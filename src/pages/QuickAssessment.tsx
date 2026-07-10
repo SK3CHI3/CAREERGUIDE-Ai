@@ -36,7 +36,7 @@ const QuickAssessment = () => {
     const [email, setEmail] = useState("");
     const [curriculum, setCurriculum] = useState<'cbc' | 'igcse' | 'legacy' | null>(null);
     const [grade, setGrade] = useState("");
-    const [pathway, setPathway] = useState<'stem' | 'arts' | 'social' | null>(null);
+    const [pathway, setPathway] = useState<'stem' | 'arts' | 'social' | 'techvoc' | null>(null);
     const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
     const [subjectGrades, setSubjectGrades] = useState<Record<string, string>>({
         'Mathematics': '',
@@ -97,10 +97,11 @@ const QuickAssessment = () => {
     }, [currentStep, name, email, curriculum, grade, subjectGrades]);
 
     const SUBJECT_DATA = {
-        cbc_junior: ["Mathematics", "English", "Kiswahili", "Integrated Science", "Health Education", "Pre-Technical Studies", "Social Studies", "Business Studies", "Agriculture & Nutrition", "Creative Arts", "Physical Education"],
+        cbc_junior: ["Mathematics", "English", "Kiswahili", "Integrated Science", "Health Education", "Pre-Technical & Pre-Career Studies", "Social Studies", "Business Studies", "Agriculture & Nutrition", "Life Skills Education", "Creative Arts and Sports", "Religious Education (CRE/IRE/HRE)"],
         cbc_senior_stem: ["Mathematics", "English", "Kiswahili", "Physics", "Chemistry", "Biology", "Computer Science", "Further Mathematics", "Technical Drawing", "Agriculture & Nutrition"],
-        cbc_senior_arts: ["English", "Kiswahili", "Mathematics", "Fine Art & Design", "Music", "Drama & Theatre", "Physical Education & Sports", "Media & Film Studies", "Fashion & Design"],
+        cbc_senior_arts: ["English", "Kiswahili", "Mathematics", "Fine Art & Design", "Music", "Drama & Theatre", "Physical Education & Sports Science", "Media & Film Studies", "Fashion & Design"],
         cbc_senior_social: ["English", "Kiswahili", "Mathematics", "History & Citizenship", "Geography", "Business Studies & Economics", "Religious Education", "Law", "Sociology"],
+        cbc_senior_techvoc: ["English", "Kiswahili", "Mathematics", "Building & Construction", "Electrical & Electronics", "Mechanical Engineering", "Agriculture", "Home Science", "Hairdressing & Beauty", "Plumbing & Carpentry", "ICT / Computer Studies"],
         igcse: ["English First Language", "Mathematics (Extended)", "Biology", "Chemistry", "Physics", "ICT", "Business Studies", "Economics", "History", "Geography", "Art & Design", "Sociology"],
         alevel: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science", "Economics", "Business", "History", "Geography", "Psychology", "Law", "English Literature"],
         legacy: ["Mathematics", "English", "Kiswahili", "Biology", "Physics", "Chemistry", "History & Government", "Geography", "Christian Religious Ed (CRE)", "Islamic Religious Ed (IRE)", "Hindu Religious Ed (HRE)", "Home Science", "Business Studies", "Agriculture", "Computer Studies", "Music", "Art & Design", "French", "German", "Arabic", "Aviation", "Building Construction", "Power Mechanics", "Woodwork", "Metalwork", "Drawing & Design", "Electricity"]
@@ -509,10 +510,10 @@ const QuickAssessment = () => {
                                                 {curriculum === 'cbc' && grade.includes('Senior') && (
                                                     <div className="space-y-3 animate-in fade-in slide-in-from-top-2">
                                                         <Label className="text-base font-bold text-primary">Senior Secondary Pathway</Label>
-                                                        <div className="grid grid-cols-3 gap-2">
-                                                            {(['stem', 'arts', 'social'] as const).map(p => (
-                                                                <button key={p} type="button" onClick={() => { setPathway(p); setSelectedSubjects([]); }} className={`p-3 rounded-xl border-2 transition-all font-bold uppercase text-xs tracking-wider ${pathway === p ? 'border-primary bg-primary text-primary-foreground' : 'border-card-border hover:border-primary/50 bg-card'}`}>
-                                                                    {p}
+                                                        <div className="grid grid-cols-2 gap-2">
+                                                            {([['stem', 'STEM'], ['arts', 'Arts & Sports'], ['social', 'Social Sciences'], ['techvoc', 'Technical & Vocational']] as const).map(([p, label]) => (
+                                                                <button key={p} type="button" onClick={() => { setPathway(p); setSelectedSubjects([]); }} className={`p-3 rounded-xl border-2 transition-all font-bold text-xs tracking-wider ${pathway === p ? 'border-primary bg-primary text-primary-foreground' : 'border-card-border hover:border-primary/50 bg-card'}`}>
+                                                                    {label}
                                                                 </button>
                                                             ))}
                                                         </div>

@@ -15,10 +15,12 @@ Covering: Structure · Subjects · National Examinations · Schools · Grading
 3. CBC Subjects by Level
 4. CBC Assessments & National Examinations
    4a. EGRA – Early Grade Reading Assessment
-   4b. KLEE – Kenya Lower Secondary Examination
-   4c. Grade 12 / KUSE – Final Certificate
+   4b. KPSEA – Kenya Primary School Education Assessment
+   4c. KLEE – Kenya Lower Secondary Examination
+   4d. Grade 12 / KUSE – Final Certificate
 5. CBC Grading Scale
 6. CBC Schools in Kenya
+   6b. Career Guidance Touchpoints – Where CareerGuide AI Fits In
 
 **PART TWO: BRITISH CURRICULUM**
 7. Overview & Background
@@ -60,7 +62,7 @@ The Competency-Based Curriculum (CBC) is Kenya's national curriculum framework, 
 **Key Philosophy:** CBC shifts focus from rote memorisation and high-stakes exams to the development of practical competencies, critical thinking, creativity, communication, collaboration, and digital literacy — skills needed in the 21st century.
 
 - **Governing Bodies:** Ministry of Education | KICD | Kenya National Examinations Council (KNEC)
-- **Introduced:** 2017 (replacing 8-4-4 system)
+- **Introduced:** Framework launched 2017; pilot rollout in schools began 2019 (replacing 8-4-4 system)
 - **Language of Instruction:** English and Kiswahili
 
 **Core CBC Values & Competencies:**
@@ -75,19 +77,19 @@ The Competency-Based Curriculum (CBC) is Kenya's national curriculum framework, 
 | Self-Efficacy | Confidence and resilience in one's own abilities |
 
 ### 2. CBC Structure & Levels
-CBC is structured into four broad levels, replacing the old 8-4-4 model of 8 years primary + 4 years secondary + 4 years university.
+CBC is structured as a **2-6-3-3** system (plus university), replacing the old 8-4-4 model of 8 years primary + 4 years secondary + 4 years university.
 
 | Level | Classes | Age Group | Duration | Focus |
 |---|---|---|---|---|
-| Early Years | Pre-Primary 1 (PP1), PP2, Grades 1–3 | Ages 4–9 | 5 years | Foundational literacy, numeracy & social skills |
-| Middle School | Grades 4–6 | Ages 10–12 | 3 years | Broadening knowledge, introduction to subjects |
+| Pre-Primary | PP1, PP2 | Ages 4–5 | 2 years | Foundational play, literacy, numeracy & social skills |
+| Primary | Grades 1–6 | Ages 6–12 | 6 years | Broad foundational knowledge; ends with KPSEA assessment |
 | Junior Secondary | Grades 7–9 | Ages 13–15 | 3 years | Core subjects + electives. Ends with KLEE exam |
-| Senior Secondary | Grades 10–12 | Ages 16–18 | 3 years | Pathway specialisation: STEM / Arts / Social Sciences |
+| Senior Secondary | Grades 10–12 | Ages 16–18 | 3 years | Pathway specialisation: STEM / Arts & Sports / Social Sciences / Technical & Vocational |
 | University | Undergraduate | Ages 18+ | 3–5 years | Degree programmes at Kenyan universities |
 
 ### 3. CBC Subjects by Level
 
-**Early Years (PP1–PP2 & Grades 1–3)**
+**Pre-Primary (PP1–PP2)**
 - Language Activities (English, Kiswahili, Mother Tongue)
 - Mathematical Activities
 - Environmental Activities
@@ -96,7 +98,7 @@ CBC is structured into four broad levels, replacing the old 8-4-4 model of 8 yea
 - Religious Education Activities (CRE / IRE)
 - Psychomotor & Creative Arts
 
-**Middle School (Grades 4–6)**
+**Primary (Grades 1–6)**
 - English Language
 - Kiswahili / Kenya Sign Language
 - Mathematics
@@ -118,13 +120,13 @@ CBC is structured into four broad levels, replacing the old 8-4-4 model of 8 yea
 | Mathematics | Compulsory |
 | Integrated Science | Compulsory |
 | Health Education | Compulsory |
-| Pre-Technical & Pre-Career Education | Compulsory |
+| Pre-Technical & Pre-Career Studies | Compulsory |
 | Social Studies | Compulsory |
 | Religious Education (CRE / IRE / HRE) | Compulsory — student chooses one |
 | Business Studies | Compulsory |
 | Agriculture & Nutrition | Compulsory |
-| Creative Arts (Music, Fine Art, Drama) | Elective |
-| Physical Education & Sports | Elective |
+| Life Skills Education | Compulsory |
+| Creative Arts and Sports (Music, Art, PE, Sports combined) | Compulsory |
 | Foreign Languages | Elective — where available |
 
 **Senior Secondary — by Pathway (Grades 10–12)**
@@ -171,6 +173,21 @@ CBC is structured into four broad levels, replacing the old 8-4-4 model of 8 yea
 | Law | Optional |
 | Sociology | Optional |
 
+*Pathway 4: Technical & Vocational*
+| Subject | Status |
+|---|---|
+| English | Compulsory |
+| Kiswahili | Compulsory |
+| Mathematics | Compulsory |
+| Building & Construction | Core |
+| Electrical & Electronics | Core |
+| Mechanical Engineering | Core |
+| Agriculture | Core |
+| Home Science | Optional |
+| Hairdressing & Beauty | Optional |
+| Plumbing & Carpentry | Optional |
+| ICT / Computer Studies | Optional |
+
 ### 4. CBC Assessments & National Examinations
 CBC uses a multi-layered assessment approach combining continuous school-based assessments with periodic national examinations administered by KNEC. Unlike the old 8-4-4 system, no single exam determines a learner's future.
 
@@ -191,11 +208,29 @@ CBC uses a multi-layered assessment approach combining continuous school-based a
 
 *EGRA is assessed in both English and Kiswahili. Results inform national literacy policy, teacher training interventions, and government/NGO resource allocation. It is purely diagnostic — results are never used to hold back or fail a learner.*
 
-**4b. KLEE — Kenya Lower Secondary Examination**
+**4b. KPSEA — Kenya Primary School Education Assessment**
+- Full Name: Kenya Primary School Education Assessment
+- Level: End of Grade 6 (Primary — Ages ~12)
+- Administered by: Kenya National Examinations Council (KNEC)
+- First administered: 2022
+- Purpose: Assesses learner readiness for transition to Junior Secondary; informs school-level interventions
+
+| Subject Assessed | Format |
+|---|---|
+| English | Written paper |
+| Kiswahili | Written paper |
+| Mathematics | Written paper |
+| Integrated Science | Written paper |
+| Social Studies | Written paper |
+| Creative Arts & Sports | Portfolio + practical assessment |
+
+*KPSEA is a formative national assessment — it does not determine promotion but provides data for learner tracking and school accountability under CBC. Results are used alongside school-based assessments for Junior Secondary placement.*
+
+**4c. KLEE — Kenya Lower Secondary Examination**
 - Full Name: Kenya Lower Secondary Examination
 - Level: End of Grade 9 (Junior Secondary — Ages ~15)
 - Administered by: Kenya National Examinations Council (KNEC)
-- First administered: 2026
+- First administered: 2025
 - Purpose: Certifies completion of Junior Secondary; results used for Senior Secondary placement & pathway selection
 
 | Subject | Assessment Mode |
@@ -205,17 +240,18 @@ CBC uses a multi-layered assessment approach combining continuous school-based a
 | Mathematics | Written exam — two papers |
 | Integrated Science | Written exam + practical |
 | Health Education | Written exam |
-| Pre-Technical & Pre-Career Education | Written + practical/portfolio |
+| Pre-Technical & Pre-Career Studies | Written + practical/portfolio |
 | Social Studies | Written exam |
 | Religious Education (CRE/IRE/HRE) | Written exam — student picks one |
 | Business Studies | Written exam |
 | Agriculture & Nutrition | Written exam + practical |
-| Creative Arts (elective) | Portfolio + performance assessment |
+| Life Skills Education | School-based assessment |
+| Creative Arts and Sports | Portfolio + performance assessment |
 | Physical Education (elective) | Performance-based assessment |
 
-*Outcome: KLEE results determine which Senior Secondary pathway (STEM, Arts & Sports Science, or Social Sciences) a learner is placed into for Grades 10–12. It replaces the role the old KCPE played at the end of primary school.*
+*Outcome: KLEE results determine which Senior Secondary pathway (STEM, Arts & Sports Science, Social Sciences, or Technical & Vocational) a learner is placed into for Grades 10–12. It replaces the role the old KCPE played at the end of primary school.*
 
-**4c. Grade 12 National Examination (KUSE)**
+**4d. Grade 12 National Examination (KUSE)**
 - Proposed Name: Kenya Upper Secondary Education Certificate (KUSE) / Kenya Secondary Education Certificate (KSEC)
 - Level: End of Grade 12 (Senior Secondary — Ages ~18)
 - Administered by: KNEC
@@ -261,6 +297,21 @@ CBC uses a competency-level scale rather than the old A–E letter grades. This 
 | Loreto Convent Msongari | Nairobi | Catholic girls' school |
 | Kitengela International School| Kitengela | Growing private school chain |
 | Strathmore School | Nairobi | Opus Dei-linked school, strong academics |
+
+### 6b. Career Guidance Touchpoints — Where CareerGuide AI Fits In
+
+CBC creates several critical decision points where learners and parents need structured career guidance. CareerGuide AI is designed to intervene at exactly these moments:
+
+| Touchpoint | Grade / Age | What Happens | CareerGuide AI Role |
+|---|---|---|---|
+| **Primary → Junior Secondary Transition** | Grade 6 → 7 (Age 12) | KPSEA assessment; first major transition. Learners enter Junior Secondary with no pathway choice yet. | Introductory RIASEC assessment to help learners understand their interests early. Parent reports on how to support emerging strengths. |
+| **Pre-Technical & Pre-Career Studies** | Grades 7–9 (Ages 13–15) | This compulsory JS subject explicitly introduces career awareness, work skills, and vocational exploration. | AI chat and career exploration tools that extend classroom career education. Maps JS subjects to real-world careers. |
+| **KLEE Results & Pathway Selection** | End of Grade 9 (Age ~15) | **The most critical touchpoint.** KLEE results + school assessments determine which of the 4 Senior Secondary pathways the learner enters. A wrong choice can derail career trajectory. | Full RIASEC assessment + AI-generated career report matching learner profile to the best-fit pathway (STEM, Arts, Social Sciences, or Technical & Vocational). School counselor dashboard for data-driven guidance. |
+| **Senior Secondary Subject Selection** | Grade 10 (Age ~16) | Within the chosen pathway, learners select specific optional subjects that determine university course eligibility. | Subject combination advisor showing which university programmes each subject mix unlocks or blocks. |
+| **Grade 12 Exam & University Application** | Grade 12 (Age ~18) | Final national exam (KUSE/KSEC); KUCCPS university placement. Career path must be decided. | Career matching with KUCCPS-eligible programmes, TVET alternatives, scholarship guidance, and career readiness reports. |
+| **Ongoing: Life Skills & Values** | All JS/SS grades | Life Skills Education and CBC's 7 core competencies emphasise self-awareness, decision-making, and goal-setting. | Continuous AI chat support for career questions, values exploration, and barrier identification (financial, mentorship gaps, etc.). |
+
+**Key Insight:** Under the old 8-4-4 system, career decisions were deferred until Form 4 (KCSE). Under CBC, the first real career decision happens at **Grade 9 → Grade 10 pathway selection** — two years earlier. CareerGuide AI fills this gap by providing structured, curriculum-aligned guidance at every touchpoint, not just at the end.
 
 ---
 
@@ -576,7 +627,7 @@ The IBDP uses a 1–7 scale for each subject (max 42 points) + up to 3 bonus poi
 | Feature | CBC (Kenya) | British Curriculum | IB |
 |---|---|---|---|
 | Governing Body | KICD / KNEC / MoE Kenya | CAIE (Cambridge) | IBO (Geneva) |
-| Main Exams | EGRA, KLEE, Grade 12 Exam | Checkpoint, IGCSE, A-Levels | PYP Exhibition, MYP eAssessment, IBDP |
+| Main Exams | EGRA, KPSEA, KLEE, Grade 12 Exam | Checkpoint, IGCSE, A-Levels | PYP Exhibition, MYP eAssessment, IBDP |
 | Final Certificate | KUSE / Grade 12 Cert | Cambridge A-Level Cert | IB Diploma (max 45 pts) |
 | Assessment Style| Exams + SBA + Portfolio | Exams + Coursework + Practical | Exams + IA + TOK + EE + CAS |
 | Subject Load | Pathway-based (6–10) | 3–4 A-Level subjects | 6 subjects + 3 core components |

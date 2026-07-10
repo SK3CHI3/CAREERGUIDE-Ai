@@ -39,11 +39,11 @@ const cbeSubjects = [
   // Junior Secondary Only (Grade 7-9)
   { name: 'Integrated Science', levels: ['secondary'] },
   { name: 'Health Education', levels: ['secondary'] },
-  { name: 'Pre-Technical & Pre-Career Education', levels: ['secondary'] },
+  { name: 'Pre-Technical & Pre-Career Studies', levels: ['secondary'] },
   { name: 'Social Studies', levels: ['secondary'] },
   { name: 'Agriculture & Nutrition', levels: ['secondary', 'tertiary'] },
-  { name: 'Creative Arts', levels: ['secondary'] },
-  { name: 'Physical Education & Sports', levels: ['secondary', 'tertiary'] },
+  { name: 'Life Skills Education', levels: ['secondary'] },
+  { name: 'Creative Arts and Sports', levels: ['secondary'] },
   { name: 'Christian Religious Education (CRE)', levels: ['secondary'] },
   { name: 'Islamic Religious Education (IRE)', levels: ['secondary'] },
   { name: 'Hindu Religious Education (HRE)', levels: ['secondary'] },
@@ -58,6 +58,7 @@ const cbeSubjects = [
   { name: 'Fine Art & Design', levels: ['tertiary'] },
   { name: 'Music', levels: ['tertiary'] },
   { name: 'Drama & Theatre', levels: ['tertiary'] },
+  { name: 'Physical Education & Sports Science', levels: ['tertiary'] },
   { name: 'Media & Film Studies', levels: ['tertiary'] },
   { name: 'Fashion & Design', levels: ['tertiary'] },
   { name: 'Economics', levels: ['tertiary'] },
@@ -65,6 +66,14 @@ const cbeSubjects = [
   { name: 'History & Citizenship', levels: ['tertiary'] },
   { name: 'Law', levels: ['tertiary'] },
   { name: 'Sociology', levels: ['tertiary'] },
+
+  // Technical & Vocational Pathway (Grade 10-12)
+  { name: 'Building & Construction', levels: ['tertiary'] },
+  { name: 'Electrical & Electronics', levels: ['tertiary'] },
+  { name: 'Mechanical Engineering', levels: ['tertiary'] },
+  { name: 'Home Science', levels: ['secondary', 'tertiary'] },
+  { name: 'Hairdressing & Beauty', levels: ['tertiary'] },
+  { name: 'Plumbing & Carpentry', levels: ['tertiary'] },
   
   // Languages (Usually Senior or JS Electives)
   { name: 'French', levels: ['secondary', 'tertiary'] },
