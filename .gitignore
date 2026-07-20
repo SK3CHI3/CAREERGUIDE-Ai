@@ -18,6 +18,9 @@ dist-ssr
 .env.*
 !.env.example
 
+# MCP config (contains tokens)
+.mcp.json
+
 # Netlify
 .netlify
 

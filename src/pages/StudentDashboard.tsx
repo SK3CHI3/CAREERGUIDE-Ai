@@ -45,7 +45,6 @@ import {
   XCircle,
   Lightbulb,
   RefreshCw,
-  School,
   X,
   UserCog,
   Search,
@@ -59,7 +58,7 @@ import { ThemeToggle } from '@/components/ThemeToggle'
 import { FieldDayRequestModal } from '@/components/FieldDayRequestModal'
 import { subscriptionService } from '@/lib/subscription-service'
 import PaymentWall from '@/components/PaymentWall'
-import AIChat from '@/components/AIChat'
+import TrialActivationModal from '@/components/TrialActivationModal'
 import { ReportGenerator } from '@/lib/report-generator'
 import { ProfileSetup } from '@/components/ProfileSetup'
 import GradesManager from '@/components/GradesManager'
@@ -107,6 +106,7 @@ const StudentDashboard = () => {
   const [selectedCareer, setSelectedCareer] = useState<CareerDataItem | null>(null)
   const [isCareerModalOpen, setIsCareerModalOpen] = useState(false)
   const [isFieldDayModalOpen, setIsFieldDayModalOpen] = useState(false)
+  const [isTrialModalOpen, setIsTrialModalOpen] = useState(false)
   const [subscriptionStatus, setSubscriptionStatus] = useState<any>(null)
   const [isGradesModalOpen, setIsGradesModalOpen] = useState(false)
   const [schoolInfo, setSchoolInfo] = useState<{ name: string; status: string } | null>(null)
@@ -141,14 +141,6 @@ const StudentDashboard = () => {
     try {
         const status = await subscriptionService.checkSubscriptionStatus(profile);
         setSubscriptionStatus(status);
-
-        if (profile.school_id) {
-            const { schoolService } = await import('@/lib/school-service');
-            const schoolData = await schoolService.getSchoolById(profile.school_id);
-            if (schoolData) {
-                setSchoolInfo({ name: schoolData.name, status: schoolData.status || 'active' });
-            }
-        }
     } catch (err) {
         console.error('Error checking access status:', err);
     }
@@ -160,8 +152,7 @@ const StudentDashboard = () => {
       setIsActivatingTrial(true);
       await subscriptionService.activateTrial(user.id);
       await checkAccessStatus();
-      // Reload page to refresh all context/boundaries
-      window.location.reload();
+      setShowTrialBanner(false);
     } catch (err) {
       console.error('Error activating trial:', err);
     } finally {
@@ -290,7 +281,7 @@ const StudentDashboard = () => {
       const userGrades = await dashboardService.getUserGrades(user.id);
       const currentHash = generateContextHash(user.id, profileData, userGrades);
 
-      // First, try to get cached recommendations
+      // First, try to get cached recommendations (with hash validation)
       console.log('🔍 Checking for cached career recommendations...');
       const cachedRecommendations = await aiCacheService.getCachedCareerRecommendations(user.id, currentHash);
 
@@ -314,7 +305,30 @@ const StudentDashboard = () => {
         return;
       }
 
-      // No cached data, generate fresh recommendations
+      // No cached data, try to load from cache without hash validation (for app reload)
+      console.log('🔍 No cached data with hash, trying cache without validation...');
+      const cachedWithoutHash = await aiCacheService.getCachedCareerRecommendations(user.id);
+
+      if (cachedWithoutHash && cachedWithoutHash.length > 0) {
+        console.log('✅ Using cached recommendations (no hash validation):', cachedWithoutHash.length);
+
+        const top3 = cachedWithoutHash.slice(0, 3).map((rec, index) => ({
+          name: rec.career_name,
+          value: rec.match_percentage,
+          color: index === 0 ? '#3b82f6' : index === 1 ? '#10b981' : '#f59e0b',
+          description: rec.description || "Exciting career opportunity aligned with your interests and skills.",
+          salaryRange: rec.salary_range || 'KES 40K - 100K',
+          growth: rec.growth || 'Moderate Growth',
+          education: rec.education || "Bachelor's Degree or Diploma Required",
+          actionabilityScore: rec.actionability_score || 85
+        }));
+
+        setCareerData(top3);
+        console.log('✅ Cached recommendations loaded (no hash)');
+        return;
+      }
+
+      // No cached data at all, generate fresh recommendations
       console.log('🤖 No cached data found, generating fresh career recommendations with AI...');
 
       console.log('📊 Academic performance data:', academicPerformance);
@@ -361,11 +375,34 @@ const StudentDashboard = () => {
         // Track the AI recommendation generation
         trackButtonClick('AI Career Recommendations Generated', 'Dashboard');
       } else {
+        console.warn('⚠️ No recommendations returned from AI service');
         setCareerData([]);
       }
     } catch (error) {
-      console.error('Failed to load career recommendations:', error);
-      setCareerData([]);
+      console.error('❌ Failed to load career recommendations:', error);
+      // Try one more time to load from cache as a last resort
+      try {
+        const lastResortCache = await aiCacheService.getCachedCareerRecommendations(user.id);
+        if (lastResortCache && lastResortCache.length > 0) {
+          console.log('✅ Last resort: loaded from cache after error');
+          const top3 = lastResortCache.slice(0, 3).map((rec, index) => ({
+            name: rec.career_name,
+            value: rec.match_percentage,
+            color: index === 0 ? '#3b82f6' : index === 1 ? '#10b981' : '#f59e0b',
+            description: rec.description || "Exciting career opportunity.",
+            salaryRange: rec.salary_range || 'KES 40K - 100K',
+            growth: rec.growth || 'Moderate Growth',
+            education: rec.education || "Bachelor's Degree",
+            actionabilityScore: rec.actionability_score || 85
+          }));
+          setCareerData(top3);
+        } else {
+          setCareerData([]);
+        }
+      } catch (cacheError) {
+        console.error('❌ Cache fallback also failed:', cacheError);
+        setCareerData([]);
+      }
     } finally {
       setIsLoadingRecommendations(false)
     }
@@ -613,20 +650,18 @@ const StudentDashboard = () => {
                 <Sparkles className="w-6 h-6 text-primary animate-pulse" />
               </div>
               <div>
-                <AlertTitle className="text-xl font-bold text-foreground">First Term Free Trial Available!</AlertTitle>
+                <AlertTitle className="text-xl font-bold text-foreground">Free Trial Available!</AlertTitle>
                 <AlertDescription className="text-foreground-muted font-medium">
-                  Get full access to all features for the remainder of this academic term. No credit card required.
+                  Activate your free term trial to unlock all features.
                 </AlertDescription>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Button 
-                onClick={handleActivateTrial} 
-                disabled={isActivatingTrial}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-8 h-12 rounded-xl shadow-lg shadow-primary/20 transition-all hover:scale-105 active:scale-95"
+              <Button
+                onClick={() => setIsTrialModalOpen(true)}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-6 h-11 rounded-xl shadow-lg shadow-primary/20 transition-all hover:scale-105 active:scale-95"
               >
-                {isActivatingTrial ? <BrandedLoader size="xs" showText={false} className="mr-2 inline-flex" /> : null}
-                Activate Free Term
+                Learn More
               </Button>
               <Button
                 variant="ghost"
@@ -1126,7 +1161,24 @@ const StudentDashboard = () => {
           </TabsContent>
 
           <TabsContent value="chat-exp" className="h-[700px]">
-            <AIChat />
+            <div className="h-full flex items-center justify-center">
+              <Card className="max-w-md w-full bg-gradient-surface border-card-border text-center p-8">
+                <div className="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary/20">
+                  <Sparkles className="w-8 h-8 text-primary-foreground" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">AI Career Counselor</h3>
+                <p className="text-foreground-muted text-sm mb-6">
+                  Get personalized career guidance based on your interests, subjects, and goals. Our AI counselor is ready to help you discover your path.
+                </p>
+                <Button
+                  onClick={() => navigate('/student/chat')}
+                  className="w-full bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow h-12 text-base font-bold"
+                >
+                  <MessageSquare className="w-5 h-5 mr-2" />
+                  Open AI Chat
+                </Button>
+              </Card>
+            </div>
           </TabsContent>
 
           {/* Progress Tab */}
@@ -1320,6 +1372,19 @@ const StudentDashboard = () => {
         isOpen={isFieldDayModalOpen}
         onClose={() => setIsFieldDayModalOpen(false)}
       />
+
+      <TrialActivationModal
+        isOpen={isTrialModalOpen}
+        onClose={() => setIsTrialModalOpen(false)}
+        onActivate={async () => {
+          await handleActivateTrial()
+          setIsTrialModalOpen(false)
+          setShowTrialBanner(false)
+        }}
+        isActivating={isActivatingTrial}
+        expiresAt={subscriptionStatus?.expiresAt}
+      />
+
       {/* Install Prompt Overlay */}
       <InstallPrompt />
     </div>

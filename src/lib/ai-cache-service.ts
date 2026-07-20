@@ -144,7 +144,14 @@ class AICacheService {
         }
       }
 
-      // 2. Fallback to L2 Cache (Supabase)
+      // 1b. Try L1 cache without hash validation (for app reload scenarios)
+      const l1DataNoHash = cacheUtils.getFromL1(userId, 'career_recommendations');
+      if (l1DataNoHash) {
+        console.log('L1 Cache Hit (no hash validation): Career Recommendations');
+        return l1DataNoHash;
+      }
+
+      // 2. Fallback to L2 Cache (Supabase) - skip hash validation for initial load
       const isValid = await this.isCacheValid(userId, 'career_recommendations', currentHash)
       if (!isValid) {
         console.log('Cache is invalid, returning null for re-fetch')

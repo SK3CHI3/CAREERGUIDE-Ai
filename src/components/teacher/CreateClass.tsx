@@ -19,12 +19,11 @@ const ACADEMIC_YEARS = [
 ]
 
 interface Props {
-    schoolId: string
     teacherId: string
     onCreated: () => void
 }
 
-const CreateClass: React.FC<Props> = ({ schoolId, teacherId, onCreated }) => {
+const CreateClass: React.FC<Props> = ({ teacherId, onCreated }) => {
     const [open, setOpen] = useState(false)
     const [name, setName] = useState('')
     const [gradeLevel, setGradeLevel] = useState('')
@@ -37,7 +36,7 @@ const CreateClass: React.FC<Props> = ({ schoolId, teacherId, onCreated }) => {
         setLoading(true)
         setError(null)
         try {
-            await classService.createClass(schoolId, teacherId, name.trim(), gradeLevel, academicYear)
+            await classService.createClass(teacherId, name.trim(), gradeLevel, academicYear)
             setOpen(false)
             setName('')
             setGradeLevel('')

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, GraduationCap, School } from "lucide-react";
+import { ArrowRight, GraduationCap, BookOpen } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { getDashboardPathForRole } from "@/types/roles";
@@ -12,17 +12,17 @@ const DotLottieReact = lazy(() => import("@lottiefiles/dotlottie-react").then(mo
 const Hero = () => {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
-  const [selectedRole, setSelectedRole] = useState<"student" | "school" | null>(null);
+  const [selectedRole, setSelectedRole] = useState<"student" | "teacher" | null>(null);
   const [showRoleOptions, setShowRoleOptions] = useState(true);
 
   const dashboardPath =
     user && profile
       ? getDashboardPathForRole(
-        profile.role as "student" | "admin" | "school" | "teacher"
+        profile.role as "student" | "admin" | "teacher"
       )
       : "/student";
 
-  const handleRoleSelect = (role: "student" | "school") => {
+  const handleRoleSelect = (role: "student" | "teacher") => {
     setSelectedRole(role);
     setShowRoleOptions(false);
   };
@@ -90,11 +90,11 @@ const Hero = () => {
                   <Button
                     size="lg"
                     className="w-full sm:w-auto bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow h-14 sm:h-16 text-base sm:text-lg px-4 sm:px-8 font-bold"
-                    onClick={() => handleRoleSelect("school")}
+                    onClick={() => handleRoleSelect("teacher")}
                   >
-                    <School className="w-5 h-5 mr-1.5 sm:mr-2 flex-shrink-0" />
-                    <span className="hidden sm:inline">I'm a School</span>
-                    <span className="sm:hidden">School</span>
+                    <BookOpen className="w-5 h-5 mr-1.5 sm:mr-2 flex-shrink-0" />
+                    <span className="hidden sm:inline">I'm a Teacher</span>
+                    <span className="sm:hidden">Teacher</span>
                   </Button>
                   <Button
                     variant="outline"
@@ -112,7 +112,7 @@ const Hero = () => {
                     className="w-full sm:flex-1 bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow h-14 sm:h-16 text-base sm:text-lg px-8 font-bold"
                     onClick={handleGetStarted}
                   >
-                    {selectedRole === "student" ? "Start your journey" : "Onboard your school"}
+                    {selectedRole === "student" ? "Start your journey" : "Start guiding students"}
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </Button>
                   <Button

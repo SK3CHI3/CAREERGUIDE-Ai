@@ -16,7 +16,7 @@ interface Profile {
   phone: string | null
   full_name: string | null
   avatar_url: string | null
-  role: 'student' | 'admin' | 'school' | 'teacher'
+  role: 'student' | 'admin' | 'teacher'
   school_id?: string | null
   school_level?: 'primary' | 'secondary' | 'tertiary'
   current_grade?: string
@@ -223,7 +223,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [user])
 
   // Sign up with email and password
-  // upiOrPhone: UPI number for students (6-char NEMIS code), phone for schools
+  // upiOrPhone: UPI number for students (6-char NEMIS code), phone for teachers
   const signUp = async (email: string, password: string, fullName: string, upiOrPhone: string, role: Profile['role'] = 'student') => {
     const isStudent = role === 'student'
     const { data, error } = await supabase.auth.signUp({
@@ -232,7 +232,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       options: {
         data: {
           full_name: fullName,
-          // Store UPI for students, phone for schools/teachers
+          // Store UPI for students, phone for teachers
           ...(isStudent ? { upi_number: upiOrPhone } : { phone: upiOrPhone }),
           role: role,
         },

@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -20,6 +21,7 @@ interface CareerDetailModalProps {
 }
 
 const CareerDetailModal: React.FC<CareerDetailModalProps> = ({ isOpen, onClose, career }) => {
+  const navigate = useNavigate()
   if (!isOpen || !career) return null
 
   return (
@@ -157,7 +159,7 @@ const CareerDetailModal: React.FC<CareerDetailModalProps> = ({ isOpen, onClose, 
               Close
             </Button>
             <Button 
-              onClick={() => window.location.href = `/quick-assessment?career=${encodeURIComponent(career.title)}`}
+              onClick={() => { onClose(); navigate(`/quick-assessment?career=${encodeURIComponent(career.title)}`) }}
               className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground px-8 rounded-lg font-bold shadow-lg shadow-primary/10 order-1 sm:order-2"
             >
               Assess My Fit

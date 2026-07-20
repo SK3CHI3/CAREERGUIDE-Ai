@@ -32,7 +32,6 @@ class ClassService {
     // ─── Class CRUD ───────────────────────────────────────────────────────
 
     async createClass(
-        schoolId: string,
         teacherId: string,
         name: string,
         gradeLevel: string,
@@ -41,7 +40,6 @@ class ClassService {
         const { data, error } = await supabase
             .from('classes')
             .insert({
-                school_id: schoolId,
                 teacher_id: teacherId,
                 name,
                 grade_level: gradeLevel,

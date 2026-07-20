@@ -29,7 +29,6 @@ const Dashboard = () => {
 
   // Redirect based on user role
   if (profile?.role === 'admin') return <Navigate to="/admin" replace />
-  if (profile?.role === 'school') return <Navigate to="/school" replace />
   if (profile?.role === 'teacher') return <Navigate to="/teacher" replace />
   if (profile?.role === 'student') return <Navigate to="/student" replace />
 
@@ -59,12 +58,8 @@ const Dashboard = () => {
     switch (role) {
       case 'admin':
         return 'bg-destructive text-destructive-foreground'
-      case 'school':
-        return 'bg-primary text-primary-foreground'
       case 'teacher':
         return 'bg-secondary text-secondary-foreground'
-      case 'counselor':
-        return 'bg-warning text-warning-foreground'
       case 'student':
       default:
         return 'bg-primary text-primary-foreground'

@@ -20,18 +20,13 @@ const Auth = lazy(() => import("./pages/Auth"));
 const About = lazy(() => import("./pages/About"));
 const FAQ = lazy(() => import("./pages/FAQ"));
 const StudentDashboard = lazy(() => import("./pages/StudentDashboard"));
+const StudentChatPage = lazy(() => import("./pages/StudentChatPage"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
-const SchoolDashboard = lazy(() => import("./pages/SchoolDashboard"));
-const SchoolTeachers = lazy(() => import("./pages/SchoolTeachers"));
-const SchoolClasses = lazy(() => import("./pages/SchoolClasses"));
-const SchoolStudents = lazy(() => import("./pages/SchoolStudents"));
 const TeacherDashboard = lazy(() => import("./pages/TeacherDashboard"));
 const StudentCounselingPage = lazy(() => import("./pages/StudentCounselingPage"));
 const ClassDetail = lazy(() => import("./pages/ClassDetail"));
-const AcceptInvite = lazy(() => import("./pages/AcceptInvite"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Counselors = lazy(() => import("./pages/Counselors"));
-const SchoolInsightsPage = lazy(() => import("./pages/SchoolInsightsPage"));
 const QuickAssessment = lazy(() => import("./pages/QuickAssessment"));
 const Careers = lazy(() => import("./pages/Careers"));
 const HowItWorks = lazy(() => import("./pages/HowItWorks"));
@@ -74,6 +69,16 @@ const App = () => (
                 }
               />
               <Route
+                path="/student/chat"
+                element={
+                  <ProtectedRoute requiredRole="student">
+                    <PaymentGate>
+                      <StudentChatPage />
+                    </PaymentGate>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/student/counseling"
                 element={
                   <ProtectedRoute requiredRole="student">
@@ -102,46 +107,6 @@ const App = () => (
                 }
               />
               <Route
-                path="/school"
-                element={
-                  <ProtectedRoute requiredRole="school">
-                    <SchoolDashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/school/teachers"
-                element={
-                  <ProtectedRoute requiredRole="school">
-                    <SchoolTeachers />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/school/classes"
-                element={
-                  <ProtectedRoute requiredRole="school">
-                    <SchoolClasses />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/school/students"
-                element={
-                  <ProtectedRoute requiredRole="school">
-                    <SchoolStudents />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/school/insights"
-                element={
-                  <ProtectedRoute requiredRole="school">
-                    <SchoolInsightsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
                 path="/teacher"
                 element={
                   <ProtectedRoute requiredRole="teacher">
@@ -157,7 +122,6 @@ const App = () => (
                   </ProtectedRoute>
                 }
               />
-              <Route path="/invite" element={<AcceptInvite />} />
               <Route
                 path="/dashboard"
                 element={
