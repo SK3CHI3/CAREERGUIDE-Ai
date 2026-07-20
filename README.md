@@ -1,88 +1,29 @@
-# CareerGuide AI
+# CareerGuide AI — AI Career Guidance for Kenyan Students
 
-A student-first career guidance platform that helps Kenyan students make informed decisions about their academic paths and future careers. Powered by AI assessments and backed by verified professional counselors.
+**CareerGuide AI** is a free AI-powered career guidance platform built for Kenyan students navigating the CBC and 8-4-4 education systems. Get personalized career recommendations, track academic performance, and chat with an AI career counselor — all tailored to Kenya's job market.
 
-## Overview
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-careerguideai.co.ke-blue)](https://careerguideai.co.ke)
+[![Built with](https://img.shields.io/badge/Built%20with-React%20%2B%20Supabase-green)]()
+[![License](https://img.shields.io/badge/License-Proprietary-red)]()
 
-CareerGuide AI bridges the gap between academic choices and career opportunities in Kenya's Competency-Based Education (CBE) system. Students get personalized career recommendations based on their personality profile, academic performance, and real Kenyan labour market data. Teachers get tools to help guide students toward better career outcomes.
+## ✨ Key Features
 
-## Roles
+- **🤖 AI Career Recommendations** — DeepSeek-powered analysis combining RIASEC personality, grades, and Kenya's labour market
+- **📊 RIASEC Assessment** — Six-dimension personality profiling with radar chart visualization
+- **💬 AI Career Chat** — Full-page conversational counselor for subject choices, university paths, and job market questions
+- **📈 Academic Tracking** — Grade management with automatic career match recalculation
+- **🎓 Career Directory** — 500+ career paths with salaries, growth, and education requirements for Kenya
+- **👩‍🏫 Teacher Dashboard** — Tools for teachers to guide students' career decisions
+- **👨‍⚕️ Counselor Access** — Book 1-on-1 sessions with verified professional counselors
 
-### Students
-- Take a RIASEC personality assessment
-- Get AI-generated career recommendations with match percentages
-- Track academic performance and see how grades affect career fit
-- Chat 1-on-1 with an AI career counselor
-- Browse an extensive career pathways directory
-- Book sessions with verified professional counselors
-- Download a personalized PDF career report
-
-### Teachers
-- Create and manage student groups
-- Track student academic performance
-- View AI-generated career insights per student
-- Help students understand how their grades align with career goals
-
-## Key Features
-
-**AI Career Recommendations** — DeepSeek-powered analysis combines RIASEC personality scores, academic performance, subject strengths, and Kenya Vision 2030 labour market data to generate ranked career matches with actionability scores.
-
-**RIASEC Assessment** — Six-dimension personality profiling (Realistic, Investigative, Artistic, Social, Enterprising, Conventional) with radar chart visualization and archetype descriptions.
-
-**Academic Performance Tracking** — Grade management with term-by-term analysis, subject strength/weakness identification, and automatic recalculation of career match scores when grades change.
-
-**AI Career Chat** — Full-page conversational interface where students can ask about subject choices, university prerequisites, TVET options, and job market trends in East Africa.
-
-**Career Pathways Directory** — 500+ career paths with salary ranges, growth projections, education requirements, and skills needed — all contextualized for the Kenyan market.
-
-**Verified Counselor Access** — Students can book 1-on-1 sessions with professional career counselors for human validation of AI recommendations.
-
-**Two-Tier Caching** — L1 (localStorage + cookie fingerprint) for instant load, L2 (Supabase) for persistence across devices. AI recommendations are cached for 24 hours with context-hash invalidation.
-
-## Tech Stack
-
-| Layer | Technology |
-|-------|-----------|
-| Frontend | React 19, TypeScript, Vite 8 |
-| Styling | Tailwind CSS 4, shadcn/ui |
-| State | React Context API |
-| Routing | React Router v6 |
-| Backend | Supabase (PostgreSQL, Auth, RLS, Storage) |
-| AI | DeepSeek V3.1 (streaming + JSON mode) |
-| Charts | Recharts (pie, radar, bar) |
-| Payments | IntaSend (M-Pesa) |
-| PDF | html2pdf.js |
-| Deployment | Netlify (SPA redirects) |
-
-## Getting Started
-
-### Prerequisites
-- Node.js 18+
-- npm or bun
-
-### Setup
+## 🚀 Quick Start
 
 ```bash
-# Clone the repository
 git clone https://github.com/SK3CHI3/CAREERGUIDE-Ai.git
 cd CAREERGUIDE-Ai
-
-# Install dependencies
 npm install
-
-# Copy environment variables
-cp .env.example .env
-# Fill in VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY, VITE_DEEPSEEK_API_KEY
-
-# Start development server
+cp .env.example .env   # Add your Supabase + DeepSeek keys
 npm run dev
-```
-
-### Build
-
-```bash
-npm run build
-npm run preview  # preview the production build
 ```
 
 ### Environment Variables
@@ -90,74 +31,47 @@ npm run preview  # preview the production build
 | Variable | Description |
 |----------|-------------|
 | `VITE_SUPABASE_URL` | Supabase project URL |
-| `VITE_SUPABASE_ANON_KEY` | Supabase anon/public key |
+| `VITE_SUPABASE_ANON_KEY` | Supabase public key |
 | `VITE_DEEPSEEK_API_KEY` | DeepSeek API key for AI features |
 
-## Project Structure
+## 🛠 Tech Stack
 
-```
-src/
-├── App.tsx                 # Routes + lazy loading
-├── contexts/
-│   └── AuthContext.tsx      # Auth + profile state
-├── pages/
-│   ├── StudentDashboard.tsx # Main student interface
-│   ├── StudentChatPage.tsx  # Full-page AI chat
-│   ├── TeacherDashboard.tsx # Teacher interface
-│   ├── Careers.tsx          # Career directory
-│   └── AdminDashboard.tsx   # Platform admin
-├── components/
-│   ├── AIChat.tsx           # Embedded chat (legacy)
-│   ├── CareerDetailModal.tsx
-│   ├── GradesManager.tsx
-│   ├── CourseRecommendations.tsx
-│   ├── TrialActivationModal.tsx
-│   └── PaymentWall.tsx
-├── lib/
-│   ├── ai-service.ts       # DeepSeek API integration
-│   ├── ai-cache-service.ts # L1/L2 cache management
-│   ├── dashboard-service.ts
-│   ├── subscription-service.ts
-│   └── class-service.ts
-└── types/
-    ├── roles.ts            # UserRole enum
-    └── supabase.ts         # Generated DB types
-```
+**Frontend:** React 19 · TypeScript · Vite 8 · Tailwind CSS 4 · shadcn/ui  
+**Backend:** Supabase (PostgreSQL + Auth + RLS + Storage)  
+**AI:** DeepSeek V3.1 (streaming chat + JSON recommendations)  
+**Charts:** Recharts (pie, radar, bar)  
+**Payments:** IntaSend (M-Pesa)  
+**Deploy:** Netlify
 
-## Database
+## 📱 Screenshots
 
-The platform uses Supabase PostgreSQL with Row Level Security (RLS) enabled on all tables.
+| Student Dashboard | AI Career Chat | Career Directory |
+|---|---|---|
+| Personalized career matches with RIASEC radar chart | Full-page AI counselor conversation | 500+ Kenya-specific career paths |
 
-**Core tables:** `profiles`, `classes`, `class_enrollments`, `student_grades`, `career_paths`, `career_recommendations`
+## 📖 Documentation
 
-**Cache tables:** `cached_career_recommendations`, `cached_career_details`, `cached_course_recommendations`, `cache_invalidation`
+- [V3 Migration Guide](docs/V3_MIGRATION.md) — Architecture changes, database migrations, and what was removed
+- [Developer Guide](docs/DEVELOPER.md) — Contributing and local development setup
+- [Security](docs/SECURITY.md) — Authentication, RLS policies, and data protection
+- [Deployment](docs/NETLIFY_DEPLOYMENT.md) — Production deployment and CI/CD
 
-**Content tables:** `blog_posts`, `feedbacks`, `counselor_profiles`, `counselor_sessions`, `counselor_messages`
+## 💰 Pricing
 
-## Subscription Model
+| Plan | Price | Features |
+|------|-------|----------|
+| **Free Trial** | KSh 0 | Full access for the current academic term |
+| **Individual** | KSh 499/term | Full access, paid via M-Pesa |
 
-- **Free Trial** — Full access for the remainder of the current academic term (first-time students)
-- **Individual** — KSh 499/term via M-Pesa
-- **Grace Period** — 3-day grace after expiry before access is locked
+*3-day grace period after expiry before access is locked.*
 
-## Changelog
+## 🤝 Contributing
 
-### v3.0 (July 2026)
-- Removed school system entirely — platform is now student + teacher focused
-- Teachers can self-register (no school invite required)
-- AI Chat moved to dedicated full-page view at `/student/chat`
-- New TrialActivationModal replaces inline trial banner
-- Fixed navigation bugs (window.location → React Router navigate)
-- Fixed AI recommendations not loading on app reload
-- Fixed career titles not showing on Careers page reload
-- Parallelized dashboard data loading (Promise.all)
-- Added 2-minute localStorage session cache for stats
-- Added sessionStorage cache for AI insights
-- Improved mobile UI across all dashboard sections
+This is a proprietary project. For bug reports or feature requests, please open an issue.
 
-## License
+## 📄 License
 
-Proprietary. All rights reserved.
+Proprietary. All rights reserved. See [LICENSE](LICENSE) for details.
 
 ---
 
