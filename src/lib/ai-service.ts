@@ -296,7 +296,7 @@ ACADEMIC PERFORMANCE:
 - Performance Trend: ${userContext.academicPerformance.performanceTrend}
 ` : ''
 
-      const prompt = `You are a Senior Pedagogical Consultant & Career Mentor. Your task is to provide a Teacher with specific, actionable guidance strategies for a student named ${userContext.name || 'this student'}.
+      const prompt = `You are a Senior Pedagogical Consultant & Career Mentor. Your task is to provide a Mentor with specific, actionable guidance strategies for a student named ${userContext.name || 'this student'}.
 
 STUDENT PROFILE:
 ${userContext.schoolLevel ? `- Level: ${userContext.schoolLevel}` : ''} ${userContext.currentGrade ? `(Grade ${userContext.currentGrade})` : ''}
@@ -305,23 +305,23 @@ ${assessmentInfo}
 ${academicInfo}
 
 TASK:
-Provide a strategic "Teacher Guidance Report" that is realistic and tactical.
+Provide a strategic "Mentor Guidance Report" that is realistic and tactical.
 
 STRUCTURE YOUR RESPONSE IN THESE SECTIONS (NO MARKDOWN ** or ##):
 
 1. STUDENT TRIANGULATION SUMMARY
 A one-sentence summary of who this student is based on the intersection of their personality, academics, and practical constraints.
 
-2. PEDAGOGICAL TACTICS
-Provide 3 concrete classroom or school-level actions the teacher can take to support this student's specific career trajectory.
+2. GUIDANCE TACTICS
+Provide 3 concrete actions the mentor can take to support this student's specific career trajectory.
 If they are weak in a subject core to their goal, suggest a specific remedial approach.
 If they have financial/geographical constraints, suggest specific resources (TVET, bursaries, digital skills).
 
 3. MENTORSHIP TALKING POINTS
-Provide 2-3 specific questions or topics the teacher should bring up in a 1-on-1 mentorship session.
+Provide 2-3 specific questions or topics the mentor should bring up in a 1-on-1 guidance session.
 
 4. REAL-WORLD REALITY CHECK
-Highlight one major opportunity or hurdle the teacher should prepare the student for (e.g., automation risk, market demand in Kenya).
+Highlight one major opportunity or hurdle the mentor should prepare the student for (e.g., automation risk, market demand in Kenya).
 
 FORMATTING:
 - Use clear headings in ALL CAPS.
@@ -332,7 +332,7 @@ FORMATTING:
       const response = await this.sendMessage(prompt, [], userContext)
       return response
     } catch (error) {
-      console.error('Failed to generate teacher insights:', error)
+      console.error('Failed to generate mentor insights:', error)
       return "I'm sorry, I couldn't generate insights for this student right now. Please check if the student has completed their profile and grades are uploaded."
     }
   }

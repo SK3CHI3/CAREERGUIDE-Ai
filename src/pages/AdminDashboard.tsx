@@ -33,7 +33,7 @@ import { ThemeToggle } from '@/components/ThemeToggle'
 interface AdminStats {
   totalStudents: number
   totalSchools: number
-  totalTeachers: number
+  totalMentors: number
   totalAssessments: number
   studentGrowth: { month: string; students: number; schools: number }[]
   careerDistribution: { name: string; value: number; color: string }[]
@@ -54,7 +54,7 @@ interface School {
   created_at: string
   logo_url?: string | null
   student_count?: number
-  teacher_count?: number
+  mentor_count?: number
 }
 
 interface AnalyticsData {
@@ -166,13 +166,13 @@ const AdminDashboard = () => {
       const [
         { count: totalStudents },
         { count: totalSchools },
-        { count: totalTeachers },
+        { count: totalMentors },
         { count: totalAssessments },
         { data: paymentsData },
       ] = await Promise.all([
         supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'student'),
         supabase.from('schools').select('id', { count: 'exact', head: true }),
-        supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'teacher'),
+        supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'mentor'),
         supabase.from('user_activities').select('id', { count: 'exact', head: true }).in('activity_type', ['assessment', 'riasec_assessment']),
         supabase.from('payments').select('amount').eq('status', 'completed')
       ])
@@ -283,7 +283,7 @@ const AdminDashboard = () => {
       setStats({
         totalStudents: totalStudents ?? 0,
         totalSchools: totalSchools ?? 0,
-        totalTeachers: totalTeachers ?? 0,
+        totalMentors: totalMentors ?? 0,
         totalAssessments: totalAssessments ?? 0,
         studentGrowth,
         careerDistribution,
@@ -304,9 +304,9 @@ const AdminDashboard = () => {
         const schoolsWithCounts = await Promise.all(schoolsData.map(async (s) => {
           const [{ count: sCount }, { count: tCount }] = await Promise.all([
             supabase.from('school_members').select('id', { count: 'exact', head: true }).eq('school_id', s.id).eq('role', 'student'),
-            supabase.from('school_members').select('id', { count: 'exact', head: true }).eq('school_id', s.id).eq('role', 'teacher'),
+            supabase.from('school_members').select('id', { count: 'exact', head: true }).eq('school_id', s.id).eq('role', 'mentor'),
           ])
-          return { ...s, student_count: sCount ?? 0, teacher_count: tCount ?? 0 }
+          return { ...s, student_count: sCount ?? 0, mentor_count: tCount ?? 0 }
         }))
         setSchools(schoolsWithCounts)
       }
@@ -864,7 +864,7 @@ const AdminDashboard = () => {
                                   <Badge variant="outline" className={`text-[9px] uppercase font-black px-2 py-0 border-border bg-muted ${
                                     u.role === 'admin' ? 'text-rose-400' : 
                                     u.role === 'school' ? 'text-amber-400' : 
-                                    u.role === 'teacher' ? 'text-blue-400' : 'text-muted-foreground'
+                                    u.role === 'mentor' ? 'text-blue-400' : 'text-muted-foreground'
                                   }`}>
                                     {u.role}
                                   </Badge>
@@ -1125,10 +1125,10 @@ const AdminDashboard = () => {
                           <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                           <CardContent className="p-6">
                             <div className="flex justify-between items-start mb-4">
-                              <p className="text-[10px] uppercase font-black text-slate-400 tracking-widest">Active Teachers</p>
+                              <p className="text-[10px] uppercase font-black text-slate-400 tracking-widest">Active Mentors</p>
                               <BookOpen className="w-4 h-4 text-violet-400 opacity-50" />
                             </div>
-                            <p className="text-4xl font-black text-white tabular-nums">{selectedSchool.teacher_count || 0}</p>
+                            <p className="text-4xl font-black text-white tabular-nums">{selectedSchool.mentor_count || 0}</p>
                           </CardContent>
                         </Card>
                         <Card className="bg-slate-950/40 backdrop-blur-md border-white/5 shadow-glass relative overflow-hidden group">
@@ -1183,7 +1183,7 @@ const AdminDashboard = () => {
                               <div className="flex flex-col sm:flex-row sm:items-center justify-between p-6 hover:bg-rose-500/[0.02] transition-colors gap-4">
                                 <div>
                                   <p className="font-bold text-rose-500 mb-1">Suspend Institution Access</p>
-                                  <p className="text-xs text-slate-400 leading-relaxed max-w-xl">Temporarily block all teacher and student access associated with this school. This action is immediately enforced.</p>
+                                  <p className="text-xs text-slate-400 leading-relaxed max-w-xl">Temporarily block all mentor and student access associated with this school. This action is immediately enforced.</p>
                                 </div>
                                 <Button variant="destructive" className="bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white border border-rose-500/20 shrink-0 shadow-none">Suspend Access</Button>
                               </div>
@@ -1237,8 +1237,8 @@ const AdminDashboard = () => {
                           <CardContent className="p-6">
                             <div className="grid grid-cols-2 gap-4 mb-6">
                               <div className="space-y-1">
-                                <p className="text-[10px] uppercase font-black text-slate-300 tracking-thinner">Teachers</p>
-                                <p className="text-xl font-black text-white">{s.teacher_count}</p>
+                                <p className="text-[10px] uppercase font-black text-slate-300 tracking-thinner">Mentors</p>
+                                <p className="text-xl font-black text-white">{s.mentor_count}</p>
                               </div>
                               <div className="space-y-1">
                                 <p className="text-[10px] uppercase font-black text-slate-300 tracking-thinner">Students</p>

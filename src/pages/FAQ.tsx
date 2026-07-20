@@ -15,7 +15,7 @@ const faqs = [
   },
   {
     question: "Do schools need a constant internet connection to use this?",
-    answer: "While an internet connection is required for the initial AI assessments and to sync data, CareerGuide AI is optimized for low-bandwidth environments. Students can take assessments and teachers can use the dashboard without needing high-speed internet."
+    answer: "While an internet connection is required for the initial AI assessments and to sync data, CareerGuide AI is optimized for low-bandwidth environments. Students can take assessments and mentors can use the dashboard without needing high-speed internet."
   },
   {
     question: "How does it align with the Kenyan CBE system?",
@@ -27,7 +27,7 @@ const faqs = [
   },
   {
     question: "How much does CareerGuide AI cost?",
-    answer: "We offer two flexible models. For Individual Students, unlocking a full professional diagnostic report costs just KES 50. For Schools, our institutional plan starts at KES 100 per student per term, which includes unlimited access to dashboards, teacher insights, and student assessments."
+    answer: "We offer two flexible models. For Individual Students, unlocking a full professional diagnostic report costs just KES 50. For Schools, our institutional plan starts at KES 100 per student per term, which includes unlimited access to dashboards, mentor insights, and student assessments."
   },
   {
     question: "Do students need to pay individual subscription fees?",
@@ -43,11 +43,11 @@ const faqs = [
   },
   {
     question: "Is there a mobile app?",
-    answer: "CareerGuide AI is a Progressive Web App (PWA). While we don't require an Apple/Play Store download, the entire platform is optimized for mobile browser use, allowing students and teachers to access their dashboards on any smartphone with minimal data usage."
+    answer: "CareerGuide AI is a Progressive Web App (PWA). While we don't require an Apple/Play Store download, the entire platform is optimized for mobile browser use, allowing students and mentors to access their dashboards on any smartphone with minimal data usage."
   },
   {
-    question: "How do teachers use the insights?",
-    answer: "Teachers receive a 'Class Insight' dashboard which aggregates the career matching trends for their full roster. This helps them identify which industries their students are naturally leaning toward, allowing them to organize precise industry field trips and immersion days."
+    question: "How do mentors use the insights?",
+    answer: "Mentors receive a 'Student Insight' dashboard which aggregates the career matching trends for their full roster. This helps them identify which industries their students are naturally leaning toward, allowing them to organize precise industry field trips and immersion days."
   }
 ];
 

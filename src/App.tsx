@@ -22,7 +22,7 @@ const FAQ = lazy(() => import("./pages/FAQ"));
 const StudentDashboard = lazy(() => import("./pages/StudentDashboard"));
 const StudentChatPage = lazy(() => import("./pages/StudentChatPage"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
-const TeacherDashboard = lazy(() => import("./pages/TeacherDashboard"));
+const TeacherDashboard = lazy(() => import("./pages/MentorDashboard"));
 const StudentCounselingPage = lazy(() => import("./pages/StudentCounselingPage"));
 const ClassDetail = lazy(() => import("./pages/ClassDetail"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
@@ -107,17 +107,17 @@ const App = () => (
                 }
               />
               <Route
-                path="/teacher"
+                path="/mentor"
                 element={
-                  <ProtectedRoute requiredRole="teacher">
+                  <ProtectedRoute requiredRole="mentor">
                     <TeacherDashboard />
                   </ProtectedRoute>
                 }
               />
               <Route
-                path="/teacher/class/:classId"
+                path="/mentor/class/:classId"
                 element={
-                  <ProtectedRoute requiredRole="teacher">
+                  <ProtectedRoute requiredRole="mentor">
                     <ClassDetail />
                   </ProtectedRoute>
                 }

@@ -23,7 +23,7 @@ const Index = () => {
   // Redirect if already authenticated
   useEffect(() => {
     if (!loading && user && profile) {
-      const dashboardPath = getDashboardPathForRole(profile.role as "student" | "admin" | "school" | "teacher");
+      const dashboardPath = getDashboardPathForRole(profile.role as "student" | "admin" | "school" | "mentor");
       navigate(dashboardPath, { replace: true });
     }
   }, [user, profile, loading, navigate]);

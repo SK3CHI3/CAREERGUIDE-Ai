@@ -12,17 +12,17 @@ const DotLottieReact = lazy(() => import("@lottiefiles/dotlottie-react").then(mo
 const Hero = () => {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
-  const [selectedRole, setSelectedRole] = useState<"student" | "teacher" | null>(null);
+  const [selectedRole, setSelectedRole] = useState<"student" | "mentor" | null>(null);
   const [showRoleOptions, setShowRoleOptions] = useState(true);
 
   const dashboardPath =
     user && profile
       ? getDashboardPathForRole(
-        profile.role as "student" | "admin" | "teacher"
+        profile.role as "student" | "admin" | "mentor"
       )
       : "/student";
 
-  const handleRoleSelect = (role: "student" | "teacher") => {
+  const handleRoleSelect = (role: "student" | "mentor") => {
     setSelectedRole(role);
     setShowRoleOptions(false);
   };
@@ -90,11 +90,11 @@ const Hero = () => {
                   <Button
                     size="lg"
                     className="w-full sm:w-auto bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow h-14 sm:h-16 text-base sm:text-lg px-4 sm:px-8 font-bold"
-                    onClick={() => handleRoleSelect("teacher")}
+                    onClick={() => handleRoleSelect("mentor")}
                   >
                     <BookOpen className="w-5 h-5 mr-1.5 sm:mr-2 flex-shrink-0" />
-                    <span className="hidden sm:inline">I'm a Teacher</span>
-                    <span className="sm:hidden">Teacher</span>
+                    <span className="hidden sm:inline">I'm a Mentor</span>
+                    <span className="sm:hidden">Mentor</span>
                   </Button>
                   <Button
                     variant="outline"

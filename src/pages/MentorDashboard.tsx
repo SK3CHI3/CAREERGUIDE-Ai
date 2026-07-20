@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { classService, type ClassRecord } from '@/lib/class-service'
-import CreateClass from '@/components/teacher/CreateClass'
+import CreateClass from '@/components/mentor/CreateClass'
 import PaymentWall from '@/components/PaymentWall'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -16,7 +16,7 @@ import { useToast } from '@/hooks/use-toast'
 import { ThemeToggle } from '@/components/ThemeToggle'
 
 
-const TeacherDashboard: React.FC = () => {
+const MentorDashboard: React.FC = () => {
   const navigate = useNavigate()
   const { user, profile, signOut } = useAuth()
   const { toast } = useToast()
@@ -56,7 +56,7 @@ const TeacherDashboard: React.FC = () => {
   useEffect(() => { loadData() }, [loadData])
 
   const initials = (name: string | null) =>
-    name ? name.split(' ').map((w) => w[0]).join('').toUpperCase().slice(0, 2) : 'T'
+    name ? name.split(' ').map((w) => w[0]).join('').toUpperCase().slice(0, 2) : 'M'
 
   const totalStudents = Object.values(classCounts).reduce((a, b) => a + b, 0)
 
@@ -97,7 +97,7 @@ const TeacherDashboard: React.FC = () => {
                 <AvatarFallback className="text-xs">{initials(profile?.full_name ?? null)}</AvatarFallback>
               </Avatar>
               <span className="text-sm text-foreground hidden md:block">{profile?.full_name ?? user?.email}</span>
-              <Badge variant="secondary">Teacher</Badge>
+              <Badge variant="secondary">Mentor</Badge>
               <Button variant="ghost" size="icon" onClick={() => signOut()} title="Sign out">
                 <LogOut className="w-4 h-4" />
               </Button>
@@ -109,8 +109,8 @@ const TeacherDashboard: React.FC = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Teacher Dashboard</h1>
-            <p className="text-foreground-muted text-sm mt-1">Guide students in making better career choices</p>
+            <h1 className="text-2xl font-bold text-foreground">Mentor Dashboard</h1>
+            <p className="text-foreground-muted text-sm mt-1">Help guide students in making better career choices</p>
           </div>
           {user && (
             <CreateClass
@@ -168,7 +168,7 @@ const TeacherDashboard: React.FC = () => {
                   <div
                     key={cls.id}
                     className="p-4 rounded-xl bg-muted/30 border border-card-border hover:border-primary/40 hover:shadow-md transform hover:-translate-y-0.5 cursor-pointer transition-all group"
-                    onClick={() => navigate(`/teacher/class/${cls.id}`)}
+                    onClick={() => navigate(`/mentor/class/${cls.id}`)}
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="w-9 h-9 rounded-lg bg-gradient-primary flex items-center justify-center">
@@ -194,7 +194,7 @@ const TeacherDashboard: React.FC = () => {
                         variant="ghost"
                         size="sm"
                         className="flex-1 justify-start gap-1.5 h-8 px-2 text-xs text-foreground-muted hover:text-foreground hover:bg-muted/50"
-                        onClick={(e) => { e.stopPropagation(); navigate(`/teacher/class/${cls.id}?tab=students`) }}
+                        onClick={(e) => { e.stopPropagation(); navigate(`/mentor/class/${cls.id}?tab=students`) }}
                       >
                         <Users className="w-3.5 h-3.5" />
                         {classCounts[cls.id] ?? 0} students
@@ -203,7 +203,7 @@ const TeacherDashboard: React.FC = () => {
                         variant="ghost"
                         size="sm"
                         className="flex-1 justify-start gap-1.5 h-8 px-2 text-xs text-foreground-muted hover:text-primary hover:bg-primary/10"
-                        onClick={(e) => { e.stopPropagation(); navigate(`/teacher/class/${cls.id}?tab=upload`) }}
+                        onClick={(e) => { e.stopPropagation(); navigate(`/mentor/class/${cls.id}?tab=upload`) }}
                       >
                         <FileSpreadsheet className="w-3.5 h-3.5" />
                         Upload grades
@@ -220,4 +220,4 @@ const TeacherDashboard: React.FC = () => {
   )
 }
 
-export default TeacherDashboard
+export default MentorDashboard

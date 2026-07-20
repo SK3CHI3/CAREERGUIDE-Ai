@@ -8,7 +8,7 @@ const CallingCard = () => {
     const features = [
         "Personalized AI Career Roster",
         "Institutional Analytics Dashboard",
-        "Teacher-Student Management System",
+        "Mentor-Student Guidance System",
         "Priority Support & Strategy",
         "Customizable CBE Pathways"
     ];

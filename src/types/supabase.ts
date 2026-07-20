@@ -1201,7 +1201,7 @@ export type Database = {
     }
     Enums: {
       assessment_type: "personality" | "skills" | "interests" | "comprehensive"
-      user_role: "student" | "admin" | "school" | "teacher"
+      user_role: "student" | "admin" | "school" | "mentor"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1330,7 +1330,7 @@ export const Constants = {
   public: {
     Enums: {
       assessment_type: ["personality", "skills", "interests", "comprehensive"],
-      user_role: ["student", "admin", "school", "teacher"],
+      user_role: ["student", "admin", "school", "mentor"],
     },
   },
 } as const

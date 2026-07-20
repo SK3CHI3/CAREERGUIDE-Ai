@@ -526,10 +526,10 @@ const GradesManager = ({ onGradesUpdated, readOnly = false }: GradesManagerProps
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="teacher_comment">Teacher Comment (Optional)</Label>
+                  <Label htmlFor="teacher_comment">Mentor Comment (Optional)</Label>
                   <Textarea
                     {...form.register('teacher_comment')}
-                    placeholder="Any additional comments from your teacher..."
+                    placeholder="Any additional comments from your mentor..."
                     rows={3}
                   />
                 </div>

@@ -16,7 +16,7 @@ interface Profile {
   phone: string | null
   full_name: string | null
   avatar_url: string | null
-  role: 'student' | 'admin' | 'teacher'
+  role: 'student' | 'admin' | 'mentor'
   school_id?: string | null
   school_level?: 'primary' | 'secondary' | 'tertiary'
   current_grade?: string

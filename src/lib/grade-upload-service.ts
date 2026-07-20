@@ -325,7 +325,7 @@ class GradeUploadService {
         // Invalidate cache for all students whose grades were updated
         const uniqueUserIds = new Set(validRows.map(r => r.student_user_id).filter(Boolean))
         uniqueUserIds.forEach(id => {
-            if (id) aiCacheService.invalidateCache(id, classId, 'teacher')
+            if (id) aiCacheService.invalidateCache(id, classId, 'mentor')
         })
 
         return { created, updated, errors, batchId }
@@ -369,7 +369,7 @@ class GradeUploadService {
                 .from('student_grades')
                 .upsert(payload, { onConflict: 'user_id,subject_name,term,academic_year,exam_type' })
             if (error) throw new Error(error.message)
-            aiCacheService.invalidateCache(identifier.user_id, teacherId, 'teacher')
+            aiCacheService.invalidateCache(identifier.user_id, teacherId, 'mentor')
         } else {
             const { error } = await supabase.from('student_grades').insert(payload)
             if (error) throw new Error(error.message)
