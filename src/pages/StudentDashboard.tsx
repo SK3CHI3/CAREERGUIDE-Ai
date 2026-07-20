@@ -733,12 +733,12 @@ const StudentDashboard = () => {
           </div>
         )}
 
-        <div className="mb-4 sm:mb-6">
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground flex items-center gap-2 sm:gap-3">
+        <div className="mb-4 sm:mb-6 hidden sm:block">
+          <h2 className="text-2xl lg:text-3xl font-bold text-foreground flex items-center gap-3">
             <span>Welcome, {profile?.full_name?.split(' ')[0] || 'Student'}</span>
-            <span className="animate-bounce text-lg sm:text-2xl">👋</span>
+            <span className="animate-bounce text-2xl">👋</span>
           </h2>
-          <p className="text-sm sm:text-base text-muted-foreground mt-1 hidden sm:block">
+          <p className="text-base text-muted-foreground mt-1">
             Continue your career discovery journey and unlock your potential.
           </p>
         </div>
