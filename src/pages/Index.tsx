@@ -24,7 +24,7 @@ const Index = () => {
   // Redirect if already authenticated
   useEffect(() => {
     if (!loading && user && profile) {
-      const dashboardPath = getDashboardPathForRole(profile.role as "student" | "admin" | "school" | "mentor");
+      const dashboardPath = getDashboardPathForRole(profile.role as "student" | "admin" | "mentor");
       navigate(dashboardPath, { replace: true });
     }
   }, [user, profile, loading, navigate]);
@@ -91,7 +91,7 @@ const Index = () => {
                 "@type": "Organization",
                 "name": "CareerGuide AI"
               },
-              "description": "Professional AI-driven mapping of school results to university degrees and global career paths."
+              "description": "Professional AI-driven mapping of academic results to university degrees and global career paths."
             }
           ])}
         </script>

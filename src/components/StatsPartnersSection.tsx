@@ -50,12 +50,12 @@ const StatsPartnersSection = () => {
                 </div>
               </div>
 
-              {/* Card 2 - Partner Institutions */}
+              {/* Card 2 - Mentors Supporting */}
               <div className="group relative rounded-2xl overflow-hidden bg-surface/50 border border-card-border hover:border-primary/30 hover:shadow-glow transition-all duration-500">
                 <div className="relative h-48 overflow-hidden">
                   <img
-                    src="/images/institutions.webp"
-                    alt="Partner Institutions"
+                    src="/images/mentors.webp"
+                    alt="Mentors"
                     width="400"
                     height="192"
                     loading="lazy"
@@ -64,15 +64,15 @@ const StatsPartnersSection = () => {
                   {/* Blue gradient overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/40 to-transparent" />
                   <div className="absolute bottom-4 left-4">
-                    <div className="text-4xl font-bold text-foreground drop-shadow-lg">15+</div>
+                    <div className="text-4xl font-bold text-foreground drop-shadow-lg">25K+</div>
                   </div>
                 </div>
 
                 {/* Content */}
                 <div className="p-6">
-                  <div className="text-sm font-semibold text-primary uppercase tracking-wide mb-2">PARTNER INSTITUTIONS</div>
+                  <div className="text-sm font-semibold text-primary uppercase tracking-wide mb-2">MENTORS SUPPORTING</div>
                   <p className="text-foreground-muted text-sm">
-                    Collaborating with government bodies and educational organizations
+                    Parents, guardians, and community members guiding students through career decisions
                   </p>
                 </div>
               </div>
