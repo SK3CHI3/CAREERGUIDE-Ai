@@ -29,15 +29,18 @@ const CounselorBookingSection = () => {
           {/* LEFT: Visual */}
           <div className="relative order-2 md:order-1">
             <Card className="bg-gradient-to-br from-card to-card/80 border-card-border/60 shadow-2xl overflow-hidden">
+              {/* Image representing career counseling */}
               <div className="h-48 sm:h-56 bg-gradient-to-br from-primary/10 via-blue-500/10 to-purple-500/10 flex items-center justify-center relative">
                 {/* Logo watermark */}
                 <div className="absolute inset-0 flex items-center justify-center opacity-[0.04]">
                   <img src="/logos/CareerGuide_Logo.webp" alt="" className="w-48 h-auto" />
                 </div>
-                {/* Main icon */}
-                <div className="relative w-24 h-24 sm:w-28 sm:h-28 bg-gradient-primary rounded-3xl flex items-center justify-center shadow-2xl shadow-primary/30">
-                  <Video className="w-12 h-12 sm:w-14 sm:h-14 text-primary-foreground" />
-                </div>
+                {/* Career counseling image */}
+                <img 
+                  src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" 
+                  alt="Career counseling session" 
+                  className="w-full h-full object-cover"
+                />
               </div>
 
               <div className="p-6 sm:p-8">
@@ -47,52 +50,46 @@ const CounselorBookingSection = () => {
                 </div>
 
                 <div className="space-y-4">
-                  {/* Career Path Planning Card */}
-                  <div className="flex items-center gap-4 p-3 rounded-xl bg-muted/30 border border-card-border/40">
-                    <div className="w-16 h-16 bg-gradient-primary/10 rounded-lg flex items-center justify-center">
+                  {/* Career Path Planning */}
+                  <div className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-card-border/40">
+                    <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center">
                         <Clock className="w-4 h-4 text-primary-foreground" />
                       </div>
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">Career Path Planning</p>
+                        <p className="text-[10px] text-muted-foreground">45 min</p>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-semibold text-foreground">Career Path Planning</p>
-                      <p className="text-[10px] text-muted-foreground">45 min</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-bold text-foreground">KSh 1,500</p>
-                    </div>
+                    <p className="text-sm font-bold text-foreground">KSh 1,500</p>
                   </div>
 
-                  {/* University Guidance Card */}
-                  <div className="flex items-center gap-4 p-3 rounded-xl bg-muted/30 border border-card-border/40">
-                    <div className="w-16 h-16 bg-gradient-primary/10 rounded-lg flex items-center justify-center">
+                  {/* University Guidance */}
+                  <div className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-card-border/40">
+                    <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center">
                         <BookOpen className="w-4 h-4 text-primary-foreground" />
                       </div>
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">University Guidance</p>
+                        <p className="text-[10px] text-muted-foreground">30 min</p>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-semibold text-foreground">University Guidance</p>
-                      <p className="text-[10px] text-muted-foreground">30 min</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-bold text-foreground">KSh 1,000</p>
-                    </div>
+                    <p className="text-sm font-bold text-foreground">KSh 1,000</p>
                   </div>
 
-                  {/* Subject Selection Card */}
-                  <div className="flex items-center gap-4 p-3 rounded-xl bg-muted/30 border border-card-border/40">
-                    <div className="w-16 h-16 bg-gradient-primary/10 rounded-lg flex items-center justify-center">
+                  {/* Subject Selection */}
+                  <div className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-card-border/40">
+                    <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center">
                         <GraduationCap className="w-4 h-4 text-primary-foreground" />
                       </div>
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">Subject Selection</p>
+                        <p className="text-[10px] text-muted-foreground">30 min</p>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-semibold text-foreground">Subject Selection</p>
-                      <p className="text-[10px] text-muted-foreground">30 min</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-bold text-foreground">KSh 800</p>
-                    </div>
+                    <p className="text-sm font-bold text-foreground">KSh 800</p>
                   </div>
                 </div>
               </div>
