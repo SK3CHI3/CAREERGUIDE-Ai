@@ -1,20 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { ArrowRight, Video, Shield, Clock, Users, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Video, Shield, Clock, Users, CheckCircle2, BookOpen, GraduationCap } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 const CounselorBookingSection = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-
-  const features = [
-    { icon: Shield, text: "Verified professional counselors" },
-    { icon: Clock, text: "Flexible scheduling" },
-    { icon: Video, text: "Secure video calls" },
-    { icon: Users, text: "Personalized career roadmap" },
-  ];
 
   const handleCTA = () => {
     if (user) {
@@ -54,22 +46,54 @@ const CounselorBookingSection = () => {
                   <span className="text-sm font-semibold text-green-600">Counselors Available</span>
                 </div>
 
-                <div className="space-y-3">
-                  {[
-                    { name: "Career Path Planning", time: "45 min", rate: "KSh 1,500" },
-                    { name: "University Guidance", time: "30 min", rate: "KSh 1,000" },
-                    { name: "Subject Selection", time: "30 min", rate: "KSh 800" },
-                  ].map((session, i) => (
-                    <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-card-border/40">
-                      <div>
-                        <p className="text-sm font-semibold text-foreground">{session.name}</p>
-                        <p className="text-[10px] text-muted-foreground">{session.time}</p>
+                <div className="space-y-4">
+                  {/* Career Path Planning Card */}
+                  <div className="flex items-center gap-4 p-3 rounded-xl bg-muted/30 border border-card-border/40">
+                    <div className="w-16 h-16 bg-gradient-primary/10 rounded-lg flex items-center justify-center">
+                      <div className="w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center">
+                        <Clock className="w-4 h-4 text-primary-foreground" />
                       </div>
-                      <Badge variant="outline" className="text-primary border-primary/20 bg-primary/5 text-[10px]">
-                        {session.rate}
-                      </Badge>
                     </div>
-                  ))}
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-foreground">Career Path Planning</p>
+                      <p className="text-[10px] text-muted-foreground">45 min</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-bold text-foreground">KSh 1,500</p>
+                    </div>
+                  </div>
+
+                  {/* University Guidance Card */}
+                  <div className="flex items-center gap-4 p-3 rounded-xl bg-muted/30 border border-card-border/40">
+                    <div className="w-16 h-16 bg-gradient-primary/10 rounded-lg flex items-center justify-center">
+                      <div className="w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center">
+                        <BookOpen className="w-4 h-4 text-primary-foreground" />
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-foreground">University Guidance</p>
+                      <p className="text-[10px] text-muted-foreground">30 min</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-bold text-foreground">KSh 1,000</p>
+                    </div>
+                  </div>
+
+                  {/* Subject Selection Card */}
+                  <div className="flex items-center gap-4 p-3 rounded-xl bg-muted/30 border border-card-border/40">
+                    <div className="w-16 h-16 bg-gradient-primary/10 rounded-lg flex items-center justify-center">
+                      <div className="w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center">
+                        <GraduationCap className="w-4 h-4 text-primary-foreground" />
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-foreground">Subject Selection</p>
+                      <p className="text-[10px] text-muted-foreground">30 min</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-bold text-foreground">KSh 800</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </Card>
@@ -90,10 +114,6 @@ const CounselorBookingSection = () => {
 
           {/* RIGHT: Content */}
           <div className="order-1 md:order-2">
-            <Badge variant="outline" className="mb-4 text-primary border-primary/20 bg-primary/5">
-              Professional Guidance
-            </Badge>
-
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4 leading-tight">
               Book a Live
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600"> Career Call</span>
@@ -105,14 +125,30 @@ const CounselorBookingSection = () => {
             </p>
 
             <div className="space-y-3 mb-8">
-              {features.map((feature, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <CheckCircle2 className="w-4 h-4 text-primary" />
-                  </div>
-                  <span className="text-sm sm:text-base font-medium text-foreground">{feature.text}</span>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <CheckCircle2 className="w-4 h-4 text-primary" />
                 </div>
-              ))}
+                <span className="text-sm sm:text-base font-medium text-foreground">Verified professional counselors</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <CheckCircle2 className="w-4 h-4 text-primary" />
+                </div>
+                <span className="text-sm sm:text-base font-medium text-foreground">Flexible scheduling</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <CheckCircle2 className="w-4 h-4 text-primary" />
+                </div>
+                <span className="text-sm sm:text-base font-medium text-foreground">Secure video calls</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <CheckCircle2 className="w-4 h-4 text-primary" />
+                </div>
+                <span className="text-sm sm:text-base font-medium text-foreground">Personalized career roadmap</span>
+              </div>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3">
