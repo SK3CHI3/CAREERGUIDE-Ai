@@ -99,9 +99,9 @@ const ReportPaywall = forwardRef<ReportPaywallHandle, ReportPaywallProps>(({ onP
     setError(null);
 
     try {
-      // Create a unique, searchable reference for manual recovery
+      // Create a unique reference for quick assessment payment tracking
       const sanitizedName = studentName?.replace(/[^a-zA-Z0-9]/g, '').slice(0, 10) || 'GUEST';
-      const recoveryRef = `REP_${sanitizedName}_${Date.now().toString().slice(-6)}`;
+      const recoveryRef = `QA_${sanitizedName}_${Date.now().toString().slice(-6)}`;
 
       intaSendInstance.run({
         amount: PAYMENT_AMOUNT,

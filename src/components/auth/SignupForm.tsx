@@ -17,6 +17,8 @@ const signupSchema = z.object({
   role: z.enum(['student', 'mentor']),
   password: z.string().min(6, 'Password must be at least 6 characters'),
   confirmPassword: z.string(),
+  mentorStudentCount: z.enum(['1-5', '6-20', '21-50', '50+']).optional(),
+  mentorType: z.enum(['individual', 'classroom', 'school', 'organization']).optional(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
@@ -72,7 +74,12 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode, defaultRol
         finalEmail = `${cleanUPI.toLowerCase()}@student.careerguideai.co.ke`;
       }
 
-      const { error } = await signUp(finalEmail || '', data.password, data.fullName, data.upiOrPhone, data.role)
+      const mentorData = data.role === 'mentor' ? {
+        studentCount: data.mentorStudentCount,
+        mentorType: data.mentorType,
+      } : undefined;
+
+      const { error } = await signUp(finalEmail || '', data.password, data.fullName, data.upiOrPhone, data.role, mentorData)
 
       if (error) {
         setError(error.message)
@@ -176,19 +183,81 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode, defaultRol
           </div>
 
           {selectedRole === 'mentor' && (
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="Enter your email"
-                {...register('email')}
-                disabled={isLoading}
-              />
-              {errors.email && (
-                <p className="text-sm text-destructive">{errors.email.message}</p>
-              )}
-            </div>
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  {...register('email')}
+                  disabled={isLoading}
+                />
+                {errors.email && (
+                  <p className="text-sm text-destructive">{errors.email.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-3">
+                <Label>How many students do you plan to guide?</Label>
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { value: '1-5' as const, label: '1-5 students', desc: 'Individual mentoring' },
+                    { value: '6-20' as const, label: '6-20 students', desc: 'Small group/class' },
+                    { value: '21-50' as const, label: '21-50 students', desc: 'Multiple classes' },
+                    { value: '50+' as const, label: '50+ students', desc: 'School-wide' },
+                  ].map(option => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => setValue('mentorStudentCount', option.value)}
+                      className={`p-4 rounded-xl border-2 text-left transition-all ${
+                        watch('mentorStudentCount') === option.value
+                          ? 'border-primary bg-primary/5'
+                          : 'border-card-border hover:border-primary/40'
+                      }`}
+                      disabled={isLoading}
+                    >
+                      <p className="font-semibold text-sm">{option.label}</p>
+                      <p className="text-[10px] text-muted-foreground">{option.desc}</p>
+                    </button>
+                  ))}
+                </div>
+                {errors.mentorStudentCount && (
+                  <p className="text-sm text-destructive">{errors.mentorStudentCount.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-3">
+                <Label>What best describes your role?</Label>
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { value: 'individual' as const, label: 'Individual Mentor', icon: '👤' },
+                    { value: 'classroom' as const, label: 'Classroom Teacher', icon: '👨‍🏫' },
+                    { value: 'school' as const, label: 'School Coordinator', icon: '🏫' },
+                    { value: 'organization' as const, label: 'Organization Leader', icon: '🏢' },
+                  ].map(option => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => setValue('mentorType', option.value)}
+                      className={`p-4 rounded-xl border-2 text-left transition-all ${
+                        watch('mentorType') === option.value
+                          ? 'border-primary bg-primary/5'
+                          : 'border-card-border hover:border-primary/40'
+                      }`}
+                      disabled={isLoading}
+                    >
+                      <span className="text-2xl">{option.icon}</span>
+                      <p className="font-semibold text-sm mt-2">{option.label}</p>
+                    </button>
+                  ))}
+                </div>
+                {errors.mentorType && (
+                  <p className="text-sm text-destructive">{errors.mentorType.message}</p>
+                )}
+              </div>
+            </>
           )}
 
           <div className="space-y-2">

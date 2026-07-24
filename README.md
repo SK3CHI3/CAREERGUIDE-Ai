@@ -13,7 +13,7 @@
 - **💬 AI Career Chat** — Full-page conversational counselor for subject choices, university paths, and job market questions
 - **📈 Academic Tracking** — Grade management with automatic career match recalculation
 - **🎓 Career Directory** — 500+ career paths with salaries, growth, and education requirements for Kenya
-- **👩‍🏫 Teacher Dashboard** — Tools for teachers to guide students' career decisions
+- **👩‍🏫 Mentor Dashboard** — Tools for mentors to guide students' career decisions
 - **👨‍⚕️ Counselor Access** — Book 1-on-1 sessions with verified professional counselors
 
 ## 🚀 Quick Start
@@ -33,14 +33,16 @@ npm run dev
 | `VITE_SUPABASE_URL` | Supabase project URL |
 | `VITE_SUPABASE_ANON_KEY` | Supabase public key |
 | `VITE_DEEPSEEK_API_KEY` | DeepSeek API key for AI features |
+| `VITE_INTASEND_PUBLIC_KEY` | IntaSend public key for payments |
+| `VITE_INTASEND_LIVE` | Boolean indicating if live mode is enabled |
 
 ## 🛠 Tech Stack
 
-**Frontend:** React 19 · TypeScript · Vite 8 · Tailwind CSS 4 · shadcn/ui  
-**Backend:** Supabase (PostgreSQL + Auth + RLS + Storage)  
-**AI:** DeepSeek V3.1 (streaming chat + JSON recommendations)  
-**Charts:** Recharts (pie, radar, bar)  
-**Payments:** IntaSend (M-Pesa)  
+**Frontend:** React 19 · TypeScript · Vite 8 · Tailwind CSS 4 · shadcn/ui
+**Backend:** Supabase (PostgreSQL + Auth + RLS + Storage)
+**AI:** DeepSeek V3.1 (streaming chat + JSON recommendations)
+**Charts:** Recharts (pie, radar, bar)
+**Payments:** IntaSend (M-Pesa)
 **Deploy:** Netlify
 
 ## 📱 Screenshots
@@ -55,6 +57,8 @@ npm run dev
 - [Developer Guide](docs/DEVELOPER.md) — Contributing and local development setup
 - [Security](docs/SECURITY.md) — Authentication, RLS policies, and data protection
 - [Deployment](docs/NETLIFY_DEPLOYMENT.md) — Production deployment and CI/CD
+- [IntaSend Integration](docs/INTASEND_INTEGRATION.md) — Payment processing with M-Pesa and credit cards
+- [Career Guidance Flow](docs/CAREER_GUIDANCE_FLOW.md) — Complete user journey from assessment to career planning
 
 ## 💰 Pricing
 

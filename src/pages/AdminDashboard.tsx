@@ -19,7 +19,8 @@ import {
   MessageCircle, CheckCircle2, Bug, Lightbulb, HelpCircle,
   LayoutDashboard, Settings, Bell, Menu, X, ChevronRight,
   Database, LineChart, PieChart as PieChartIcon,
-  MessageSquarePlus, FileText, Briefcase, Calendar
+  MessageSquarePlus, FileText, Briefcase, Calendar,
+  Video, CreditCard
 } from 'lucide-react'
 import BrandedLoader from '@/components/BrandedLoader'
 import { supabase } from '@/lib/supabase'
@@ -43,6 +44,12 @@ interface AdminStats {
   }[]
   subscriptionBreakdown: { name: string; value: number; color: string }[]
   totalRevenue: number
+  quickAssessmentRevenue: number
+  quickAssessmentCount: number
+  counselorSessionRevenue: number
+  counselorSessionCount: number
+  subscriptionRevenue: number
+  subscriptionCount: number
   globalActivities: any[]
 }
 
@@ -174,10 +181,26 @@ const AdminDashboard = () => {
         supabase.from('schools').select('id', { count: 'exact', head: true }),
         supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'mentor'),
         supabase.from('user_activities').select('id', { count: 'exact', head: true }).in('activity_type', ['assessment', 'riasec_assessment']),
-        supabase.from('payments').select('amount').eq('status', 'completed')
+        supabase.from('payments').select('amount, payment_type').eq('status', 'completed')
       ])
 
       const totalRevenue = (paymentsData ?? []).reduce((sum: number, p: any) => sum + Number(p.amount), 0)
+
+      // Payment type breakdown
+      const paymentBreakdown = (paymentsData ?? []).reduce((acc: Record<string, { count: number; total: number }>, p: any) => {
+        const type = p.payment_type || 'subscription'
+        if (!acc[type]) acc[type] = { count: 0, total: 0 }
+        acc[type].count += 1
+        acc[type].total += Number(p.amount)
+        return acc
+      }, {})
+
+      const quickAssessmentRevenue = paymentBreakdown?.quick_assessment?.total || 0
+      const quickAssessmentCount = paymentBreakdown?.quick_assessment?.count || 0
+      const counselorSessionRevenue = paymentBreakdown?.counselor_session?.total || 0
+      const counselorSessionCount = paymentBreakdown?.counselor_session?.count || 0
+      const subscriptionRevenue = paymentBreakdown?.subscription?.total || 0
+      const subscriptionCount = paymentBreakdown?.subscription?.count || 0
 
       const { data: allProfiles } = await supabase
         .from('profiles')
@@ -290,6 +313,12 @@ const AdminDashboard = () => {
         recentUsers,
         subscriptionBreakdown,
         totalRevenue,
+        quickAssessmentRevenue,
+        quickAssessmentCount,
+        counselorSessionRevenue,
+        counselorSessionCount,
+        subscriptionRevenue,
+        subscriptionCount,
         globalActivities: globalActivities ?? []
       })
 
@@ -637,14 +666,68 @@ const AdminDashboard = () => {
                       trend="+85"
                       description="Unique RIASEC and Interest tests completed."
                     />
-                    <StatCard 
-                      label="Platform Value" 
-                      value={`KES ${stats.totalRevenue.toLocaleString()}`} 
-                      icon={TrendingUp} 
-                      color="#fbbf24" 
+                    <StatCard
+                      label="Platform Value"
+                      value={`KES ${stats.totalRevenue.toLocaleString()}`}
+                      icon={TrendingUp}
+                      color="#fbbf24"
                       trend="+18%"
                       description="Estimated ecosystem value based on activity."
                     />
+                  </div>
+
+                  {/* Revenue Breakdown */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Card className="bg-gradient-to-br from-blue-500/10 to-blue-600/5 border-blue-500/20 shadow-sm">
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm flex items-center gap-2 text-foreground">
+                          <FileText className="w-4 h-4 text-blue-500" />
+                          Quick Assessments
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-2xl font-bold text-foreground">
+                          KES {stats.quickAssessmentRevenue.toLocaleString()}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {stats.quickAssessmentCount} assessments @ KES 50 each
+                        </p>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="bg-gradient-to-br from-green-500/10 to-green-600/5 border-green-500/20 shadow-sm">
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm flex items-center gap-2 text-foreground">
+                          <Video className="w-4 h-4 text-green-500" />
+                          Counselor Sessions
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-2xl font-bold text-foreground">
+                          KES {stats.counselorSessionRevenue.toLocaleString()}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {stats.counselorSessionCount} sessions booked
+                        </p>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="bg-gradient-to-br from-purple-500/10 to-purple-600/5 border-purple-500/20 shadow-sm">
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm flex items-center gap-2 text-foreground">
+                          <CreditCard className="w-4 h-4 text-purple-500" />
+                          Subscriptions
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-2xl font-bold text-foreground">
+                          KES {stats.subscriptionRevenue.toLocaleString()}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {stats.subscriptionCount} active subscriptions
+                        </p>
+                      </CardContent>
+                    </Card>
                   </div>
 
                   {/* Charts Grid */}

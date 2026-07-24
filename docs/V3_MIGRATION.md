@@ -16,19 +16,21 @@ V3 removes the school system entirely and restructures the platform around two c
 - 4 school user accounts and 1 school record from the database
 
 ### Reworked
-- **SignupForm** — Now offers Student and Teacher (instead of Student and School)
-- **Hero** — Landing page CTA buttons changed from Student/School to Student/Teacher
-- **TeacherDashboard** — Removed school_id dependency; teachers create independent classes
+- **SignupForm** — Now offers Student and Mentor (instead of Student and School)
+- **Hero** — Landing page CTA buttons changed from Student/School to Student/Mentor
+- **MentorDashboard** — Removed school_id dependency; mentors create independent classes
 - **ClassService** — `school_id` parameter removed from `createClass()`
 - **SubscriptionService** — Removed institutional subscription check path
 - **PaymentWall** — Removed school-based per-student pricing
 - **Dashboard redirect** — Removed school case
+- **Mentor Role** — Renamed "Teacher" role to "Mentor" to include parents/guardians guiding students
 
 ### New
 - **`/student/chat` route** — Full-page AI career chat with improved response parsing
 - **`StudentChatPage.tsx`** — Dedicated full-page chat component with markdown rendering
 - **`TrialActivationModal.tsx`** — Modal replacing the inline trial banner
 - **Dashboard chat tab** — Now links to full-page `/student/chat` instead of embedded component
+- **Counselor Booking System** — New feature allowing students to book 1-on-1 sessions with verified professional counselors
 
 ### Bug Fixes
 - Replaced `window.location.href` with `navigate()` in 6 locations:

@@ -9,7 +9,7 @@ The platform manages three primary payment tracks:
 | Category | Target | Price | Frequency | Description |
 | :--- | :--- | :--- | :--- | :--- |
 | **Individual Pro** | Students/Parents | **KES 499** | Termly | Full access to AI assessments and reports. |
-| **Institutional** | Schools | **KES 100** / student | Termly | Management dashboard for teachers and student roster. |
+| **Institutional** | Schools | **KES 100** / student | Termly | Management dashboard for mentors and student roster. |
 | **Counselor Sessions**| Students | **Variable** | Per Session | Direct booking with verified career experts (KES 500 - 3,000). |
 
 ### Billing Logistics
@@ -25,6 +25,11 @@ The platform manages three primary payment tracks:
 Students can book 1-on-1 video calls with verified career experts.
 - **Pricing**: Set by individual counselors (Admin approved).
 - **Payment**: Processed upfront via the Counselor Directory.
+- **Session Types**: 
+  - Career Path Planning: KSh 1,500 (45 min)
+  - University Guidance: KSh 1,000 (30 min)
+  - Subject Selection: KSh 800 (30 min)
+- **Integration**: Uses the existing IntaSend payment infrastructure with BOOK_ prefixed references
 
 ### B. Career Field Day Requests
 Schools and student groups can request organized industrial visits.
@@ -50,3 +55,7 @@ Developers should maintain these values in the following locations:
 - **School Pricing**: `src/lib/school-service.ts` -> `PRICE_PER_STUDENT_PER_TERM`
 - **Student Pricing**: `src/components/PaymentWall.tsx` -> `pricingInfo` state
 - **Counselor Rates**: Managed via `counselor_profiles` table in Supabase.
+- **Payment References**: 
+  - Individual subscriptions: PAY_{userId}_{timestamp}
+  - Quick assessments: QA_{userName}_{timestamp}
+  - Counselor sessions: BOOK_{studentId}_{counselorId}_{timestamp}

@@ -11,7 +11,7 @@ CareerPath AI is a modern SaaS platform built with:
 ## 2. Core Technical Decisions
 
 ### 2.1. "Realistic Triangulation" Engine
-The primary differentiator of this platform is the triangulation logic. 
+The primary differentiator of this platform is the triangulation logic.
 - **The Problem**: Career tools often rely on naive interest matching, ignoring real-world constraints.
 - **The Solution**: A synthesis of four data dimensions:
     - **Psychometric**: RIASEC (Holland Codes) personality types.
@@ -37,6 +37,25 @@ The primary differentiator of this platform is the triangulation logic.
 ### 2.5. Data Modeling (PostgreSQL)
 - **JSONB Usage**: We use JSONB for `assessment_results` to allow the personality framework to evolve (e.g., adding DISC or Big Five later) without schema migrations.
 - **Relational Integrity**: Traditional tables for `classes`, `enrollments`, and `student_grades` ensure strict data consistency for academic records.
+
+### 2.6. Counselor Booking System
+- **Architecture**: A new component-based system for booking 1-on-1 career counseling sessions.
+- **Components**: 
+  - `CounselorBookingSection.tsx` - Main marketing section for counselor bookings
+  - `CounselorCard.tsx` - Individual counselor display
+  - `BookingModal.tsx` - Session scheduling modal
+- **Integration**: Uses existing IntaSend payment infrastructure with BOOK_ prefixed references
+- **Database**: Creates entries in `counselor_sessions` table linking students and counselors
+
+### 2.7. Mentor Role System
+- **Architecture**: Implemented mentor role to replace teacher role, expanding scope to include parents and guardians
+- **Components**: 
+  - `MentorDashboard.tsx` - Dashboard for mentors managing students
+  - `SignupForm.tsx` - Updated registration form to include mentor-specific fields
+  - `StudentInsightDialog.tsx` - Mentor-focused career insights
+- **Database**: Extended `profiles` table with `mentor_student_count` and `mentor_type` fields
+- **Services**: Modified `class-service.ts` to work with mentor IDs instead of teacher IDs
+- **Authentication**: Updated `AuthContext.tsx` to recognize mentor role
 
 ## 3. Development Guidelines
 - **Modern Typography**: Always use Google Fonts (Inter/Outfit) for a premium feel.

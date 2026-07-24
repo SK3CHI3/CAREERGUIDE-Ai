@@ -21,6 +21,8 @@ A dedicated `payments` table acts as the source of truth for all financial trans
 - `amount`: KES value
 - `status`: 'completed' or 'failed'
 - `intasend_transaction_id`: External reference
+- `payment_type`: 'subscription', 'quick_assessment', or 'counselor_session'
+- `api_ref`: Reference for tracking (starts with 'PAY_', 'QA_', or 'BOOK_')
 - `payload`: Full JSON payload from IntaSend for auditing
 
 ### 2. Components Created
@@ -105,6 +107,25 @@ The platform aligns access with the Kenyan academic calendar:
 - Monitor payment processing times
 - Log payment events for debugging
 - Set up alerts for payment failures
+
+### 11. Payment Types
+
+The system supports three distinct payment types:
+
+1. **Subscription Payments** (prefix: `PAY_`)
+   - Used for individual student subscriptions
+   - Amount: KSh 499 per term
+   - Reference format: `PAY_{userId}_{timestamp}`
+
+2. **Quick Assessment Payments** (prefix: `QA_`)
+   - Used for one-time diagnostic assessments
+   - Amount: KSh 50
+   - Reference format: `QA_{userName}_{timestamp}`
+
+3. **Counselor Session Payments** (prefix: `BOOK_`)
+   - Used for booking 1-on-1 career counseling sessions
+   - Amount varies by session type (KSh 800-1500)
+   - Reference format: `BOOK_{studentId}_{counselorId}_{timestamp}`
 
 ## Getting Started
 
