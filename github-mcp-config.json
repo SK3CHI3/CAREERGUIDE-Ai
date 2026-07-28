@@ -1,7 +1,0 @@
-{
-  "github": {
-    "token": "YOUR_GITHUB_PERSONAL_ACCESS_TOKEN",
-    "hostname": "api.github.com",
-    "repository": "SK3CHI3/CAREERGUIDE-Ai"
-  }
-}

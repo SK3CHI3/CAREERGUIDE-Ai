@@ -150,14 +150,12 @@ const Hero = () => {
               aria-hidden="true"
             >
               <div className="aspect-[4/3] w-full flex items-center justify-center">
-                <Suspense fallback={<BrandedLoader size="lg" />}>
-                  <DotLottieReact
-                    src="https://lottie.host/63e138b4-6a2a-42d0-88d6-ce61ba658d0c/PqnRt9UrJM.lottie"
-                    loop={true}
-                    autoplay={true}
-                    className="w-full h-full"
-                  />
-                </Suspense>
+                {/* Using local STUDENT.svg animation file */}
+                <img 
+                  src="/images/STUDENT.svg" 
+                  alt="Student career animation"
+                  className="w-full h-full object-contain"
+                />
               </div>
             </div>
 
