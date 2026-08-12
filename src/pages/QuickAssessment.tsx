@@ -113,12 +113,12 @@ const QuickAssessment = () => {
         legacy: ["Form 1", "Form 2", "Form 3", "Form 4", "Form 4 Leaver", "University Year 1", "University Year 2", "University Year 3", "University Year 4"]
     };
 
-    const valueOptions = ["High Income / Wealth", "Helping Others / Impact", "Work-Life Balance", "Leadership / Power", "Creativity / Innovation", "Stability / Security"];
-    const workStyleOptions = ["Solo / Independent", "Collaborative Team", "Remote / Tech-Focused", "Outdoors / Active", "Corporate Office", "Hands-on / Fieldwork"];
+    const valueOptions = ["Financial success and prosperity", "Making a meaningful impact on society", "Work-life balance and personal time", "Leadership and influence", "Creativity and innovation", "Job security and stability"];
+    const workStyleOptions = ["Independent and autonomous", "Collaborative team environment", "Fast-paced and dynamic", "Structured and systematic", "Creative and flexible", "Research and analysis focused"];
 
-    const barrierOptions = ["Financial Constraints", "Unsure of my interests", "Fear of failure", "Lack of mentorship/guidance", "Poor academic grades currently", "No barriers right now"];
-    const experienceOptions = ["School Clubs / Leader", "Volunteering / Community Service", "Hobby / Personal Projects", "Part-time Job / Internship", "None yet"];
-    const readinessOptions = ["Ready to apply now!", "Exploring my options", "Completely stuck / Need help"];
+    const barrierOptions = ["Financial constraints", "Unclear about my interests and strengths", "Fear of making the wrong choice", "Lack of mentorship or guidance", "Academic performance concerns", "No significant barriers at the moment"];
+    const experienceOptions = ["School clubs, student leadership, or competitions", "Volunteering or community service", "Personal projects, creative work, or independent research", "Part-time job or internship", "None yet"];
+    const readinessOptions = ["Ready to take action now", "Exploring my options carefully", "Need help understanding my path forward"];
     const getAvailableSubjects = () => {
         if (!curriculum || !grade) return [];
         
