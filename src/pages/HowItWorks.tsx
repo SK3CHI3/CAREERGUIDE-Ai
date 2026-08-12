@@ -1,67 +1,16 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import BackgroundGradient from "@/components/BackgroundGradient";
-import { UserCircle, BrainCircuit, Bot, Map, School, CheckCircle2, ArrowRight, Play, Clock } from "lucide-react";
+import { CheckCircle2, Play, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet-async";
 
 export default function HowItWorks() {
-  const steps = [
-    {
-      id: "01",
-      image: "/images/how_it_works_01.png",
-      title: "Profile Synchronization",
-      desc: "Begin by constructing your academic DNA. Our secure portal captures your unique learner profile and extracurricular passions to create a baseline for guidance.",
-      accent: "bg-primary"
-    },
-    {
-      id: "02",
-      image: "/images/how_it_works_02.png",
-      title: "RIASEC Diagnostics",
-      desc: "Engage with a world-class psychometric assessment. We map your personality across the RIASEC spectrum to identify the hidden drivers of your career satisfaction.",
-      accent: "bg-secondary"
-    },
-    {
-      id: "03",
-      image: "/images/how_it_works_03.png",
-      title: "AI Analysis Engine",
-      desc: "Our proprietary AI doesn't just guess; it predicts. By cross-referencing your potential with national economic trends, we deliver precision-targeted career matches.",
-      accent: "bg-accent"
-    },
-    {
-      id: "04",
-      image: "/images/how_it_works_04.png",
-      title: "Curriculum Mapping",
-      desc: "Abstract matches become concrete actions. We reverse-engineer your chosen career into CBE learning areas, telling you exactly which subjects to master.",
-      accent: "bg-purple-500"
-    },
-    {
-      id: "05",
-      image: "/images/how_it_works_05.png",
-      title: "Institutional Sync",
-      desc: "Schools receive aggregated analytics to drive institutional success. Teachers can now organize specialized career immersion days with surgical precision.",
-      accent: "bg-emerald-500"
-    }
-  ];
-
   return (
     <div className="min-h-screen text-foreground overflow-x-hidden relative flex flex-col bg-background">
       <Helmet>
         <title>How It Works | CareerGuide AI Journey</title>
         <meta name="description" content="Discover the step-by-step process of CareerGuide AI. From synchronizing your profile to matching with your dream career and mapping your academic potential." />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "HowTo",
-            "name": "How to Use CareerGuide AI for Career Guidance",
-            "step": steps.map((step, i) => ({
-              "@type": "HowToStep",
-              "position": i + 1,
-              "name": step.title,
-              "text": step.desc
-            }))
-          })}
-        </script>
       </Helmet>
       
       <BackgroundGradient />
@@ -120,65 +69,6 @@ export default function HowItWorks() {
           </motion.div>
         </div>
 
-        {/* Modern Steps Grid */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-40">
-          {steps.map((step, index) => {
-            const isEven = index % 2 === 0;
-            return (
-              <div key={step.id} className={`flex flex-col lg:flex-row items-center gap-16 lg:gap-24 ${isEven ? '' : 'lg:flex-row-reverse'}`}>
-                
-                {/* Visual Side */}
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0.9, x: isEven ? -40 : 40 }}
-                  whileInView={{ opacity: 1, scale: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.8 }}
-                  className="flex-1 w-full"
-                >
-                  <div className={`relative aspect-[4/3] rounded-[3rem] border border-card-border overflow-hidden group shadow-2xl`}>
-                    <img 
-                      src={step.image} 
-                      alt={step.title} 
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-80" />
-                    
-                    {/* Watermark Number */}
-                    <div className="absolute bottom-4 right-8 text-[8rem] font-black text-white/20 leading-none select-none drop-shadow-lg">
-                      {step.id}
-                    </div>
-                  </div>
-                </motion.div>
-
-                {/* Content Side */}
-                <motion.div 
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                  className="flex-1 space-y-6"
-                >
-                  <div className={`inline-flex items-center justify-center w-12 h-12 rounded-2xl ${step.accent} text-white font-black text-xl shadow-lg mb-4`}>
-                    {step.id}
-                  </div>
-                  <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">
-                    {step.title}
-                  </h2>
-                  <p className="text-lg text-foreground-muted leading-relaxed font-medium">
-                    {step.desc}
-                  </p>
-                  <div className="pt-4">
-                    <button className="flex items-center gap-2 font-bold text-primary group">
-                      Learn more about this phase
-                      <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-2" />
-                    </button>
-                  </div>
-                </motion.div>
-              </div>
-            );
-          })}
-        </div>
-
         {/* Final CTA Full Width */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-60">
           <motion.div 
@@ -192,10 +82,10 @@ export default function HowItWorks() {
             </div>
             <div className="relative z-10 max-w-3xl mx-auto space-y-8">
               <h2 className="text-4xl md:text-6xl font-black text-white leading-tight">
-                Ready to transform your school's future?
+                Ready to discover your career path?
               </h2>
               <p className="text-xl text-primary-foreground/80 font-medium">
-                Join the institutions already using AI to empower the next generation of Kenyan leaders.
+                Join thousands of students already using AI to unlock their potential and build their future.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
                 <a href="/auth" className="bg-white text-primary px-10 py-5 rounded-full font-black text-lg shadow-xl hover:scale-105 transition-transform">
