@@ -336,7 +336,7 @@ const QuickAssessment = () => {
             const summaryString = await aiCareerService.sendMessage(
                 summaryPrompt,
                 [],
-                { ...payload, assessmentResults: { personality_type: mbtiCode } }
+                { ...payload, assessmentResults: { personality_type: [mbtiCode] } }
             );
 
             const updatedProfile = {
