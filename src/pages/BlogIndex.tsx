@@ -16,6 +16,7 @@ export interface BlogPost {
   content: string;
   cover_image_url: string;
   published_at: string;
+  updated_at: string;
   seo_title: string;
   seo_description: string;
 }

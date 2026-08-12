@@ -82,6 +82,7 @@ export default function BlogPostPage() {
             "articleBody": post.content ? post.content.replace(/<[^>]*>?/gm, '').substring(0, 5000) : "",
             "image": post.cover_image_url,
             "datePublished": post.published_at,
+            "dateModified": post.updated_at || post.published_at,
             "author": {
               "@type": "Organization",
               "name": "CareerGuide AI",
