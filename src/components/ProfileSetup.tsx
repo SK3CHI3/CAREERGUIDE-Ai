@@ -16,6 +16,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
 import { dashboardService, CbeSubject, CareerInterest } from '@/lib/dashboard-service'
 import { RIASEC_ACTIVITIES, RIASEC_LABELS, CAREER_VALUES, CONTEXTUAL_CONSTRAINTS } from '@/data/riasec-assessment'
+import { INTEREST_CATEGORIES } from '@/data/interest-categories'
 
 const profileSchema = z.object({
   curriculum: z.enum(['cbc', 'igcse']),
@@ -124,6 +125,8 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ onComplete }) => {
   const [selectedInterests, setSelectedInterests] = useState<string[]>([])
   const [selectedActivities, setSelectedActivities] = useState<string[]>([])
   const [selectedValues, setSelectedValues] = useState<string[]>([])
+  const [selectedInterestItems, setSelectedInterestItems] = useState<string[]>([])
+  const [customInterest, setCustomInterest] = useState('')
   const [currentStep, setCurrentStep] = useState(1)
   const [dynamicSubjects, setDynamicSubjects] = useState<CbeSubject[]>([])
   const [dynamicInterests, setDynamicInterests] = useState<CareerInterest[]>([])
@@ -204,12 +207,12 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ onComplete }) => {
         school_level: data.schoolLevel,
         current_grade: data.currentGrade || null,
         cbe_subjects: selectedSubjects,
-        career_interests: selectedInterests,
+        career_interests: [...selectedInterests, ...selectedInterestItems],
         career_goals: data.careerGoals || null,
         assessment_results: {
           riasec_scores: scores,
           personality_type: personalityTypes,
-          interests: selectedInterests,
+          interests: [...selectedInterests, ...selectedInterestItems],
           subjects: selectedSubjects,
           values: selectedValues,
           customAspiration: data.careerGoals || null,
@@ -436,6 +439,98 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ onComplete }) => {
                     </div>
                   </button>
                 ))}
+              </div>
+
+              {/* Your Interests Section */}
+              <div className="pt-8 border-t border-card-border/50 space-y-4">
+                <div className="text-center space-y-2">
+                  <h3 className="text-2xl font-bold">Your Interests</h3>
+                  <p className="text-base text-foreground-muted">Tap a category to pick specific interests, or add your own.</p>
+                </div>
+
+                <div className="space-y-3">
+                  {INTEREST_CATEGORIES.map(cat => {
+                    const isExpanded = selectedInterestItems.some(i => cat.items.includes(i));
+                    return (
+                      <div key={cat.id} className="space-y-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const allSelected = cat.items.every(item => selectedInterestItems.includes(item));
+                            if (allSelected) {
+                              setSelectedInterestItems(prev => prev.filter(i => !cat.items.includes(i)));
+                            } else {
+                              setSelectedInterestItems(prev => [...new Set([...prev, ...cat.items])]);
+                            }
+                          }}
+                          className={`w-full p-4 rounded-2xl border-2 transition-all text-left font-semibold text-sm flex items-center justify-between ${isExpanded ? 'border-primary bg-primary/10 text-primary' : 'border-card-border hover:border-primary/50 bg-card/50'}`}
+                        >
+                          <span>{cat.label}</span>
+                          <span className="text-xs font-normal text-muted-foreground">
+                            {cat.items.filter(i => selectedInterestItems.includes(i)).length}/{cat.items.length}
+                          </span>
+                        </button>
+                        {isExpanded && (
+                          <div className="flex flex-wrap gap-2 pl-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                            {cat.items.map(item => (
+                              <button
+                                key={item}
+                                type="button"
+                                onClick={() => setSelectedInterestItems(prev => prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item])}
+                                className={`px-3 py-1.5 text-xs rounded-lg border-2 transition-all ${selectedInterestItems.includes(item) ? 'border-primary bg-primary text-primary-foreground' : 'border-card-border hover:border-primary/50 bg-background/50'}`}
+                              >
+                                {item}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Custom Interest Input */}
+                <div className="space-y-2 pt-2">
+                  <Label className="text-sm font-semibold">Don't see yours? Add it here.</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      value={customInterest}
+                      onChange={e => setCustomInterest(e.target.value)}
+                      placeholder="Type your interest..."
+                      className="flex-1 h-10 rounded-xl border-2"
+                      onKeyDown={e => {
+                        if (e.key === 'Enter' && customInterest.trim()) {
+                          setSelectedInterestItems(prev => [...prev, customInterest.trim()]);
+                          setCustomInterest('');
+                        }
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        if (customInterest.trim()) {
+                          setSelectedInterestItems(prev => [...prev, customInterest.trim()]);
+                          setCustomInterest('');
+                        }
+                      }}
+                      className="h-10 px-4 rounded-xl bg-primary"
+                    >
+                      Add
+                    </Button>
+                  </div>
+                  {selectedInterestItems.length > 0 && (
+                    <div className="flex flex-wrap gap-2 pt-2">
+                      {selectedInterestItems.map(i => (
+                        <span key={i} className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-md bg-primary/10 text-primary border border-primary/20">
+                          {i}
+                          <button type="button" onClick={() => setSelectedInterestItems(prev => prev.filter(x => x !== i))} className="hover:text-destructive">
+                            ×
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="pt-8 border-t border-card-border/50">

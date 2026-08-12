@@ -17,6 +17,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import BackgroundGradient from "@/components/BackgroundGradient";
 import { RIASEC_ACTIVITIES, RIASEC_LABELS } from "@/data/riasec-assessment";
+import { INTEREST_CATEGORIES } from "@/data/interest-categories";
 
 const QuickAssessment = () => {
     const navigate = useNavigate();
@@ -46,6 +47,10 @@ const QuickAssessment = () => {
 
     // Phase 2: RIASEC
     const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
+
+    // Phase 2: Interests
+    const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+    const [customInterest, setCustomInterest] = useState("");
 
     // Phase 3: Values & Work Style
     const [selectedValues, setSelectedValues] = useState<string[]>([]);
@@ -305,7 +310,7 @@ const QuickAssessment = () => {
                 grade,
                 pathway: pathway || undefined,
                 subjects: selectedSubjects,
-                interests: [`RIASEC Type: ${personalityTypes.join(', ')}`],
+                interests: [`RIASEC Type: ${personalityTypes.join(', ')}`, ...selectedInterests],
                 values: selectedValues,
                 workStyle,
                 mbti: mbtiCode,
@@ -635,6 +640,99 @@ const QuickAssessment = () => {
                                                 <p className="text-[15px] font-medium leading-tight text-foreground">{a.text}</p>
                                             </button>
                                         ))}
+                                    </div>
+
+                                    {/* Interests Section */}
+                                    <div className="pt-6 border-t border-card-border/50 space-y-4">
+                                        <div className="text-center space-y-1">
+                                            <h3 className="text-lg font-bold">Your Interests</h3>
+                                            <p className="text-sm text-muted-foreground">Tap a category to pick specific interests, or add your own.</p>
+                                        </div>
+
+                                        <div className="space-y-3">
+                                            {INTEREST_CATEGORIES.map(cat => {
+                                                const isExpanded = selectedInterests.some(i => cat.items.includes(i));
+                                                return (
+                                                    <div key={cat.id} className="space-y-2">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                // Toggle all items in this category
+                                                                const allSelected = cat.items.every(item => selectedInterests.includes(item));
+                                                                if (allSelected) {
+                                                                    setSelectedInterests(prev => prev.filter(i => !cat.items.includes(i)));
+                                                                } else {
+                                                                    setSelectedInterests(prev => [...new Set([...prev, ...cat.items])]);
+                                                                }
+                                                            }}
+                                                            className={`w-full p-3 rounded-xl border-2 transition-all text-left font-semibold text-sm flex items-center justify-between ${isExpanded ? 'border-primary bg-primary/10 text-primary' : 'border-card-border hover:border-primary/50 bg-card/50'}`}
+                                                        >
+                                                            <span>{cat.label}</span>
+                                                            <span className="text-xs font-normal text-muted-foreground">
+                                                                {cat.items.filter(i => selectedInterests.includes(i)).length}/{cat.items.length}
+                                                            </span>
+                                                        </button>
+                                                        {isExpanded && (
+                                                            <div className="flex flex-wrap gap-2 pl-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                                                                {cat.items.map(item => (
+                                                                    <button
+                                                                        key={item}
+                                                                        type="button"
+                                                                        onClick={() => setSelectedInterests(prev => prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item])}
+                                                                        className={`px-3 py-1.5 text-xs rounded-lg border-2 transition-all ${selectedInterests.includes(item) ? 'border-primary bg-primary text-primary-foreground' : 'border-card-border hover:border-primary/50 bg-background/50'}`}
+                                                                    >
+                                                                        {item}
+                                                                    </button>
+                                                                ))}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+
+                                        {/* Custom Interest Input */}
+                                        <div className="space-y-2 pt-2">
+                                            <Label className="text-sm font-semibold">Don't see yours? Add it here.</Label>
+                                            <div className="flex gap-2">
+                                                <Input
+                                                    value={customInterest}
+                                                    onChange={e => setCustomInterest(e.target.value)}
+                                                    placeholder="Type your interest..."
+                                                    className="flex-1 h-10 rounded-xl border-2"
+                                                    onKeyDown={e => {
+                                                        if (e.key === 'Enter' && customInterest.trim()) {
+                                                            setSelectedInterests(prev => [...prev, customInterest.trim()]);
+                                                            setCustomInterest('');
+                                                        }
+                                                    }}
+                                                />
+                                                <Button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        if (customInterest.trim()) {
+                                                            setSelectedInterests(prev => [...prev, customInterest.trim()]);
+                                                            setCustomInterest('');
+                                                        }
+                                                    }}
+                                                    className="h-10 px-4 rounded-xl bg-primary"
+                                                >
+                                                    Add
+                                                </Button>
+                                            </div>
+                                            {selectedInterests.length > 0 && (
+                                                <div className="flex flex-wrap gap-2 pt-2">
+                                                    {selectedInterests.map(i => (
+                                                        <span key={i} className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-md bg-primary/10 text-primary border border-primary/20">
+                                                            {i}
+                                                            <button type="button" onClick={() => setSelectedInterests(prev => prev.filter(x => x !== i))} className="hover:text-destructive">
+                                                                ×
+                                                            </button>
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
 
                                     <div className="pt-4 flex justify-between">
