@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Sparkles, Download, ArrowRight, ArrowLeft, CheckCircle, Brain, Target, User, Heart, Compass, ShieldAlert, Rocket, Lock, Zap, GraduationCap } from "lucide-react";
+import { Sparkles, Download, ArrowRight, ArrowLeft, CheckCircle, Brain, Target, User, Heart, ShieldAlert, Rocket, Lock, GraduationCap } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import BrandedLoader from "@/components/BrandedLoader";
@@ -843,82 +843,59 @@ const QuickAssessment = () => {
                                 </motion.div>
                             )}
 
-                            {/* STEP 7: RESULTS (PREVIEW & PAYWALL) */}
-                            {/* STEP 7: RESULTS (PREVIEW & PAYWALL) */}
+                            {/* STEP 7: RESULTS */}
                             {currentStep === 7 && (
-                                <motion.div key="step7" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-6 py-4 max-w-2xl mx-auto">
+                                <motion.div key="step7" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 py-4 max-w-3xl mx-auto">
+                                    {/* Success Header */}
                                     <div className="text-center space-y-2">
-                                        <div className="w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-1">
+                                        <div className="w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center mx-auto">
                                             <CheckCircle className="w-6 h-6 text-green-500" />
                                         </div>
                                         <h2 className="text-xl md:text-2xl font-black tracking-tight">Diagnostic Analysis Complete</h2>
-                                        <p className="text-xs text-muted-foreground px-4">Your personalized career roadmap and alignment profile are ready.</p>
+                                        <p className="text-sm text-muted-foreground">Your personalized career roadmap is ready.</p>
                                     </div>
 
-                                    <div className="flex flex-col gap-6">
-                                        {/* PREVIEW PANEL - CLICKABLE */}
-                                        <div className="relative group w-full">
-                                            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2 flex items-center gap-2 px-1">
-                                                <Compass className="w-3 h-3" /> Report Preview (Tap to Unlock)
-                                            </div>
-                                            <button 
-                                                onClick={() => !isPaid && paywallRef.current?.handlePayment()}
-                                                disabled={isPaid}
-                                                className={`relative w-full rounded-xl border-2 border-card-border overflow-hidden bg-white aspect-[3/4] transition-all text-left ${!isPaid ? 'max-h-[260px] cursor-pointer hover:border-primary/50' : 'max-h-none'}`}
-                                            >
-                                                {/* Actual Content Rendering */}
-                                                <div 
-                                                    className="p-4 origin-top scale-[0.55] sm:scale-[0.8] w-[182%] sm:w-[125%] pointer-events-none"
-                                                    dangerouslySetInnerHTML={{ __html: reportHtml || '' }}
-                                                />
-                                                
-                                                {/* Glassmorphism Blur Overlay */}
-                                                {!isPaid && (
-                                                    <div className="absolute inset-0 z-20 flex flex-col justify-end">
-                                                        <div className="h-full w-full backdrop-blur-[3.5px] bg-gradient-to-t from-background/90 via-background/40 to-transparent flex items-center justify-center p-6 text-center">
-                                                            <div className="bg-white/95 dark:bg-card/95 p-4 rounded-2xl shadow-2xl border border-primary/10 max-w-[190px] transform group-hover:scale-[1.02] transition-all duration-300">
-                                                                <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-2">
-                                                                    <Lock className="w-5 h-5 text-primary" />
-                                                                </div>
-                                                                <p className="text-[12px] font-black tracking-tight">Unlock Analysis</p>
-                                                                <p className="text-[9px] text-muted-foreground leading-tight mt-1">Tap here to unlock your full diagnostic report</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            </button>
-                                            
-                                            {isPaid && (
-                                                <div className="mt-4 flex justify-center">
-                                                    <Button onClick={downloadReport} className="w-full h-14 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg">
-                                                        <Download className="mr-2 w-5 h-5" /> Download Full PDF Report
-                                                    </Button>
-                                                </div>
-                                            )}
-                                        </div>
+                                    {/* Report Preview - Full width, centered, blurred */}
+                                    <div className="relative w-full rounded-2xl border-2 border-card-border overflow-hidden bg-white shadow-lg">
+                                        {/* Blurred Preview Content */}
+                                        <div
+                                            className={`p-6 md:p-8 transition-all duration-300 ${!isPaid ? 'blur-[2px] select-none pointer-events-none' : ''}`}
+                                            style={{ userSelect: isPaid ? 'text' : 'none' }}
+                                            dangerouslySetInnerHTML={{ __html: reportHtml || '' }}
+                                        />
 
-                                        {/* PAYWALL PANEL */}
-                                        <div className="w-full">
-                                            {!isPaid ? (
-                                                <ReportPaywall 
-                                                    ref={paywallRef}
-                                                    onPaymentSuccess={handlePaymentSuccess} 
-                                                    studentName={name}
-                                                    email={email}
-                                                />
-                                            ) : (
-                                                <div className="bg-green-500/5 border-2 border-green-500/20 rounded-2xl p-6 text-center space-y-4">
-                                                    <div className="w-14 h-14 bg-green-500/10 rounded-full flex items-center justify-center mx-auto">
-                                                        <Zap className="w-7 h-7 text-green-500" />
+                                        {/* Unlock Overlay (only when unpaid) */}
+                                        {!isPaid && (
+                                            <div className="absolute inset-0 z-20 flex items-center justify-center bg-gradient-to-t from-background/80 via-background/40 to-transparent">
+                                                <div className="text-center space-y-3 p-6">
+                                                    <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+                                                        <Lock className="w-6 h-6 text-primary" />
                                                     </div>
-                                                    <h3 className="text-xl font-bold text-green-600">Report Unlocked!</h3>
-                                                    <p className="text-sm text-muted-foreground">Your comprehensive diagnostic is ready for download.</p>
-                                                    <Button onClick={() => navigate('/student')} className="w-full h-12 rounded-xl border-2 border-primary text-primary hover:bg-primary/5 font-bold">
-                                                        Consult with Career Counselor
-                                                    </Button>
+                                                    <p className="text-sm font-semibold text-foreground">Full report available after payment</p>
                                                 </div>
-                                            )}
-                                        </div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Action Section */}
+                                    <div className="space-y-4">
+                                        {!isPaid ? (
+                                            <ReportPaywall
+                                                ref={paywallRef}
+                                                onPaymentSuccess={handlePaymentSuccess}
+                                                studentName={name}
+                                                email={email}
+                                            />
+                                        ) : (
+                                            <div className="space-y-3">
+                                                <Button onClick={downloadReport} className="w-full h-14 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg text-base">
+                                                    <Download className="mr-2 w-5 h-5" /> Download Full PDF Report
+                                                </Button>
+                                                <Button variant="outline" onClick={() => navigate('/student')} className="w-full h-12 border-2 border-primary text-primary hover:bg-primary/5 font-bold">
+                                                    Consult with Career Counselor
+                                                </Button>
+                                            </div>
+                                        )}
                                     </div>
                                 </motion.div>
                             )}
