@@ -11,7 +11,6 @@ import FeatureShowcase from "@/components/FeatureShowcase";
 import Testimonials from "@/components/Testimonials";
 import BackgroundGradient from "@/components/BackgroundGradient";
 import StatsPartnersSection from "@/components/StatsPartnersSection.tsx";
-import CallingCard from "@/components/CallingCard";
 import CounselorBookingSection from "@/components/CounselorBookingSection";
 import { useAuth } from "@/contexts/AuthContext";
 import { getDashboardPathForRole } from "@/types/roles";
@@ -158,14 +157,6 @@ const Index = () => {
           <QuickAssessmentSection />
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
-          <CallingCard />
-        </motion.div>
       </main>
       <Footer />
     </div>

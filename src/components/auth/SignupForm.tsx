@@ -43,6 +43,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode, defaultRol
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
+  const [currentStep, setCurrentStep] = useState(1)
   const { signUp } = useAuth()
 
   const {
@@ -50,6 +51,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode, defaultRol
     handleSubmit,
     setValue,
     watch,
+    trigger,
     formState: { errors },
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
@@ -59,6 +61,28 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode, defaultRol
   })
 
   const selectedRole = watch('role')
+  const totalSteps = selectedRole === 'mentor' ? 4 : 1
+
+  const handleNext = async () => {
+    let fieldsToValidate: (keyof SignupFormData)[] = []
+    
+    if (currentStep === 1) {
+      fieldsToValidate = ['fullName', 'email', 'upiOrPhone']
+    } else if (currentStep === 2) {
+      fieldsToValidate = ['mentorStudentCount']
+    } else if (currentStep === 3) {
+      fieldsToValidate = ['mentorType']
+    }
+    
+    const isValid = await trigger(fieldsToValidate)
+    if (isValid) {
+      setCurrentStep((prev) => prev + 1)
+    }
+  }
+
+  const handleBack = () => {
+    setCurrentStep((prev) => prev - 1)
+  }
 
   const onSubmit = async (data: SignupFormData) => {
     setIsLoading(true)
@@ -106,6 +130,34 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode, defaultRol
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {/* Progress indicator for mentor wizard */}
+        {selectedRole === 'mentor' && (
+          <div className="flex items-center justify-center gap-2 mb-6">
+            {[1, 2, 3, 4].map((step) => (
+              <div key={step} className="flex items-center gap-2">
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all ${
+                    currentStep === step
+                      ? 'bg-primary text-primary-foreground'
+                      : currentStep > step
+                        ? 'bg-primary/20 text-primary'
+                        : 'bg-muted text-muted-foreground'
+                  }`}
+                >
+                  {currentStep > step ? <Check size={14} /> : step}
+                </div>
+                {step < 4 && (
+                  <div
+                    className={`w-8 h-0.5 transition-all ${
+                      currentStep > step ? 'bg-primary/40' : 'bg-muted'
+                    }`}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {error && (
             <Alert variant="destructive">
@@ -119,242 +171,353 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode, defaultRol
             </Alert>
           )}
 
-          <div className="space-y-3">
-            <Label>Register as</Label>
-            <div className="grid grid-cols-2 gap-4">
-              <div
-                onClick={() => setValue('role', 'student')}
-                className={`cursor-pointer rounded-xl border-2 p-4 transition-all duration-200 flex flex-col items-center gap-2 group ${selectedRole === 'student'
-                  ? 'border-primary bg-primary/5'
-                  : 'border-card-border hover:border-primary/40 text-muted-foreground'
-                  }`}
-              >
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${selectedRole === 'student' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground group-hover:bg-primary/20'
-                  }`}>
-                  <User size={20} />
-                </div>
-                <div className="text-center">
-                  <p className={`font-semibold text-sm ${selectedRole === 'student' ? 'text-primary' : 'text-foreground'}`}>Student</p>
-                  <p className="text-[10px] opacity-70">Seek career guidance</p>
-                </div>
-                {selectedRole === 'student' && (
-                  <div className="absolute top-2 right-2 flex items-center justify-center bg-primary text-primary-foreground rounded-full w-4 h-4">
-                    <Check size={10} />
-                  </div>
-                )}
-              </div>
-
-              <div
-                onClick={() => setValue('role', 'mentor')}
-                className={`cursor-pointer rounded-xl border-2 p-4 transition-all duration-200 flex flex-col items-center gap-2 group relative ${selectedRole === 'mentor'
-                  ? 'border-primary bg-primary/5'
-                  : 'border-card-border hover:border-primary/40 text-muted-foreground'
-                  }`}
-              >
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${selectedRole === 'mentor' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground group-hover:bg-primary/20'
-                  }`}>
-                  <GraduationCap size={20} />
-                </div>
-                <div className="text-center">
-                  <p className={`font-semibold text-sm ${selectedRole === 'mentor' ? 'text-primary' : 'text-foreground'}`}>Mentor</p>
-                  <p className="text-[10px] opacity-70">Help guide career decisions</p>
-                </div>
-                {selectedRole === 'mentor' && (
-                  <div className="absolute top-2 right-2 flex items-center justify-center bg-primary text-primary-foreground rounded-full w-4 h-4">
-                    <Check size={10} />
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="name">Full Name</Label>
-            <Input
-              id="name"
-              type="text"
-              placeholder="Enter your full name"
-              {...register('fullName')}
-              disabled={isLoading}
-            />
-            {errors.fullName && (
-              <p className="text-sm text-destructive">{errors.fullName.message}</p>
-            )}
-          </div>
-
-          {selectedRole === 'mentor' && (
+          {/* Step 1: Role + Basic Details */}
+          {currentStep === 1 && (
             <>
+              <div className="space-y-3">
+                <Label>Register as</Label>
+                <div className="grid grid-cols-2 gap-4">
+                  <div
+                    onClick={() => {
+                      setValue('role', 'student')
+                      setCurrentStep(1)
+                    }}
+                    className={`cursor-pointer rounded-xl border-2 p-4 transition-all duration-200 flex flex-col items-center gap-2 group ${
+                      selectedRole === 'student'
+                        ? 'border-primary bg-primary/5'
+                        : 'border-card-border hover:border-primary/40 text-muted-foreground'
+                    }`}
+                  >
+                    <div
+                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                        selectedRole === 'student'
+                          ? 'bg-primary text-primary-foreground'
+                          : 'bg-muted text-muted-foreground group-hover:bg-primary/20'
+                      }`}
+                    >
+                      <User size={20} />
+                    </div>
+                    <div className="text-center">
+                      <p className={`font-semibold text-sm ${selectedRole === 'student' ? 'text-primary' : 'text-foreground'}`}>
+                        Student
+                      </p>
+                      <p className="text-[10px] opacity-70">Seek career guidance</p>
+                    </div>
+                    {selectedRole === 'student' && (
+                      <div className="absolute top-2 right-2 flex items-center justify-center bg-primary text-primary-foreground rounded-full w-4 h-4">
+                        <Check size={10} />
+                      </div>
+                    )}
+                  </div>
+
+                  <div
+                    onClick={() => {
+                      setValue('role', 'mentor')
+                      setCurrentStep(1)
+                    }}
+                    className={`cursor-pointer rounded-xl border-2 p-4 transition-all duration-200 flex flex-col items-center gap-2 group relative ${
+                      selectedRole === 'mentor'
+                        ? 'border-primary bg-primary/5'
+                        : 'border-card-border hover:border-primary/40 text-muted-foreground'
+                    }`}
+                  >
+                    <div
+                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                        selectedRole === 'mentor'
+                          ? 'bg-primary text-primary-foreground'
+                          : 'bg-muted text-muted-foreground group-hover:bg-primary/20'
+                      }`}
+                    >
+                      <GraduationCap size={20} />
+                    </div>
+                    <div className="text-center">
+                      <p className={`font-semibold text-sm ${selectedRole === 'mentor' ? 'text-primary' : 'text-foreground'}`}>
+                        Mentor
+                      </p>
+                      <p className="text-[10px] opacity-70">Help guide career decisions</p>
+                    </div>
+                    {selectedRole === 'mentor' && (
+                      <div className="absolute top-2 right-2 flex items-center justify-center bg-primary text-primary-foreground rounded-full w-4 h-4">
+                        <Check size={10} />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="name">Full Name</Label>
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  {...register('email')}
+                  id="name"
+                  type="text"
+                  placeholder="Enter your full name"
+                  {...register('fullName')}
                   disabled={isLoading}
                 />
-                {errors.email && (
-                  <p className="text-sm text-destructive">{errors.email.message}</p>
-                )}
+                {errors.fullName && <p className="text-sm text-destructive">{errors.fullName.message}</p>}
               </div>
 
-              <div className="space-y-3">
-                <Label>How many students do you plan to guide?</Label>
-                <div className="grid grid-cols-2 gap-3">
-                  {[
-                    { value: '1-5' as const, label: '1-5 students', desc: 'Individual mentoring' },
-                    { value: '6-20' as const, label: '6-20 students', desc: 'Small group/class' },
-                    { value: '21-50' as const, label: '21-50 students', desc: 'Multiple classes' },
-                    { value: '50+' as const, label: '50+ students', desc: 'School-wide' },
-                  ].map(option => (
-                    <button
-                      key={option.value}
-                      type="button"
-                      onClick={() => setValue('mentorStudentCount', option.value)}
-                      className={`p-4 rounded-xl border-2 text-left transition-all ${
-                        watch('mentorStudentCount') === option.value
-                          ? 'border-primary bg-primary/5'
-                          : 'border-card-border hover:border-primary/40'
-                      }`}
-                      disabled={isLoading}
-                    >
-                      <p className="font-semibold text-sm">{option.label}</p>
-                      <p className="text-[10px] text-muted-foreground">{option.desc}</p>
-                    </button>
-                  ))}
+              {selectedRole === 'mentor' && (
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    {...register('email')}
+                    disabled={isLoading}
+                  />
+                  {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
                 </div>
-                {errors.mentorStudentCount && (
-                  <p className="text-sm text-destructive">{errors.mentorStudentCount.message}</p>
+              )}
+
+              <div className="space-y-2">
+                {selectedRole === 'student' ? (
+                  <>
+                    <Label htmlFor="upiOrPhone">NEMIS UPI Number</Label>
+                    <Input
+                      id="upiOrPhone"
+                      type="text"
+                      placeholder="e.g. A1B2C3 (from your NEMIS record)"
+                      {...register('upiOrPhone')}
+                      disabled={isLoading}
+                      className="uppercase"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Your 4-12 character Unique Personal Identifier from Kenya's NEMIS system.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <Label htmlFor="upiOrPhone">Phone Number</Label>
+                    <Input
+                      id="upiOrPhone"
+                      type="tel"
+                      placeholder="e.g. 0712345678"
+                      {...register('upiOrPhone')}
+                      disabled={isLoading}
+                    />
+                  </>
                 )}
+                {errors.upiOrPhone && <p className="text-sm text-destructive">{errors.upiOrPhone.message}</p>}
               </div>
 
-              <div className="space-y-3">
-                <Label>What best describes your role?</Label>
-                <div className="grid grid-cols-2 gap-3">
-                  {[
-                    { value: 'individual' as const, label: 'Individual Mentor', icon: '👤' },
-                    { value: 'classroom' as const, label: 'Classroom Teacher', icon: '👨‍🏫' },
-                    { value: 'school' as const, label: 'School Coordinator', icon: '🏫' },
-                    { value: 'organization' as const, label: 'Organization Leader', icon: '🏢' },
-                  ].map(option => (
-                    <button
-                      key={option.value}
-                      type="button"
-                      onClick={() => setValue('mentorType', option.value)}
-                      className={`p-4 rounded-xl border-2 text-left transition-all ${
-                        watch('mentorType') === option.value
-                          ? 'border-primary bg-primary/5'
-                          : 'border-card-border hover:border-primary/40'
-                      }`}
-                      disabled={isLoading}
-                    >
-                      <span className="text-2xl">{option.icon}</span>
-                      <p className="font-semibold text-sm mt-2">{option.label}</p>
-                    </button>
-                  ))}
-                </div>
-                {errors.mentorType && (
-                  <p className="text-sm text-destructive">{errors.mentorType.message}</p>
-                )}
-              </div>
+              {selectedRole === 'student' && (
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Password</Label>
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder="Enter your password"
+                        {...register('password')}
+                        disabled={isLoading}
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => setShowPassword(!showPassword)}
+                        disabled={isLoading}
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </Button>
+                    </div>
+                    {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="confirmPassword">Confirm Password</Label>
+                    <div className="relative">
+                      <Input
+                        id="confirmPassword"
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        placeholder="Confirm your password"
+                        {...register('confirmPassword')}
+                        disabled={isLoading}
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        disabled={isLoading}
+                      >
+                        {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </Button>
+                    </div>
+                    {errors.confirmPassword && (
+                      <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
+                    )}
+                  </div>
+                </>
+              )}
+
+              {selectedRole === 'mentor' && (
+                <Button type="button" className="w-full" onClick={handleNext}>
+                  Next
+                </Button>
+              )}
             </>
           )}
 
-          <div className="space-y-2">
-            {selectedRole === 'student' ? (
-              <>
-                <Label htmlFor="upiOrPhone">NEMIS UPI Number</Label>
-                <Input
-                  id="upiOrPhone"
-                  type="text"
-                  placeholder="e.g. A1B2C3 (from your NEMIS record)"
-                  {...register('upiOrPhone')}
-                  disabled={isLoading}
-                  className="uppercase"
-                />
-                <p className="text-xs text-muted-foreground">Your 4–12 character Unique Personal Identifier from Kenya's NEMIS system.</p>
-              </>
-            ) : (
-              <>
-                <Label htmlFor="upiOrPhone">Phone Number</Label>
-                <Input
-                  id="upiOrPhone"
-                  type="tel"
-                  placeholder="e.g. 0712345678"
-                  {...register('upiOrPhone')}
-                  disabled={isLoading}
-                />
-              </>
-            )}
-            {errors.upiOrPhone && (
-              <p className="text-sm text-destructive">{errors.upiOrPhone.message}</p>
-            )}
-          </div>
+          {/* Step 2: How many students */}
+          {selectedRole === 'mentor' && currentStep === 2 && (
+            <div className="space-y-3">
+              <Label className="text-base font-semibold">How many students do you plan to guide?</Label>
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { value: '1-5' as const, label: '1-5 students', desc: 'Individual mentoring' },
+                  { value: '6-20' as const, label: '6-20 students', desc: 'Small group/class' },
+                  { value: '21-50' as const, label: '21-50 students', desc: 'Multiple classes' },
+                  { value: '50+' as const, label: '50+ students', desc: 'School-wide' },
+                ].map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setValue('mentorStudentCount', option.value)}
+                    className={`p-4 rounded-xl border-2 text-left transition-all ${
+                      watch('mentorStudentCount') === option.value
+                        ? 'border-primary bg-primary/5'
+                        : 'border-card-border hover:border-primary/40'
+                    }`}
+                    disabled={isLoading}
+                  >
+                    <p className="font-semibold text-sm">{option.label}</p>
+                    <p className="text-[10px] text-muted-foreground">{option.desc}</p>
+                  </button>
+                ))}
+              </div>
+              {errors.mentorStudentCount && (
+                <p className="text-sm text-destructive">{errors.mentorStudentCount.message}</p>
+              )}
 
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <div className="relative">
-              <Input
-                id="password"
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Enter your password"
-                {...register('password')}
-                disabled={isLoading}
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                onClick={() => setShowPassword(!showPassword)}
-                disabled={isLoading}
-              >
-                {showPassword ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )}
-              </Button>
+              <div className="flex gap-3 pt-2">
+                <Button type="button" variant="outline" className="flex-1" onClick={handleBack}>
+                  Back
+                </Button>
+                <Button type="button" className="flex-1" onClick={handleNext}>
+                  Next
+                </Button>
+              </div>
             </div>
-            {errors.password && (
-              <p className="text-sm text-destructive">{errors.password.message}</p>
-            )}
-          </div>
+          )}
 
-          <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm Password</Label>
-            <div className="relative">
-              <Input
-                id="confirmPassword"
-                type={showConfirmPassword ? 'text' : 'password'}
-                placeholder="Confirm your password"
-                {...register('confirmPassword')}
-                disabled={isLoading}
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                disabled={isLoading}
-              >
-                {showConfirmPassword ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )}
-              </Button>
+          {/* Step 3: Your role */}
+          {selectedRole === 'mentor' && currentStep === 3 && (
+            <div className="space-y-3">
+              <Label className="text-base font-semibold">What best describes your role?</Label>
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { value: 'individual' as const, label: 'Individual Mentor', icon: '👤' },
+                  { value: 'classroom' as const, label: 'Classroom Teacher', icon: '👨‍🏫' },
+                  { value: 'school' as const, label: 'School Coordinator', icon: '🏫' },
+                  { value: 'organization' as const, label: 'Organization Leader', icon: '🏢' },
+                ].map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setValue('mentorType', option.value)}
+                    className={`p-4 rounded-xl border-2 text-left transition-all ${
+                      watch('mentorType') === option.value
+                        ? 'border-primary bg-primary/5'
+                        : 'border-card-border hover:border-primary/40'
+                    }`}
+                    disabled={isLoading}
+                  >
+                    <span className="text-2xl">{option.icon}</span>
+                    <p className="font-semibold text-sm mt-2">{option.label}</p>
+                  </button>
+                ))}
+              </div>
+              {errors.mentorType && <p className="text-sm text-destructive">{errors.mentorType.message}</p>}
+
+              <div className="flex gap-3 pt-2">
+                <Button type="button" variant="outline" className="flex-1" onClick={handleBack}>
+                  Back
+                </Button>
+                <Button type="button" className="flex-1" onClick={handleNext}>
+                  Next
+                </Button>
+              </div>
             </div>
-            {errors.confirmPassword && (
-              <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
-            )}
-          </div>
+          )}
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Create Account
-          </Button>
+          {/* Step 4: Password */}
+          {selectedRole === 'mentor' && currentStep === 4 && (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Enter your password"
+                    {...register('password')}
+                    disabled={isLoading}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowPassword(!showPassword)}
+                    disabled={isLoading}
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
+                </div>
+                {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <div className="relative">
+                  <Input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    placeholder="Confirm your password"
+                    {...register('confirmPassword')}
+                    disabled={isLoading}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    disabled={isLoading}
+                  >
+                    {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
+                </div>
+                {errors.confirmPassword && (
+                  <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
+                )}
+              </div>
+
+              <div className="flex gap-3 pt-2">
+                <Button type="button" variant="outline" className="flex-1" onClick={handleBack}>
+                  Back
+                </Button>
+                <Button type="submit" className="flex-1" disabled={isLoading}>
+                  {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Create Account
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Student submit button */}
+          {selectedRole === 'student' && (
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Create Account
+            </Button>
+          )}
 
           <div className="text-center">
             <div className="text-sm text-muted-foreground">
