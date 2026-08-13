@@ -3,24 +3,22 @@ import { Mail, ArrowRight } from "lucide-react";
 
 const StatsPartnersSection = () => {
   return (
-    <section className="pt-2 pb-12 lg:py-12 bg-gradient-hero">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative pt-2 pb-12 lg:py-12">
+      {/* Background Image */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src="/images/A Junior Secondary Learner in the Phase Four Campus in Grade Seven learning.jpg.webp"
+          alt=""
+          className="w-full h-full object-cover"
+        />
+        {/* Subtle overlay for text readability */}
+        <div className="absolute inset-0 bg-background/60 backdrop-blur-sm" />
+      </div>
 
-        {/* Main Card Container with background image */}
-        <div className="relative bg-card/80 backdrop-blur-sm rounded-3xl border border-card-border overflow-hidden shadow-card hover:shadow-elevated transition-shadow duration-500">
-          {/* Background Image */}
-          <div className="absolute inset-0 z-0">
-            <img
-              src="/images/A Junior Secondary Learner in the Phase Four Campus in Grade Seven learning.jpg.webp"
-              alt=""
-              className="w-full h-full object-cover"
-            />
-            {/* Dark overlay for text readability */}
-            <div className="absolute inset-0 bg-background/85 backdrop-blur-sm" />
-          </div>
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-          {/* Content wrapper */}
-          <div className="relative z-10">
+        {/* Main Card Container */}
+        <div className="bg-card/60 backdrop-blur-md rounded-3xl border border-card-border overflow-hidden shadow-card hover:shadow-elevated transition-shadow duration-500">
 
           {/* Stats Section with Images */}
           <div className="p-8 md:p-12">
@@ -136,7 +134,6 @@ const StatsPartnersSection = () => {
                 <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </div>
-          </div>
           </div>
         </div>
       </div>
