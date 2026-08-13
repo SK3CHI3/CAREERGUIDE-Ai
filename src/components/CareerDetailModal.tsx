@@ -26,8 +26,8 @@ const CareerDetailModal: React.FC<CareerDetailModalProps> = ({ isOpen, onClose, 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl w-[95vw] sm:w-full p-0 overflow-hidden bg-[#0a0a0c] border-white/10 rounded-xl shadow-2xl">
-        <div className="p-5 sm:p-8 md:p-10 space-y-6 sm:space-y-8 max-h-[85vh] overflow-y-auto custom-scrollbar">
+      <DialogContent className="max-w-2xl w-[95vw] sm:w-full p-0 overflow-hidden bg-[#0a0a0c] border-white/10 rounded-xl shadow-2xl max-h-[90vh] flex flex-col">
+        <div className="p-4 sm:p-5 md:p-8 lg:p-10 space-y-4 sm:space-y-6 overflow-y-auto flex-1">
           
           {/* Header Section */}
           <div className="space-y-3 sm:space-y-4">
@@ -65,9 +65,9 @@ const CareerDetailModal: React.FC<CareerDetailModalProps> = ({ isOpen, onClose, 
           </section>
 
           {/* Market Reality */}
-          <section className="space-y-4">
+          <section className="space-y-3 sm:space-y-4">
             <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500">Market Reality</h3>
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div className="space-y-1">
                 <span className="text-xs text-slate-500 font-medium">Salary Range</span>
                 <p className="text-white font-bold flex items-center gap-2">
@@ -103,7 +103,7 @@ const CareerDetailModal: React.FC<CareerDetailModalProps> = ({ isOpen, onClose, 
           </section>
 
           {/* Pros & Cons */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 pt-4">
             <section className="space-y-3">
               <h3 className="text-xs font-bold uppercase tracking-widest text-emerald-400/80">Key Benefits</h3>
               <ul className="space-y-2">
@@ -146,19 +146,19 @@ const CareerDetailModal: React.FC<CareerDetailModalProps> = ({ isOpen, onClose, 
         </div>
 
         {/* Minimalist Footer */}
-        <div className="p-5 sm:p-6 bg-white/[0.02] border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-[10px] sm:text-xs text-slate-500 font-medium text-center sm:text-left">
+        <div className="p-4 sm:p-5 md:p-6 bg-white/[0.02] border-t border-white/5 flex flex-col gap-3 sm:gap-4">
+          <p className="text-[10px] sm:text-xs text-slate-500 font-medium text-center">
             Compare this path with your personalized assessment results.
           </p>
-          <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
-            <Button 
-              variant="ghost" 
-              onClick={onClose} 
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 w-full">
+            <Button
+              variant="ghost"
+              onClick={onClose}
               className="w-full sm:w-auto text-slate-400 hover:text-white hover:bg-white/5 rounded-lg font-bold order-2 sm:order-1"
             >
               Close
             </Button>
-            <Button 
+            <Button
               onClick={() => { onClose(); navigate(`/quick-assessment?career=${encodeURIComponent(career.title)}`) }}
               className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground px-8 rounded-lg font-bold shadow-lg shadow-primary/10 order-1 sm:order-2"
             >
