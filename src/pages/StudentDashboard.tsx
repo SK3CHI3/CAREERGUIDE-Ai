@@ -89,40 +89,6 @@ interface CareerDataItem {
   actionabilityScore?: number
 }
 
-// Fallback career recommendations when AI service fails
-const getDefaultCareerRecommendations = (): CareerDataItem[] => [
-  {
-    name: 'Software Developer',
-    value: 85,
-    color: '#3b82f6',
-    description: 'Design and build software applications using modern programming languages and frameworks.',
-    salaryRange: 'KSh 80K - 250K',
-    growth: 'High Growth',
-    education: "Bachelor's in Computer Science or related field",
-    actionabilityScore: 90
-  },
-  {
-    name: 'Data Analyst',
-    value: 78,
-    color: '#10b981',
-    description: 'Analyze complex datasets to help organizations make informed business decisions.',
-    salaryRange: 'KSh 70K - 200K',
-    growth: 'High Growth',
-    education: "Bachelor's in Statistics, Mathematics, or related field",
-    actionabilityScore: 85
-  },
-  {
-    name: 'Digital Marketing Specialist',
-    value: 72,
-    color: '#f59e0b',
-    description: 'Create and implement marketing strategies across digital platforms to drive brand awareness.',
-    salaryRange: 'KSh 60K - 180K',
-    growth: 'Moderate Growth',
-    education: "Bachelor's in Marketing, Communications, or related field",
-    actionabilityScore: 80
-  }
-];
-
 
 
 const StudentDashboard = () => {
@@ -171,6 +137,9 @@ const StudentDashboard = () => {
 
   // Reload careers when profile changes (after initial load)
   const [initialLoadComplete, setInitialLoadComplete] = useState(false)
+  const [retryCount, setRetryCount] = useState(0)
+  const MAX_RETRIES = 3
+
   useEffect(() => {
     if (user && profile && initialLoadComplete) {
       loadCareerRecommendations(profile)
@@ -179,6 +148,19 @@ const StudentDashboard = () => {
       setInitialLoadComplete(true)
     }
   }, [profile])
+
+  // Auto-retry when no career data exists
+  useEffect(() => {
+    if (user && profile && initialLoadComplete && !isLoadingRecommendations && careerData.length === 0 && retryCount < MAX_RETRIES) {
+      const timer = setTimeout(() => {
+        console.log(`Auto-retrying career recommendations (attempt ${retryCount + 1}/${MAX_RETRIES})`)
+        setRetryCount(prev => prev + 1)
+        loadCareerRecommendations(profile)
+      }, 2000) // Wait 2 seconds before retrying
+
+      return () => clearTimeout(timer)
+    }
+  }, [careerData, isLoadingRecommendations, retryCount, initialLoadComplete])
 
   const checkAccessStatus = async () => {
     if (!profile) return;
@@ -454,8 +436,7 @@ const StudentDashboard = () => {
         trackButtonClick('AI Career Recommendations Generated', 'Dashboard');
       } else {
         console.warn('⚠️ No recommendations returned from AI service');
-        // Fallback to default recommendations
-        setCareerData(getDefaultCareerRecommendations());
+        setCareerData([]);
       }
     } catch (error) {
       console.error('❌ Failed to load career recommendations:', error);
@@ -467,7 +448,7 @@ const StudentDashboard = () => {
           const top3 = lastResortCache.slice(0, 3).map((rec, index) => ({
             name: rec.career_name,
             value: rec.match_percentage,
-            color: '#3b82f6',
+            color: index === 0 ? '#3b82f6' : index === 1 ? '#10b981' : '#f59e0b',
             description: rec.description || "Exciting career opportunity.",
             salaryRange: rec.salary_range || 'KES 40K - 100K',
             growth: rec.growth || 'Moderate Growth',
@@ -476,13 +457,11 @@ const StudentDashboard = () => {
           }));
           setCareerData(top3);
         } else {
-          // Final fallback to default recommendations
-          setCareerData(getDefaultCareerRecommendations());
+          setCareerData([]);
         }
       } catch (cacheError) {
         console.error('❌ Cache fallback also failed:', cacheError);
-        // Final fallback to default recommendations
-        setCareerData(getDefaultCareerRecommendations());
+        setCareerData([]);
       }
     } finally {
       setIsLoadingRecommendations(false)
@@ -914,13 +893,30 @@ const StudentDashboard = () => {
                   ) : careerData.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-64 text-center">
                       <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
-                        <Briefcase className="w-8 h-8 text-muted-foreground" />
+                        {retryCount > 0 && retryCount < MAX_RETRIES ? (
+                          <Loader2 className="w-8 h-8 text-primary animate-spin" />
+                        ) : (
+                          <Briefcase className="w-8 h-8 text-muted-foreground" />
+                        )}
                       </div>
-                      <h3 className="text-lg font-semibold mb-2">No Career Recommendations Yet</h3>
+                      <h3 className="text-lg font-semibold mb-2">
+                        {retryCount > 0 && retryCount < MAX_RETRIES
+                          ? 'Retrying...'
+                          : 'No Career Recommendations Yet'}
+                      </h3>
                       <p className="text-sm text-muted-foreground mb-4 max-w-md">
-                        Complete your profile and assessment to get personalized career recommendations based on your interests and strengths.
+                        {retryCount > 0 && retryCount < MAX_RETRIES
+                          ? `Attempting to load your recommendations (attempt ${retryCount}/${MAX_RETRIES})...`
+                          : 'Complete your profile and assessment to get personalized career recommendations based on your interests and strengths.'}
                       </p>
-                      <Button onClick={handleRefreshRecommendations} variant="outline" className="gap-2">
+                      <Button
+                        onClick={() => {
+                          setRetryCount(0)
+                          handleRefreshRecommendations()
+                        }}
+                        variant="outline"
+                        className="gap-2"
+                      >
                         <RefreshCw className="w-4 h-4" />
                         Generate Recommendations
                       </Button>
@@ -1118,13 +1114,29 @@ const StudentDashboard = () => {
               <Card className="border-card-border">
                 <CardContent className="flex flex-col items-center justify-center py-16 text-center">
                   <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mb-6">
-                    <Briefcase className="w-10 h-10 text-muted-foreground" />
+                    {retryCount > 0 && retryCount < MAX_RETRIES ? (
+                      <Loader2 className="w-10 h-10 text-primary animate-spin" />
+                    ) : (
+                      <Briefcase className="w-10 h-10 text-muted-foreground" />
+                    )}
                   </div>
-                  <h3 className="text-xl font-semibold mb-3">No Career Recommendations Yet</h3>
+                  <h3 className="text-xl font-semibold mb-3">
+                    {retryCount > 0 && retryCount < MAX_RETRIES
+                      ? 'Retrying...'
+                      : 'No Career Recommendations Yet'}
+                  </h3>
                   <p className="text-sm text-muted-foreground mb-6 max-w-md">
-                    Complete your profile and assessment to get personalized career recommendations based on your interests, strengths, and the Kenyan job market.
+                    {retryCount > 0 && retryCount < MAX_RETRIES
+                      ? `Attempting to load your recommendations (attempt ${retryCount}/${MAX_RETRIES})...`
+                      : 'Complete your profile and assessment to get personalized career recommendations based on your interests, strengths, and the Kenyan job market.'}
                   </p>
-                  <Button onClick={handleRefreshRecommendations} className="gap-2">
+                  <Button
+                    onClick={() => {
+                      setRetryCount(0)
+                      handleRefreshRecommendations()
+                    }}
+                    className="gap-2"
+                  >
                     <RefreshCw className="w-4 h-4" />
                     Generate Recommendations
                   </Button>

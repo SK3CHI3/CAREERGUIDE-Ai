@@ -417,15 +417,16 @@ Return EXACTLY this JSON format (array of 3 objects):
           console.log('Successfully parsed', parsed.length, 'career recommendations')
           return parsed
         }
-        console.warn('Parsed result did not match expected structure, using fallback')
-        return this.getFallbackRecommendations(userContext)
+        console.error('Parsed result did not match expected structure:', parsed)
+        throw new Error('AI returned invalid career recommendation structure')
       } catch (parseError) {
         console.error('Failed to parse career recommendations:', parseError)
-        return this.getFallbackRecommendations(userContext)
+        console.error('Raw response:', response)
+        throw parseError
       }
     } catch (error) {
       console.error('Failed to generate career recommendations:', error)
-      return this.getFallbackRecommendations(userContext)
+      throw error
     }
   }
 
@@ -525,54 +526,6 @@ Return EXACTLY this JSON format (array of 3 objects):
       console.error('JSON string at failure:', jsonString);
       throw new Error(`JSON parsing failed: ${repairError instanceof Error ? repairError.message : String(repairError)}`);
     }
-  }
-
-  private getFallbackRecommendations(userContext: UserContext): any[] {
-    // Return a diverse set of standard careers if AI fails
-    return [
-      {
-        title: "Software Engineering & Data Science",
-        matchPercentage: 92,
-        estimatedClusterPoints: 42.5,
-        kuccpsCluster: "Cluster 5",
-        universities: ["JKUAT", "UoN", "Strathmore"],
-        isTechnicalMisfit: false,
-        reasoning: "Strong alignment with analytical thinking and digital economy trends.",
-        actionabilityScore: 95,
-        description: "Design and build software solutions for the global market.",
-        salaryRange: "KSh 120,000 - 450,000",
-        education: "BSc. Computer Science or Software Engineering",
-        whyRecommended: "Digital transformation is a key pillar of Vision 2030, offering massive growth."
-      },
-      {
-        title: "Agricultural Tech & Agribusiness",
-        matchPercentage: 88,
-        estimatedClusterPoints: 34.0,
-        kuccpsCluster: "Cluster 13",
-        universities: ["Egerton", "JKUAT"],
-        isTechnicalMisfit: false,
-        reasoning: "Leverages Kenya's economic backbone with modern technological integration.",
-        actionabilityScore: 90,
-        description: "Innovate food production and supply chain management.",
-        salaryRange: "KSh 80,000 - 300,000",
-        education: "BSc. Agribusiness or Agricultural Economics",
-        whyRecommended: "High demand for food security specialists and modern farming consultants."
-      },
-      {
-        title: "Creative Arts & Digital Media",
-        matchPercentage: 85,
-        estimatedClusterPoints: 28.5,
-        kuccpsCluster: "Cluster 19",
-        universities: ["Kenyatta University", "Daystar"],
-        isTechnicalMisfit: false,
-        reasoning: "Excellent fit for creative archetypes in the growing gig economy.",
-        actionabilityScore: 85,
-        description: "Content creation, digital marketing, and multimedia production.",
-        salaryRange: "KSh 60,000 - 250,000",
-        education: "BA. Communication or Digital Media",
-        whyRecommended: "The creative economy is one of the fastest-growing sectors in the region."
-      }
-    ];
   }
 
   // Note: Conversations are now stored in localStorage only (not in database)
