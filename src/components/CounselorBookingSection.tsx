@@ -21,10 +21,11 @@ const CounselorBookingSection = () => {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img
-          src="/images/career-counselor-page.jpg"
+          src="/images/career-couclior page.jpg"
           alt=""
           className="w-full h-full object-cover"
         />
+        <div className="absolute inset-0 bg-black/40" />
       </div>
 
       <div className="relative z-10 w-full">
@@ -56,9 +57,6 @@ const CounselorBookingSection = () => {
             </div>
           </div>
         </div>
-
-        {/* Bottom fade gradient */}
-        <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-background via-background/50 to-transparent" />
       </div>
     </section>
   );
