@@ -19,7 +19,7 @@ const StatsPartnersSection = () => {
         <div className="min-h-[500px] relative">
 
           {/* Top left text */}
-          <div className="absolute top-4 left-4 sm:top-8 sm:left-8 md:top-16 md:left-16">
+          <div className="absolute top-4 left-4 sm:top-8 sm:left-4 md:top-16 md:left-4">
             <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg text-left">
               Making an Impact Across Kenya
             </h2>
