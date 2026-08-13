@@ -187,8 +187,20 @@ class AICacheService {
 
   async saveCareerRecommendations(userId: string, recommendations: Record<string, unknown>[], hash?: string): Promise<void> {
     try {
-      // 1. Save to L1 Cache (LocalStorage + Cookie)
-      cacheUtils.saveToL1(userId, 'career_recommendations', recommendations);
+      // Normalize recommendations to consistent format
+      const normalizedRecommendations = recommendations.map(rec => ({
+        career_name: (rec.career_name || rec.title || rec.name || '').toString(),
+        match_percentage: Number(rec.match_percentage || rec.matchPercentage || rec.value || 0),
+        description: (rec.description || '').toString(),
+        salary_range: (rec.salary_range || rec.salaryRange || '').toString(),
+        education: (rec.education || rec.education_required || '').toString(),
+        growth: (rec.growth || rec.growth_prospect || '').toString(),
+        why_recommended: (rec.why_recommended || rec.whyRecommended || '').toString(),
+        actionability_score: Number(rec.actionability_score || rec.actionabilityScore || 85)
+      }));
+
+      // 1. Save to L1 Cache (LocalStorage + Cookie) - normalized format
+      cacheUtils.saveToL1(userId, 'career_recommendations', normalizedRecommendations);
       if (hash) cacheUtils.setCacheFingerprint(userId, hash);
 
       // 2. Save to L2 Cache (Supabase)
@@ -204,15 +216,15 @@ class AICacheService {
       }
 
       // Insert new recommendations
-      const recommendationsToSave = recommendations.map(rec => ({
+      const recommendationsToSave = normalizedRecommendations.map(rec => ({
         user_id: userId,
-        career_name: (rec.career_name || rec.title || rec.name || '').toString(),
-        match_percentage: Number(rec.match_percentage || rec.matchPercentage || rec.value || 0),
-        description: (rec.description || '').toString(),
-        salary_range: (rec.salary_range || rec.salaryRange || '').toString(),
-        education: (rec.education || rec.education_required || '').toString(),
-        growth: (rec.growth || rec.growth_prospect || '').toString(),
-        why_recommended: (rec.why_recommended || rec.whyRecommended || '').toString()
+        career_name: rec.career_name,
+        match_percentage: rec.match_percentage,
+        description: rec.description,
+        salary_range: rec.salary_range,
+        education: rec.education,
+        growth: rec.growth,
+        why_recommended: rec.why_recommended
       }))
 
       // Ensure unique career names in case AI generates duplicates

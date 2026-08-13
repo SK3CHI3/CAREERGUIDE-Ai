@@ -348,20 +348,20 @@ const StudentDashboard = () => {
       if (cachedRecommendations && cachedRecommendations.length > 0) {
         console.log('✅ Using cached career recommendations:', cachedRecommendations.length);
 
-        // Convert cached data to chart format
+        // Convert cached data to chart format (handles both normalized and legacy formats)
         const top3 = cachedRecommendations.slice(0, 3).map((rec, index) => ({
-          name: rec.career_name,
-          value: rec.match_percentage,
+          name: rec.career_name || rec.title || rec.name || 'Unknown Career',
+          value: rec.match_percentage || rec.matchPercentage || rec.value || 0,
           color: index === 0 ? '#3b82f6' : index === 1 ? '#10b981' : '#f59e0b',
           description: rec.description || "Exciting career opportunity aligned with your interests and skills.",
-          salaryRange: rec.salary_range || 'KES 40K - 100K',
+          salaryRange: rec.salary_range || rec.salaryRange || 'KES 40K - 100K',
           growth: rec.growth || 'Moderate Growth',
           education: rec.education || "Bachelor's Degree or Diploma Required",
-          actionabilityScore: rec.actionability_score || 85
+          actionabilityScore: rec.actionability_score || rec.actionabilityScore || 85
         }));
 
         setCareerData(top3);
-        console.log('✅ Cached career recommendations loaded');
+        console.log('✅ Cached career recommendations loaded:', top3);
         return;
       }
 
