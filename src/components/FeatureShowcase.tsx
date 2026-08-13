@@ -126,7 +126,7 @@ const FeatureShowcase = () => {
                   <Bot className="w-5 h-5" />
                 </div>
                 <div className="pt-0.5">
-                  <h4 className="text-[15px] font-bold text-card-foreground mb-1">AI-Powered Matching</h4>
+                  <h4 className="text-[15px] font-bold text-card-foreground mb-1">AI-Powered Career Matching</h4>
                   <p className="text-sm text-foreground-muted leading-snug font-medium">Career matches based on your interests, personality, academic strengths, and Kenya's job market trends.</p>
                 </div>
               </div>
