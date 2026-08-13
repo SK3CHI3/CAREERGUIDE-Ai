@@ -31,7 +31,7 @@ export const CounselorDirectory = ({ limit }: { limit?: number }) => {
     full_name: 'Victor Omollo',
     title: 'Career Guidance Specialist',
     bio: 'Experienced career counselor specializing in helping students navigate their educational and professional paths in Kenya.',
-    hourly_rate: 100,
+    hourly_rate: 1000,
     image_url: null
   };
 
