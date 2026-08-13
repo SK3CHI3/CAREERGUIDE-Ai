@@ -181,13 +181,43 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ onComplete }) => {
 
   const calculateRiasec = () => {
     const scores = { realistic: 0, investigative: 0, artistic: 0, social: 0, enterprising: 0, conventional: 0 }
-    selectedActivities.forEach(id => {
-      const activity = RIASEC_ACTIVITIES.find(a => a.id === id)
-      if (activity) {
-        const key = activity.code === 'R' ? 'realistic' : activity.code === 'I' ? 'investigative' : activity.code === 'A' ? 'artistic' : activity.code === 'S' ? 'social' : activity.code === 'E' ? 'enterprising' : 'conventional'
-        scores[key]++
+
+    // Map interest categories to RIASEC types
+    const riasecMapping: Record<string, string[]> = {
+      'sports': ['realistic'],
+      'arts': ['artistic'],
+      'technology': ['investigative', 'realistic'],
+      'science': ['investigative'],
+      'community': ['social', 'enterprising'],
+      'business': ['enterprising', 'conventional'],
+      'media': ['artistic', 'social']
+    }
+
+    // Calculate scores based on selected interest items
+    selectedInterestItems.forEach(item => {
+      // Find which category this item belongs to
+      const category = INTEREST_CATEGORIES.find(cat => cat.items.includes(item))
+      if (category && riasecMapping[category.id]) {
+        riasecMapping[category.id].forEach(type => {
+          scores[type as keyof typeof scores]++
+        })
       }
     })
+
+    // Also factor in pathway selection
+    if (selectedInterests.includes('stem')) {
+      scores.investigative += 2
+      scores.realistic += 1
+    }
+    if (selectedInterests.includes('social_sciences')) {
+      scores.social += 2
+      scores.artistic += 1
+    }
+    if (selectedInterests.includes('arts_sports')) {
+      scores.artistic += 2
+      scores.realistic += 1
+    }
+
     const sortedTypes = Object.entries(scores).sort((a, b) => b[1] - a[1]).filter(s => s[1] > 0).map(s => RIASEC_LABELS[s[0].charAt(0).toUpperCase()])
     return { scores, personalityTypes: sortedTypes }
   }
