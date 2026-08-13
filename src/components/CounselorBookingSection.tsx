@@ -17,50 +17,48 @@ const CounselorBookingSection = () => {
   };
 
   return (
-    <section className="relative min-h-[700px] overflow-hidden">
-      <div className="flex h-full">
-        {/* Left side - Image with slant */}
-        <div className="absolute inset-0 w-full">
+    <section className="relative min-h-[500px] overflow-hidden">
+      <div className="flex flex-col md:flex-row h-full min-h-[500px]">
+        {/* Left side - Image at natural size */}
+        <div className="relative w-full md:w-1/2 flex items-center justify-center bg-background">
           <img
             src="/images/career-couclior page.jpg"
-            alt=""
-            className="w-full h-full object-cover"
+            alt="Career counseling session"
+            className="w-full max-w-[649px] h-auto object-contain"
           />
         </div>
 
-        {/* Right side - Dark overlay with slant */}
+        {/* Right side - Content with slant */}
         <div
-          className="absolute top-0 right-0 w-full h-full bg-background"
+          className="relative w-full md:w-1/2 flex items-center justify-center"
           style={{
-            clipPath: 'polygon(40% 0, 100% 0, 100% 100%, 25% 100%)'
+            background: 'linear-gradient(135deg, hsl(221.2 83.2% 53.3%) 0%, hsl(142.1 76.2% 36.3%) 100%)'
           }}
-        />
+        >
+          {/* Slant overlay from left */}
+          <div
+            className="absolute top-0 left-0 w-full h-full bg-background"
+            style={{
+              clipPath: 'polygon(0 0, 15% 0, 0 100%)'
+            }}
+          />
 
-        {/* Content */}
-        <div className="relative z-10 w-full h-full">
-          {/* Top left text on image */}
-          <div className="absolute top-8 left-8 md:top-16 md:left-16">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg text-left">
+          <div className="relative z-10 p-8 md:p-16 text-center md:text-left max-w-md">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Book a Live Career Call
             </h2>
-            <p className="text-lg md:text-xl text-white/90 leading-relaxed drop-shadow-md text-left max-w-md">
+            <p className="text-lg text-white/90 leading-relaxed mb-6">
               Connect with verified career counselors for personalized 1-on-1 guidance.
             </p>
-          </div>
-
-          {/* Bottom right CTA on dark side */}
-          <div className="absolute bottom-8 right-8 md:bottom-16 md:right-16 text-right">
-            <div className="space-y-4 max-w-sm">
-              <p className="text-foreground/90">Starting from KSh 800 per session</p>
-              <Button
-                size="lg"
-                onClick={handleCTA}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-8 py-6 text-lg font-bold shadow-glow group transition-all"
-              >
-                View Counselors
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </div>
+            <p className="text-sm text-white/70 mb-6">Starting from KSh 800 per session</p>
+            <Button
+              size="lg"
+              onClick={handleCTA}
+              className="bg-white text-primary hover:bg-white/90 rounded-full px-8 py-6 text-lg font-bold shadow-lg group transition-all"
+            >
+              View Counselors
+              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
           </div>
         </div>
       </div>
