@@ -13,13 +13,13 @@ const StatsPartnersSection = () => {
         />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 w-full">
 
-        {/* Content Container - No card, just content on image */}
-        <div className="min-h-[500px] relative">
+        {/* Content Container - Full width, no max-width constraint */}
+        <div className="min-h-[500px] relative w-full">
 
           {/* Top left text */}
-          <div className="absolute top-4 left-4 sm:top-8 sm:left-4 md:top-16 md:left-4">
+          <div className="absolute top-4 left-4 sm:top-8 sm:left-8 md:top-16 md:left-16">
             <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg text-left">
               Making an Impact Across Kenya
             </h2>
