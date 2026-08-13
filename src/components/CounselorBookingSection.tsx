@@ -9,11 +9,7 @@ const CounselorBookingSection = () => {
   const { user } = useAuth();
 
   const handleCTA = () => {
-    if (user) {
-      navigate("/student/counselors");
-    } else {
-      navigate("/auth?mode=signup&role=student");
-    }
+    navigate("/counselors");
   };
 
   return (
