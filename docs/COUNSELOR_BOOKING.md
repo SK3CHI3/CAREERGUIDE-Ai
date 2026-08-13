@@ -3,73 +3,64 @@
 ## Overview
 The counselor booking system allows students to book 1-on-1 career guidance sessions with verified professional counselors. This feature provides personalized support beyond the AI chat functionality.
 
-## Implementation Details
+## Current Implementation
 
-### Component Structure
-The system is implemented through the `CounselorBookingSection.tsx` component which includes:
-- Visual display of counselor availability and session types
-- Flexible scheduling options
-- Secure video calls
-- Pricing information for different session types
-- CTA buttons to view counselors or learn more
-
-### Features
-- **Verified Professionals**: All counselors are verified professionals
-- **Flexible Scheduling**: Students can choose from available time slots
-- **Secure Video Calls**: Encrypted video sessions for privacy
-- **Personalized Roadmaps**: Customized career guidance sessions
-- **Multiple Session Types**: Different durations and focus areas
-
-### Pricing Structure
-- Career Path Planning: KSh 1,500 (45 min)
-- University Guidance: KSh 1,000 (30 min)
-- Subject Selection: KSh 800 (30 min)
+### Counselor
+- **Victor Omollo** — Career Counselor, KSh 1,000/hr
+- Single counselor currently hardcoded in `CounselorDirectory.tsx`
+- Admin interface available via `AdminCounselorManager.tsx` for adding more counselors
 
 ### User Flow
-1. Student visits the landing page or dashboard
-2. Sees counselor booking section with available sessions
-3. Clicks "View Counselors" to see available counselors
-4. Selects a counselor and session type
-5. Proceeds with booking and payment via IntaSend
+1. Student visits the public `/counselors` page (no authentication required to browse)
+2. Sees available counselor(s) with hourly rate and specialties
+3. Selects a counselor and initiates booking
+4. Must be authenticated to complete booking — redirected to login if not
+5. Proceeds with payment via IntaSend (M-Pesa, Visa, Mastercard)
 6. Receives confirmation and scheduling details
+
+### Pricing
+- Flat rate of **KSh 1,000/hr** per counselor session
+- Rate is set per counselor in the `counselor_profiles` table (admin approved)
 
 ## Integration Points
 
 ### Authentication
-- Students must be authenticated to book sessions
-- Unauthenticated users are redirected to signup/login
+- Browsing the counselor directory is public (`/counselors` route)
+- Students must be authenticated to book and pay for sessions
+- Unauthenticated users are redirected to signup/login when attempting to book
 
 ### Payment Processing
 - Uses existing IntaSend payment infrastructure
-- Session-specific payment references (BOOK_ prefix)
+- Payment references use `BOOK_{studentId}_{counselorId}_{timestamp}` format
 - Integration with the existing payments table
 
 ### Database Integration
 - Creates entries in `counselor_sessions` table
 - Links student and counselor IDs
 - Records session status and payment details
+- RLS policies on `counselor_profiles`, `counselor_sessions`, and related tables (migration: `20260710000000_enable_rls_counselor_tables`)
 
 ## Technical Implementation
 
 ### Frontend Components
-- `CounselorBookingSection.tsx` - Main booking section
-- `CounselorCard.tsx` - Individual counselor display
-- `BookingModal.tsx` - Session scheduling modal
+- `CounselorBookingSection.tsx` — Marketing section on landing page with background image design
+- `CounselorDirectory.tsx` — Public directory page with booking flow and payment integration
+- `AdminCounselorManager.tsx` — Admin dashboard component for managing counselors
 
 ### Backend Integration
-- Supabase functions for counselor availability
+- Counselor data stored in `counselor_profiles` table in Supabase
 - Payment webhook handling for session bookings
-- Session management in database
+- Session management in `counselor_sessions` table
 
 ## Security Considerations
-- All counselor sessions are secured with encrypted video calls
+- All counselor sessions secured with encrypted video calls
 - Payment processing through verified IntaSend infrastructure
-- Session data stored securely in Supabase
-- User authentication required for all booking interactions
+- Session data stored securely in Supabase with RLS policies
+- User authentication required for booking interactions
 
-## Testing Scenarios
-1. Unauthenticated user accessing booking section
-2. Authenticated student viewing available counselors
-3. Successful booking and payment processing
-4. Session cancellation and rescheduling
-5. Payment failure handling
+## Future Enhancements
+- Multiple counselors with varying specialties and rates
+- Session type selection (career planning, university guidance, subject selection)
+- Session cancellation and rescheduling flow
+- Counselor availability calendar
+- Rating and review system

@@ -6,37 +6,11 @@
 [![Built with](https://img.shields.io/badge/Built%20with-React%20%2B%20Supabase-green)]()
 [![License](https://img.shields.io/badge/License-Proprietary-red)]()
 
-## ✨ Key Features
+## About
 
-- **🤖 AI Career Recommendations** — DeepSeek-powered analysis combining RIASEC personality, grades, and Kenya's labour market
-- **📊 RIASEC Assessment** — Six-dimension personality profiling with radar chart visualization
-- **💬 AI Career Chat** — Full-page conversational counselor for subject choices, university paths, and job market questions
-- **📈 Academic Tracking** — Grade management with automatic career match recalculation
-- **🎓 Career Directory** — 500+ career paths with salaries, growth, and education requirements for Kenya
-- **👩‍🏫 Mentor Dashboard** — Tools for mentors to guide students' career decisions
-- **👨‍⚕️ Counselor Access** — Book 1-on-1 sessions with verified professional counselors
+CareerGuide AI combines RIASEC personality profiling, academic performance, and Kenya's labour market data to deliver personalized career guidance. Students get AI-powered career recommendations, a conversational AI career counselor, and access to verified professional counselors for 1-on-1 sessions. Mentors (parents, guardians, and educators) can track student progress and guide career decisions.
 
-## 🚀 Quick Start
-
-```bash
-git clone https://github.com/SK3CHI3/CAREERGUIDE-Ai.git
-cd CAREERGUIDE-Ai
-npm install
-cp .env.example .env   # Add your Supabase + DeepSeek keys
-npm run dev
-```
-
-### Environment Variables
-
-| Variable | Description |
-|----------|-------------|
-| `VITE_SUPABASE_URL` | Supabase project URL |
-| `VITE_SUPABASE_ANON_KEY` | Supabase public key |
-| `VITE_DEEPSEEK_API_KEY` | DeepSeek API key for AI features |
-| `VITE_INTASEND_PUBLIC_KEY` | IntaSend public key for payments |
-| `VITE_INTASEND_LIVE` | Boolean indicating if live mode is enabled |
-
-## 🛠 Tech Stack
+## Tech Stack
 
 **Frontend:** React 19 · TypeScript · Vite 8 · Tailwind CSS 4 · shadcn/ui
 **Backend:** Supabase (PostgreSQL + Auth + RLS + Storage)
@@ -45,13 +19,13 @@ npm run dev
 **Payments:** IntaSend (M-Pesa)
 **Deploy:** Netlify
 
-## 📱 Screenshots
+## Screenshots
 
 | Student Dashboard | AI Career Chat | Career Directory |
 |---|---|---|
 | Personalized career matches with RIASEC radar chart | Full-page AI counselor conversation | 500+ Kenya-specific career paths |
 
-## 📖 Documentation
+## Documentation
 
 - [V3 Migration Guide](docs/V3_MIGRATION.md) — Architecture changes, database migrations, and what was removed
 - [Developer Guide](docs/DEVELOPER.md) — Contributing and local development setup
@@ -59,24 +33,24 @@ npm run dev
 - [Deployment](docs/NETLIFY_DEPLOYMENT.md) — Production deployment and CI/CD
 - [IntaSend Integration](docs/INTASEND_INTEGRATION.md) — Payment processing with M-Pesa and credit cards
 - [Career Guidance Flow](docs/CAREER_GUIDANCE_FLOW.md) — Complete user journey from assessment to career planning
+- [Counselor Booking](docs/COUNSELOR_BOOKING.md) — 1-on-1 counselor session booking system
+- [Mentor System](docs/MENTOR_SYSTEM_FLOW.md) — Mentor role and student management flow
+- [Pricing Strategy](docs/PRICING_STRATEGY.md) — Revenue model and pricing tiers
 
-## 💰 Pricing
+## Pricing
 
 | Plan | Price | Features |
 |------|-------|----------|
 | **Free Trial** | KSh 0 | Full access for the current academic term |
 | **Individual** | KSh 499/term | Full access, paid via M-Pesa |
+| **Counselor Session** | KSh 1,000/hr | 1-on-1 with a verified career counselor |
 
 *3-day grace period after expiry before access is locked.*
 
-## 🤝 Contributing
+## Contributing
 
 This is a proprietary project. For bug reports or feature requests, please open an issue.
 
-## 📄 License
+## License
 
 Proprietary. All rights reserved. See [LICENSE](LICENSE) for details.
-
----
-
-Built with ❤️ for Kenyan students navigating their career journeys.
