@@ -11,8 +11,8 @@ const StatsPartnersSection = () => {
           alt=""
           className="w-full h-full object-cover"
         />
-        {/* Bottom fade gradient */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
+        {/* Bottom fade gradient - smoother transition */}
+        <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-background via-background/50 to-transparent" />
       </div>
 
       <div className="relative z-10 w-full">
