@@ -20,7 +20,7 @@ AI analysis of RIASEC profiles and grades can take 5-10 seconds. Requesting this
 - **Location**: Centralized Database.
 - **Logic**: Used for cross-device persistence. If a student finishes an assessment on a school computer and later checks their phone at home, the recommendations are instantly available without a new AI call.
 
-## 3. Dynamic Invalidation (Context Fingerprinting)
+## 3. Dynamic Invalidation (Context Fingerprinting).
 
 The cache is not a static timer. We use a **Context Hash** to ensure the advice is always fresh.
 
