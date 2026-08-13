@@ -336,16 +336,19 @@ class AICacheService {
             console.log('L1 Cache Hit: Course Recommendations');
             return l1Data;
           }
+        } else {
+          console.log('L1 Cache fingerprint mismatch for courses, checking L2...');
         }
       }
 
-      // 2. Fallback to L2
-      const isValid = await this.isCacheValid(userId, 'course_recommendations', currentHash)
-      if (!isValid) {
-        console.log('Course recommendations cache is missing/invalid')
-        return null
+      // 1b. Try L1 cache without hash validation (for app reload scenarios)
+      const l1DataNoHash = cacheUtils.getFromL1(userId, 'course_recommendations');
+      if (l1DataNoHash) {
+        console.log('L1 Cache Hit (no hash validation): Course Recommendations');
+        return l1DataNoHash;
       }
 
+      // 2. Always try L2 Cache (Supabase) - don't block on hash mismatch
       // @ts-ignore - Database types not fully generated
       const { data, error } = await supabase
         .from('cached_course_recommendations')
@@ -354,21 +357,26 @@ class AICacheService {
         .maybeSingle()
 
       if (error) {
-        console.warn('Error fetching cached course recommendations from L2:', error)
-        return null
+        console.warn('Error fetching cached course recommendations from L2:', error);
+        return null;
       }
 
       const courses = (data?.courses as Record<string, unknown>[]) ?? null;
 
-      // Sync L1 if we found it in L2
-      if (courses && currentHash) {
+      if (courses && courses.length > 0) {
+        console.log(`L2 Cache Hit: Found ${courses.length} course recommendations in Supabase`);
+        // Sync to L1 for faster future reads
         cacheUtils.saveToL1(userId, 'course_recommendations', courses);
+        if (currentHash) {
+          cacheUtils.setCacheFingerprint(userId, currentHash);
+        }
+        return courses;
       }
 
-      return courses;
+      return null;
     } catch (error) {
-      console.error('Error getting cached course recommendations:', error)
-      return null
+      console.error('Error getting cached course recommendations:', error);
+      return null;
     }
   }
 
