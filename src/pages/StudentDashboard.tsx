@@ -883,6 +883,20 @@ const StudentDashboard = () => {
                     <div className="flex items-center justify-center h-64">
                       <BrandedLoader showText={true} text="Analyzing your career potential..." />
                     </div>
+                  ) : careerData.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center h-64 text-center">
+                      <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
+                        <Briefcase className="w-8 h-8 text-muted-foreground" />
+                      </div>
+                      <h3 className="text-lg font-semibold mb-2">No Career Recommendations Yet</h3>
+                      <p className="text-sm text-muted-foreground mb-4 max-w-md">
+                        Complete your profile and assessment to get personalized career recommendations based on your interests and strengths.
+                      </p>
+                      <Button onClick={handleRefreshRecommendations} variant="outline" className="gap-2">
+                        <RefreshCw className="w-4 h-4" />
+                        Generate Recommendations
+                      </Button>
+                    </div>
                   ) : (
                     <div className="h-64">
                       <ResponsiveContainer width="100%" height="100%">
@@ -1072,6 +1086,23 @@ const StudentDashboard = () => {
 
           {/* Careers Tab */}
           <TabsContent value="careers" className="space-y-2 sm:space-y-6">
+            {careerData.length === 0 ? (
+              <Card className="border-card-border">
+                <CardContent className="flex flex-col items-center justify-center py-16 text-center">
+                  <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mb-6">
+                    <Briefcase className="w-10 h-10 text-muted-foreground" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-3">No Career Recommendations Yet</h3>
+                  <p className="text-sm text-muted-foreground mb-6 max-w-md">
+                    Complete your profile and assessment to get personalized career recommendations based on your interests, strengths, and the Kenyan job market.
+                  </p>
+                  <Button onClick={handleRefreshRecommendations} className="gap-2">
+                    <RefreshCw className="w-4 h-4" />
+                    Generate Recommendations
+                  </Button>
+                </CardContent>
+              </Card>
+            ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 w-full">
               {careerData.map((career, index) => (
                 <Card key={index} className="bg-card border-card-border hover:shadow-lg transition-all duration-300 cursor-pointer group" onClick={() => handleCareerDetailClick(career)}>
@@ -1154,6 +1185,7 @@ const StudentDashboard = () => {
                 </Card>
               ))}
             </div>
+            )}
           </TabsContent>
 
           {/* AI Chat Tab Refined */}
