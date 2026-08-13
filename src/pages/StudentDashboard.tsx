@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -525,15 +525,15 @@ const StudentDashboard = () => {
   };
 
 
-  const getDominantInfo = () => {
+  const dominantInfo = useMemo(() => {
     if (!profile?.assessment_results?.riasec_scores) return null;
     const scores = profile.assessment_results.riasec_scores;
     const topEntry = Object.entries(scores).reduce((a, b) => (a[1] > b[1] ? a : b));
     const label = topEntry[0].charAt(0).toUpperCase() + topEntry[0].slice(1);
-    return { label, ...RIASEC_INFO[label] };
-  };
-
-  const dominantInfo = getDominantInfo();
+    const info = RIASEC_INFO[label];
+    if (!info) return null;
+    return { label, ...info };
+  }, [profile]);
 
 
 
