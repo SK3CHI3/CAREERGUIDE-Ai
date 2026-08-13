@@ -252,6 +252,10 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ onComplete }) => {
       setError('Please pick a path or tell us about your dream')
       return
     }
+    if (currentStep === 5 && selectedInterestItems.length < 1) {
+      setError('Please select at least one interest')
+      return
+    }
     setError(null)
     setCurrentStep(s => s + 1)
   }
@@ -270,7 +274,7 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ onComplete }) => {
       <div className="mb-12 text-center">
         <div className="flex justify-center gap-2 mb-4">
           {[1, 2, 3, 4, 5, 6].map(s => (
-            <div key={s} className={`h-1.5 w-10 sm:w-12 rounded-full transition-all ${currentStep >= s ? 'bg-primary shadow-[0_0_10px_rgba(var(--primary),0.5)]' : 'bg-muted'}`} />
+            <div key={s} className={`h-1.5 w-8 sm:w-10 rounded-full transition-all ${currentStep >= s ? 'bg-primary shadow-[0_0_10px_rgba(var(--primary),0.5)]' : 'bg-muted'}`} />
           ))}
         </div>
         <p className="text-sm font-bold text-primary uppercase tracking-widest">Phase {currentStep} of 6</p>
@@ -441,98 +445,6 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ onComplete }) => {
                 ))}
               </div>
 
-              {/* Your Interests Section */}
-              <div className="pt-8 border-t border-card-border/50 space-y-4">
-                <div className="text-center space-y-2">
-                  <h3 className="text-2xl font-bold">Your Interests</h3>
-                  <p className="text-base text-foreground-muted">Tap a category to pick specific interests, or add your own.</p>
-                </div>
-
-                <div className="space-y-3">
-                  {INTEREST_CATEGORIES.map(cat => {
-                    const isExpanded = selectedInterestItems.some(i => cat.items.includes(i));
-                    return (
-                      <div key={cat.id} className="space-y-2">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const allSelected = cat.items.every(item => selectedInterestItems.includes(item));
-                            if (allSelected) {
-                              setSelectedInterestItems(prev => prev.filter(i => !cat.items.includes(i)));
-                            } else {
-                              setSelectedInterestItems(prev => [...new Set([...prev, ...cat.items])]);
-                            }
-                          }}
-                          className={`w-full p-4 rounded-2xl border-2 transition-all text-left font-semibold text-sm flex items-center justify-between ${isExpanded ? 'border-primary bg-primary/10 text-primary' : 'border-card-border hover:border-primary/50 bg-card/50'}`}
-                        >
-                          <span>{cat.label}</span>
-                          <span className="text-xs font-normal text-muted-foreground">
-                            {cat.items.filter(i => selectedInterestItems.includes(i)).length}/{cat.items.length}
-                          </span>
-                        </button>
-                        {isExpanded && (
-                          <div className="flex flex-wrap gap-2 pl-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                            {cat.items.map(item => (
-                              <button
-                                key={item}
-                                type="button"
-                                onClick={() => setSelectedInterestItems(prev => prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item])}
-                                className={`px-3 py-1.5 text-xs rounded-lg border-2 transition-all ${selectedInterestItems.includes(item) ? 'border-primary bg-primary text-primary-foreground' : 'border-card-border hover:border-primary/50 bg-background/50'}`}
-                              >
-                                {item}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Custom Interest Input */}
-                <div className="space-y-2 pt-2">
-                  <Label className="text-sm font-semibold">Don't see yours? Add it here.</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      value={customInterest}
-                      onChange={e => setCustomInterest(e.target.value)}
-                      placeholder="Type your interest..."
-                      className="flex-1 h-10 rounded-xl border-2"
-                      onKeyDown={e => {
-                        if (e.key === 'Enter' && customInterest.trim()) {
-                          setSelectedInterestItems(prev => [...prev, customInterest.trim()]);
-                          setCustomInterest('');
-                        }
-                      }}
-                    />
-                    <Button
-                      type="button"
-                      onClick={() => {
-                        if (customInterest.trim()) {
-                          setSelectedInterestItems(prev => [...prev, customInterest.trim()]);
-                          setCustomInterest('');
-                        }
-                      }}
-                      className="h-10 px-4 rounded-xl bg-primary"
-                    >
-                      Add
-                    </Button>
-                  </div>
-                  {selectedInterestItems.length > 0 && (
-                    <div className="flex flex-wrap gap-2 pt-2">
-                      {selectedInterestItems.map(i => (
-                        <span key={i} className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-md bg-primary/10 text-primary border border-primary/20">
-                          {i}
-                          <button type="button" onClick={() => setSelectedInterestItems(prev => prev.filter(x => x !== i))} className="hover:text-destructive">
-                            ×
-                          </button>
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-
               <div className="pt-8 border-t border-card-border/50">
                 <div className="space-y-4 max-w-2xl mx-auto">
                   <div className="flex items-center gap-2 mb-2">
@@ -553,6 +465,99 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ onComplete }) => {
           )}
 
           {currentStep === 5 && (
+            <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="text-center space-y-4">
+                <h2 className="text-5xl font-extrabold tracking-tight bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent pb-2">Your Interests</h2>
+                <p className="text-xl text-foreground-muted">Tap a category to pick specific interests, or add your own.</p>
+              </div>
+
+              <div className="space-y-3">
+                {INTEREST_CATEGORIES.map(cat => {
+                  const isExpanded = selectedInterestItems.some(i => cat.items.includes(i));
+                  return (
+                    <div key={cat.id} className="space-y-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const allSelected = cat.items.every(item => selectedInterestItems.includes(item));
+                          if (allSelected) {
+                            setSelectedInterestItems(prev => prev.filter(i => !cat.items.includes(i)));
+                          } else {
+                            setSelectedInterestItems(prev => [...new Set([...prev, ...cat.items])]);
+                          }
+                        }}
+                        className={`w-full p-4 rounded-2xl border-2 transition-all text-left font-semibold text-sm flex items-center justify-between ${isExpanded ? 'border-primary bg-primary/10 text-primary' : 'border-card-border hover:border-primary/50 bg-card/50'}`}
+                      >
+                        <span>{cat.label}</span>
+                        <span className="text-xs font-normal text-muted-foreground">
+                          {cat.items.filter(i => selectedInterestItems.includes(i)).length}/{cat.items.length}
+                        </span>
+                      </button>
+                      {isExpanded && (
+                        <div className="flex flex-wrap gap-2 pl-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                          {cat.items.map(item => (
+                            <button
+                              key={item}
+                              type="button"
+                              onClick={() => setSelectedInterestItems(prev => prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item])}
+                              className={`px-3 py-1.5 text-xs rounded-lg border-2 transition-all ${selectedInterestItems.includes(item) ? 'border-primary bg-primary text-primary-foreground' : 'border-card-border hover:border-primary/50 bg-background/50'}`}
+                            >
+                              {item}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Custom Interest Input */}
+              <div className="space-y-2 pt-2">
+                <Label className="text-sm font-semibold">Don't see yours? Add it here.</Label>
+                <div className="flex gap-2">
+                  <Input
+                    value={customInterest}
+                    onChange={e => setCustomInterest(e.target.value)}
+                    placeholder="Type your interest..."
+                    className="flex-1 h-10 rounded-xl border-2"
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' && customInterest.trim()) {
+                        setSelectedInterestItems(prev => [...prev, customInterest.trim()]);
+                        setCustomInterest('');
+                      }
+                    }}
+                  />
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      if (customInterest.trim()) {
+                        setSelectedInterestItems(prev => [...prev, customInterest.trim()]);
+                        setCustomInterest('');
+                      }
+                    }}
+                    className="h-10 px-4 rounded-xl bg-primary"
+                  >
+                    Add
+                  </Button>
+                </div>
+                {selectedInterestItems.length > 0 && (
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    {selectedInterestItems.map(i => (
+                      <span key={i} className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-md bg-primary/10 text-primary border border-primary/20">
+                        {i}
+                        <button type="button" onClick={() => setSelectedInterestItems(prev => prev.filter(x => x !== i))} className="hover:text-destructive">
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {currentStep === 6 && (
             <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="text-center space-y-3">
                 <h2 className="text-4xl font-extrabold tracking-tight">Your Values</h2>
@@ -573,27 +578,6 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ onComplete }) => {
                       <p className="text-sm text-foreground-muted">{v.description}</p>
                     </div>
                     {selectedValues.includes(v.id) && <CheckCircle className="w-6 h-6 text-pink-500" />}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {currentStep === 6 && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="text-center space-y-3">
-                <h2 className="text-4xl font-extrabold tracking-tight">Final Step: Work Styles</h2>
-                <p className="text-lg text-foreground-muted">Which of these activities sounds fun to you?</p>
-              </div>
-              <div className="grid grid-cols-1 gap-3 max-h-[450px] overflow-y-auto p-2 pr-4">
-                {RIASEC_ACTIVITIES.map(a => (
-                  <button
-                    key={a.id} type="button"
-                    onClick={() => setSelectedActivities(p => p.includes(a.id) ? p.filter(x => x !== a.id) : [...p, a.id])}
-                    className={`p-5 rounded-2xl border-2 transition-all text-left flex items-center gap-4 ${selectedActivities.includes(a.id) ? 'border-primary bg-primary/5 ring-1 ring-primary' : 'border-card-border hover:border-primary/20'}`}
-                  >
-                    <div className={`w-3 h-3 rounded-full ${selectedActivities.includes(a.id) ? 'bg-primary' : 'bg-muted'}`} />
-                    <p className="text-base font-bold">{a.text}</p>
                   </button>
                 ))}
               </div>
