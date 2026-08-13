@@ -135,6 +135,17 @@ const StudentDashboard = () => {
     }
   }, [user, profile])
 
+  // Reload careers when profile changes (after initial load)
+  const [initialLoadComplete, setInitialLoadComplete] = useState(false)
+  useEffect(() => {
+    if (user && profile && initialLoadComplete) {
+      loadCareerRecommendations(profile)
+    }
+    if (user && profile && !initialLoadComplete) {
+      setInitialLoadComplete(true)
+    }
+  }, [profile])
+
   const checkAccessStatus = async () => {
     if (!profile) return;
 
@@ -1067,8 +1078,8 @@ const StudentDashboard = () => {
                   <CardHeader className="p-3 sm:p-5 pb-2 sm:pb-4">
                     <div className="flex items-start justify-between mb-2 sm:mb-4">
                       <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
-                        <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center flex-shrink-0">
-                          <Briefcase className="w-5 h-5 sm:w-7 sm:h-7 text-blue-600" />
+                        <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                          <Briefcase className="w-5 h-5 sm:w-7 sm:h-7 text-primary" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <CardTitle className="text-base sm:text-xl font-bold mb-0.5 sm:mb-1 text-foreground truncate">{career.name}</CardTitle>
@@ -1080,17 +1091,17 @@ const StudentDashboard = () => {
                               <Progress
                                 value={career.value}
                                 className="h-1 sm:h-1.5 bg-muted flex-1"
-                                indicatorClassName="bg-gradient-to-r from-blue-500 to-purple-500"
+                                indicatorClassName="bg-primary"
                               />
                             </div>
                             <div className="flex items-center gap-1.5 sm:gap-2">
-                              <Badge variant="outline" className="text-[9px] sm:text-[10px] h-4 sm:h-5 border-orange-200 text-orange-700 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20 flex-shrink-0">
+                              <Badge variant="outline" className="text-[9px] sm:text-[10px] h-4 sm:h-5 border-primary/20 text-primary bg-primary/5 flex-shrink-0">
                                 {(career.actionabilityScore || 85)}%
                               </Badge>
                               <Progress
                                 value={career.actionabilityScore || 85}
                                 className="h-1 sm:h-1.5 bg-muted flex-1"
-                                indicatorClassName="bg-orange-400"
+                                indicatorClassName="bg-primary/60"
                               />
                             </div>
                           </div>
@@ -1105,28 +1116,28 @@ const StudentDashboard = () => {
                     </p>
 
                     <div className="grid grid-cols-2 gap-2 sm:gap-3">
-                      <div className="p-2 sm:p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                      <div className="p-2 sm:p-3 rounded-lg bg-primary/5 border border-primary/10">
                         <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1">
-                          <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-500" />
-                          <span className="text-[10px] sm:text-xs font-semibold text-emerald-700 dark:text-emerald-400">Salary</span>
+                          <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
+                          <span className="text-[10px] sm:text-xs font-semibold text-primary">Salary</span>
                         </div>
-                        <p className="text-xs sm:text-sm font-bold text-emerald-800 dark:text-emerald-200 truncate">{career.salaryRange || 'KSh 60K - 200K'}</p>
+                        <p className="text-xs sm:text-sm font-bold text-foreground truncate">{career.salaryRange || 'KSh 60K - 200K'}</p>
                       </div>
-                      <div className="p-2 sm:p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                      <div className="p-2 sm:p-3 rounded-lg bg-primary/5 border border-primary/10">
                         <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1">
-                          <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-blue-500" />
-                          <span className="text-[10px] sm:text-xs font-semibold text-blue-700 dark:text-blue-400">Growth</span>
+                          <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
+                          <span className="text-[10px] sm:text-xs font-semibold text-primary">Growth</span>
                         </div>
-                        <p className="text-xs sm:text-sm font-bold text-blue-800 dark:text-blue-200 truncate">{career.growth || 'High Growth'}</p>
+                        <p className="text-xs sm:text-sm font-bold text-foreground truncate">{career.growth || 'High Growth'}</p>
                       </div>
                     </div>
 
-                    <div className="p-2 sm:p-3 rounded-lg bg-purple-500/10 border border-purple-500/20">
+                    <div className="p-2 sm:p-3 rounded-lg bg-primary/5 border border-primary/10">
                       <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1">
-                        <GraduationCap className="w-3 h-3 sm:w-4 sm:h-4 text-purple-500" />
-                        <span className="text-[10px] sm:text-xs font-semibold text-purple-700 dark:text-purple-400">Education</span>
+                        <GraduationCap className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
+                        <span className="text-[10px] sm:text-xs font-semibold text-primary">Education</span>
                       </div>
-                      <p className="text-xs sm:text-sm text-purple-800 dark:text-purple-200 font-medium truncate">{career.education || "Bachelor's Degree Required"}</p>
+                      <p className="text-xs sm:text-sm text-foreground font-medium truncate">{career.education || "Bachelor's Degree Required"}</p>
                     </div>
 
                     <Button
