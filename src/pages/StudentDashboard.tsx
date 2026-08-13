@@ -305,9 +305,15 @@ const StudentDashboard = () => {
       );
 
       try {
-        const parsedInsights = JSON.parse(insights);
-        setAiInsights(parsedInsights);
-        sessionStorage.setItem(INSIGHTS_KEY, JSON.stringify(parsedInsights));
+        // Extract JSON object from response (handles markdown, extra text, etc.)
+        const jsonMatch = insights.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const parsedInsights = JSON.parse(jsonMatch[0]);
+          setAiInsights(parsedInsights);
+          sessionStorage.setItem(INSIGHTS_KEY, JSON.stringify(parsedInsights));
+        } else {
+          console.log('No JSON object found in AI insights response');
+        }
       } catch (e) {
         console.log('Could not parse AI insights, using defaults');
       }
