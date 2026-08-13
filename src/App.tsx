@@ -13,6 +13,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import FeedbackWidget from "./components/FeedbackWidget";
 import CookieBanner from "./components/CookieBanner";
 import InstallPrompt from "./components/InstallPrompt";
+import SmartRoot from "./components/SmartRoot";
 
 // Lazy load pages for performance
 const Index = lazy(() => import("./pages/Index"));
@@ -50,7 +51,7 @@ const App = () => (
           <ScrollToTop />
           <Suspense fallback={<BrandedLoader fullScreen />}>
             <Routes>
-              <Route path="/" element={<Index />} />
+              <Route path="/" element={<SmartRoot />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/about" element={<About />} />
               <Route path="/how-it-works" element={<HowItWorks />} />

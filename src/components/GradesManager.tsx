@@ -115,17 +115,16 @@ const GradesManager = ({ onGradesUpdated, readOnly = false }: GradesManagerProps
   const loadGradesData = async () => {
     try {
       setIsLoading(true)
-      const [gradesData, subjectsData, categoriesData, termsData] = await Promise.all([
+      const [gradesData, subjectsData] = await Promise.all([
         loadGrades(),
-        dashboardService.getCbeSubjects(),
-        loadGradeCategories(),
-        loadAcademicTerms()
+        dashboardService.getCbeSubjects()
       ])
 
       setGrades(gradesData)
       setSubjects(subjectsData)
-      setGradeCategories(categoriesData)
-      setAcademicTerms(termsData)
+      // Grade categories and academic terms are no longer used in v3
+      setGradeCategories([])
+      setAcademicTerms([])
     } catch (error) {
       console.error('Failed to load grades data:', error)
       setError('Failed to load grades data')
