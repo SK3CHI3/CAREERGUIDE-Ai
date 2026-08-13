@@ -38,27 +38,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="min-h-screen flex items-center pt-16 relative overflow-hidden">
-      {/* Background - Pure Gradient (Exact Restoration) */}
-      <div className="absolute inset-0 -z-10 bg-surface">
-        <div className="absolute inset-0 bg-gradient-to-br from-surface via-surface/95 to-primary/5" />
-        
-        {/* Mobile-only background image with brand-color shade */}
-        <div className="absolute inset-0 lg:hidden opacity-[0.35] pointer-events-none">
-          <img 
-            src="/images/kenyan-student-graduating.png" 
-            alt="Kenyan student graduation background" 
-            className="w-full h-full object-cover"
-          />
-          {/* Brand-color "Shade" overlay from below */}
-          <div className="absolute inset-0 bg-gradient-to-t from-primary/60 via-surface/40 to-surface/20" />
-        </div>
-
-        {/* Brand color accents */}
-        <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-primary/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/3" />
-        <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-secondary/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/3" />
-      </div>
-
+    <section className="min-h-screen flex items-center pt-16 relative overflow-hidden bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-16 lg:py-20 w-full relative text-center lg:text-left">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* LEFT CONTENT */}
