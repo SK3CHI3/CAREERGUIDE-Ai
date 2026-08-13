@@ -11,29 +11,25 @@ const StatsPartnersSection = () => {
           alt=""
           className="w-full h-full object-cover"
         />
-        {/* Subtle overlay for text readability */}
-        <div className="absolute inset-0 bg-background/60 backdrop-blur-sm" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Content Container - No card, just content on image */}
-        <div className="min-h-[500px] flex flex-col">
+        <div className="min-h-[500px] relative">
 
-          {/* Left side text */}
-          <div className="flex-1 p-8 md:p-12 flex flex-col justify-center">
-            <div className="max-w-2xl">
-              <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg">
-                Making an Impact Across Kenya
-              </h2>
-              <p className="text-lg md:text-xl text-white/90 leading-relaxed drop-shadow-md">
-                Join thousands of Kenyan students who've found their path with CareerGuide AI
-              </p>
-            </div>
+          {/* Top left text */}
+          <div className="absolute top-4 left-4 sm:top-8 sm:left-8 md:top-16 md:left-16">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg text-left">
+              Making an Impact Across Kenya
+            </h2>
+            <p className="text-lg md:text-xl text-white/90 leading-relaxed drop-shadow-md text-left max-w-lg">
+              Join thousands of Kenyan students who've found their path with CareerGuide AI
+            </p>
           </div>
 
           {/* Bottom right CTA */}
-          <div className="p-8 md:p-12 flex justify-end">
+          <div className="absolute bottom-4 right-4 sm:bottom-8 sm:right-8 md:bottom-16 md:right-16">
             <div className="text-right space-y-4 max-w-md">
               <h3 className="text-xl md:text-2xl font-bold text-white drop-shadow-lg">Want to help shape our future?</h3>
               <p className="text-white/90 drop-shadow-md">Collaborate with CareerGuide AI to expand career guidance for students nationwide.</p>
