@@ -17,35 +17,41 @@ const CounselorBookingSection = () => {
   };
 
   return (
-    <section className="relative py-16 sm:py-24">
-      {/* Background Image */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src="/images/career-couclior page.jpg"
-          alt=""
-          className="w-full h-full object-cover"
+    <section className="relative min-h-[700px] overflow-hidden">
+      <div className="flex h-full">
+        {/* Left side - Image with slant */}
+        <div className="absolute inset-0 w-full">
+          <img
+            src="/images/career-couclior page.jpg"
+            alt=""
+            className="w-full h-full object-cover"
+          />
+        </div>
+
+        {/* Right side - Dark overlay with slant */}
+        <div
+          className="absolute top-0 right-0 w-full h-full bg-background"
+          style={{
+            clipPath: 'polygon(40% 0, 100% 0, 100% 100%, 25% 100%)'
+          }}
         />
-        <div className="absolute inset-0 bg-black/30" />
-      </div>
 
-      <div className="relative z-10 w-full">
-        {/* Content Container - Full width */}
-        <div className="min-h-[700px] relative w-full">
-
-          {/* Top left text */}
-          <div className="absolute top-4 left-4 sm:top-8 sm:left-8 md:top-16 md:left-16">
+        {/* Content */}
+        <div className="relative z-10 w-full h-full">
+          {/* Top left text on image */}
+          <div className="absolute top-8 left-8 md:top-16 md:left-16">
             <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg text-left">
               Book a Live Career Call
             </h2>
-            <p className="text-lg md:text-xl text-white/90 leading-relaxed drop-shadow-md text-left max-w-lg">
+            <p className="text-lg md:text-xl text-white/90 leading-relaxed drop-shadow-md text-left max-w-md">
               Connect with verified career counselors for personalized 1-on-1 guidance.
             </p>
           </div>
 
-          {/* Bottom right CTA */}
-          <div className="absolute bottom-4 right-4 sm:bottom-8 sm:right-8 md:bottom-16 md:right-16">
-            <div className="text-right space-y-4 max-w-md">
-              <p className="text-white/90 drop-shadow-md">Starting from KSh 800 per session</p>
+          {/* Bottom right CTA on dark side */}
+          <div className="absolute bottom-8 right-8 md:bottom-16 md:right-16 text-right">
+            <div className="space-y-4 max-w-sm">
+              <p className="text-foreground/90">Starting from KSh 800 per session</p>
               <Button
                 size="lg"
                 onClick={handleCTA}
