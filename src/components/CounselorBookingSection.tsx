@@ -18,7 +18,7 @@ const CounselorBookingSection = () => {
         {/* Left side - Image at natural size */}
         <div className="relative w-full md:w-1/2 flex items-center justify-center bg-background">
           <img
-            src="/images/career-couclior page.jpg"
+            src="/images/career-couclior_page-removebg-preview.png"
             alt="Career counseling session"
             className="w-full max-w-[649px] h-auto object-contain"
           />
