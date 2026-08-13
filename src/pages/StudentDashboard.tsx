@@ -89,6 +89,40 @@ interface CareerDataItem {
   actionabilityScore?: number
 }
 
+// Fallback career recommendations when AI service fails
+const getDefaultCareerRecommendations = (): CareerDataItem[] => [
+  {
+    name: 'Software Developer',
+    value: 85,
+    color: '#3b82f6',
+    description: 'Design and build software applications using modern programming languages and frameworks.',
+    salaryRange: 'KSh 80K - 250K',
+    growth: 'High Growth',
+    education: "Bachelor's in Computer Science or related field",
+    actionabilityScore: 90
+  },
+  {
+    name: 'Data Analyst',
+    value: 78,
+    color: '#10b981',
+    description: 'Analyze complex datasets to help organizations make informed business decisions.',
+    salaryRange: 'KSh 70K - 200K',
+    growth: 'High Growth',
+    education: "Bachelor's in Statistics, Mathematics, or related field",
+    actionabilityScore: 85
+  },
+  {
+    name: 'Digital Marketing Specialist',
+    value: 72,
+    color: '#f59e0b',
+    description: 'Create and implement marketing strategies across digital platforms to drive brand awareness.',
+    salaryRange: 'KSh 60K - 180K',
+    growth: 'Moderate Growth',
+    education: "Bachelor's in Marketing, Communications, or related field",
+    actionabilityScore: 80
+  }
+];
+
 
 
 const StudentDashboard = () => {
@@ -420,7 +454,8 @@ const StudentDashboard = () => {
         trackButtonClick('AI Career Recommendations Generated', 'Dashboard');
       } else {
         console.warn('⚠️ No recommendations returned from AI service');
-        setCareerData([]);
+        // Fallback to default recommendations
+        setCareerData(getDefaultCareerRecommendations());
       }
     } catch (error) {
       console.error('❌ Failed to load career recommendations:', error);
@@ -432,7 +467,7 @@ const StudentDashboard = () => {
           const top3 = lastResortCache.slice(0, 3).map((rec, index) => ({
             name: rec.career_name,
             value: rec.match_percentage,
-            color: index === 0 ? '#3b82f6' : index === 1 ? '#10b981' : '#f59e0b',
+            color: '#3b82f6',
             description: rec.description || "Exciting career opportunity.",
             salaryRange: rec.salary_range || 'KES 40K - 100K',
             growth: rec.growth || 'Moderate Growth',
@@ -441,11 +476,13 @@ const StudentDashboard = () => {
           }));
           setCareerData(top3);
         } else {
-          setCareerData([]);
+          // Final fallback to default recommendations
+          setCareerData(getDefaultCareerRecommendations());
         }
       } catch (cacheError) {
         console.error('❌ Cache fallback also failed:', cacheError);
-        setCareerData([]);
+        // Final fallback to default recommendations
+        setCareerData(getDefaultCareerRecommendations());
       }
     } finally {
       setIsLoadingRecommendations(false)
@@ -744,15 +781,6 @@ const StudentDashboard = () => {
           </div>
         )}
 
-        <div className="mb-4 sm:mb-6 hidden sm:block">
-          <h2 className="text-2xl lg:text-3xl font-bold text-foreground flex items-center gap-3">
-            <span>Welcome, {profile?.full_name?.split(' ')[0] || 'Student'}</span>
-            <span className="animate-bounce text-2xl">👋</span>
-          </h2>
-          <p className="text-base text-muted-foreground mt-1">
-            Continue your career discovery journey and unlock your potential.
-          </p>
-        </div>
         </div>
 
         {/* Tabs Navigation */}

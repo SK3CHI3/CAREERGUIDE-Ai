@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Send, User, Sparkles, Loader2, AlertCircle, RefreshCw, ArrowLeft, Briefcase, Target, GraduationCap as GradIcon } from "lucide-react";
+import { Send, User, Sparkles, Loader2, AlertCircle, RefreshCw, ArrowLeft } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { aiCareerService, type ChatMessage, type UserContext } from "@/lib/ai-service";
@@ -12,90 +13,30 @@ import { supabase } from "@/lib/supabase";
 import type { Database } from '@/types/supabase';
 import { ThemeToggle } from "@/components/ThemeToggle";
 
-// Enhanced message content renderer with better markdown parsing
+// Enhanced message content renderer with proper markdown support
 const MessageContent = ({ content, role }: { content: string, role: 'user' | 'assistant' }) => {
   if (role === 'user') {
     return <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">{content}</p>;
   }
 
-  const parts = content.split('\n');
-
   return (
-    <div className="space-y-3">
-      {parts.map((part, i) => {
-        const trimmed = part.trim();
-
-        // Detect headers (# or **bold** at start)
-        if (trimmed.startsWith('# ')) {
-          return <h3 key={i} className="text-lg font-bold text-foreground mt-2">{trimmed.substring(2)}</h3>;
-        }
-        if (trimmed.startsWith('## ')) {
-          return <h4 key={i} className="text-base font-bold text-foreground mt-2">{trimmed.substring(3)}</h4>;
-        }
-
-        // Detect bold text
-        if (trimmed.startsWith('**') && trimmed.endsWith('**')) {
-          return <p key={i} className="font-bold text-sm">{trimmed.slice(2, -2)}</p>;
-        }
-
-        // Detect bullet points
-        if (trimmed.startsWith('- ') || trimmed.startsWith('• ') || trimmed.startsWith('* ')) {
-          return (
-            <div key={i} className="flex gap-2 items-start pl-1">
-              <div className="w-1.5 h-1.5 rounded-full bg-primary/40 mt-1.5 shrink-0" />
-              <p className="text-sm leading-relaxed">{trimmed.substring(2)}</p>
-            </div>
-          );
-        }
-
-        // Detect numbered lists
-        const numberedMatch = trimmed.match(/^(\d+)\.\s+(.+)$/);
-        if (numberedMatch) {
-          return (
-            <div key={i} className="flex gap-2 items-start pl-1">
-              <span className="text-xs font-bold text-primary/60 mt-0.5">{numberedMatch[1]}.</span>
-              <p className="text-sm leading-relaxed">{numberedMatch[2]}</p>
-            </div>
-          );
-        }
-
-        // Detect Career Recommendations
-        if (trimmed.startsWith('Career Profile:') || trimmed.startsWith('Recommended Career:') || trimmed.startsWith('Career Match:')) {
-          return (
-            <div key={i} className="bg-primary/5 border border-primary/10 rounded-xl p-3 my-3">
-              <div className="flex items-center gap-2 mb-1">
-                <Briefcase className="w-4 h-4 text-primary" />
-                <span className="text-xs font-bold uppercase tracking-wider text-primary">Career Match</span>
-              </div>
-              <p className="font-bold text-sm sm:text-base">{trimmed.split(':')[1]?.trim()}</p>
-            </div>
-          );
-        }
-
-        // Detect Key Insights
-        if (trimmed.toLowerCase().includes('insight:') || trimmed.toLowerCase().includes('why this matches:')) {
-          return (
-            <div key={i} className="flex items-center gap-2 text-primary font-bold text-xs mt-4 mb-1">
-              <Target className="w-3.5 h-3.5" />
-              <span>{trimmed.toUpperCase()}</span>
-            </div>
-          );
-        }
-
-        // Detect Subjects
-        if (trimmed.startsWith('Subjects:') || trimmed.startsWith('Academic Focus:') || trimmed.startsWith('Recommended Subjects:')) {
-          return (
-            <div key={i} className="flex items-center gap-2 text-purple-600 font-bold text-xs mt-4 mb-1">
-              <GradIcon className="w-3.5 h-3.5" />
-              <span>{trimmed.toUpperCase()}</span>
-            </div>
-          );
-        }
-
-        // Regular text
-        if (!trimmed) return <div key={i} className="h-2" />;
-        return <p key={i} className="text-sm leading-relaxed whitespace-pre-wrap break-words">{trimmed}</p>;
-      })}
+    <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-headings:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0.5">
+      <ReactMarkdown
+        components={{
+          h1: ({children}) => <h1 className="text-lg font-bold mt-3 mb-2">{children}</h1>,
+          h2: ({children}) => <h2 className="text-base font-bold mt-3 mb-2">{children}</h2>,
+          h3: ({children}) => <h3 className="text-sm font-bold mt-2 mb-1">{children}</h3>,
+          p: ({children}) => <p className="text-sm leading-relaxed my-1.5">{children}</p>,
+          strong: ({children}) => <strong className="font-bold">{children}</strong>,
+          em: ({children}) => <em className="italic">{children}</em>,
+          ul: ({children}) => <ul className="list-disc pl-4 my-2 space-y-1">{children}</ul>,
+          ol: ({children}) => <ol className="list-decimal pl-4 my-2 space-y-1">{children}</ol>,
+          li: ({children}) => <li className="text-sm leading-relaxed">{children}</li>,
+          br: () => <br />,
+        }}
+      >
+        {content}
+      </ReactMarkdown>
     </div>
   );
 };

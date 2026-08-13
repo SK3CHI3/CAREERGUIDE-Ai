@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +11,34 @@ import { aiCareerService, type ChatMessage } from "@/lib/ai-service";
 import { ReportGenerator, type GuestProfile } from "@/lib/report-generator";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+// Component to render message content with proper markdown support
+const MessageContent = ({ content, role }: { content: string, role: 'user' | 'assistant' }) => {
+  if (role === 'user') {
+    return <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">{content}</p>;
+  }
+
+  return (
+    <div className="prose prose-sm max-w-none prose-p:my-1 prose-headings:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0.5">
+      <ReactMarkdown
+        components={{
+          h1: ({children}) => <h1 className="text-lg font-bold mt-3 mb-2">{children}</h1>,
+          h2: ({children}) => <h2 className="text-base font-bold mt-3 mb-2">{children}</h2>,
+          h3: ({children}) => <h3 className="text-sm font-bold mt-2 mb-1">{children}</h3>,
+          p: ({children}) => <p className="text-sm leading-relaxed my-1.5">{children}</p>,
+          strong: ({children}) => <strong className="font-bold">{children}</strong>,
+          em: ({children}) => <em className="italic">{children}</em>,
+          ul: ({children}) => <ul className="list-disc pl-4 my-2 space-y-1">{children}</ul>,
+          ol: ({children}) => <ol className="list-decimal pl-4 my-2 space-y-1">{children}</ol>,
+          li: ({children}) => <li className="text-sm leading-relaxed">{children}</li>,
+          br: () => <br />,
+        }}
+      >
+        {content}
+      </ReactMarkdown>
+    </div>
+  );
+};
 
 const GuestAIChat = () => {
   const [message, setMessage] = useState("");
@@ -36,15 +65,6 @@ const GuestAIChat = () => {
   useEffect(() => {
     scrollToBottom();
   }, [conversation]);
-
-  const cleanMarkdownFormatting = (text: string): string => {
-    return text
-      .replace(/\*\*(.*?)\*\*/g, '$1')
-      .replace(/\*(.*?)\*/g, '$1')
-      .replace(/#{1,6}\s/g, '')
-      .replace(/`{1,3}(.*?)`{1,3}/g, '$1')
-      .trim();
-  };
 
   useEffect(() => {
     const welcomeMessage: ChatMessage = {
@@ -120,7 +140,7 @@ What is your name? 😊`,
       const assistantMessage: ChatMessage = {
         id: crypto.randomUUID(),
         role: 'assistant',
-        content: cleanMarkdownFormatting(response),
+        content: response,
         timestamp: new Date()
       };
       
@@ -295,11 +315,11 @@ What is your name? 😊`,
                       {msg.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4 text-primary" />}
                     </div>
                     <div className={`p-4 rounded-2xl shadow-sm text-sm ${
-                      msg.role === 'user' 
-                        ? 'bg-primary text-white rounded-br-none' 
+                      msg.role === 'user'
+                        ? 'bg-primary text-white rounded-br-none'
                         : 'bg-white border rounded-bl-none text-foreground'
                     }`}>
-                      {msg.content}
+                      <MessageContent content={msg.content} role={msg.role as 'user' | 'assistant'} />
                       {msg.role === 'assistant' && index === conversation.length - 1 && showGradeForm && renderGradeForm()}
                     </div>
                   </div>
