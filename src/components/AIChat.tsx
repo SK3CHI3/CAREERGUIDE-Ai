@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,69 +12,31 @@ import { aiCareerService, type ChatMessage, type UserContext } from "@/lib/ai-se
 import { dashboardService } from "@/lib/dashboard-service";
 import { supabase } from "@/lib/supabase";
 import type { Database } from '@/types/supabase';
-import { Target, Briefcase, GraduationCap as GradIcon } from "lucide-react";
 
-// Component to render structured message content
+// Component to render structured message content with proper markdown support
 const MessageContent = ({ content, role }: { content: string, role: 'user' | 'assistant' }) => {
   if (role === 'user') {
     return <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">{content}</p>;
   }
 
-  // Simple parser for assistant messages to detect structured blocks
-  const parts = content.split('\n');
-
   return (
-    <div className="space-y-3">
-      {parts.map((part, i) => {
-        const trimmed = part.trim();
-
-        // Detect bullet points
-        if (trimmed.startsWith('- ') || trimmed.startsWith('• ') || trimmed.startsWith('* ')) {
-          return (
-            <div key={i} className="flex gap-2 items-start pl-1">
-              <div className="w-1.5 h-1.5 rounded-full bg-primary/40 mt-1.5 shrink-0" />
-              <p className="text-sm leading-relaxed">{trimmed.substring(2)}</p>
-            </div>
-          );
-        }
-
-        // Detect Career Recommendations or Titles (e.g. "Career Profile: [Name]")
-        if (trimmed.startsWith('Career Profile:') || trimmed.startsWith('Recommended Career:')) {
-          return (
-            <div key={i} className="bg-primary/5 border border-primary/10 rounded-xl p-3 my-3">
-              <div className="flex items-center gap-2 mb-1">
-                <Briefcase className="w-4 h-4 text-primary" />
-                <span className="text-xs font-bold uppercase tracking-wider text-primary">Career Match</span>
-              </div>
-              <p className="font-bold text-sm sm:text-base">{trimmed.split(':')[1]?.trim()}</p>
-            </div>
-          );
-        }
-
-        // Detect Key Insights (e.g. "Key Insight:", "Why this matches:")
-        if (trimmed.toLowerCase().includes('insight:') || trimmed.toLowerCase().includes('why this matches:')) {
-          return (
-            <div key={i} className="flex items-center gap-2 text-primary font-bold text-xs mt-4 mb-1">
-              <Target className="w-3.5 h-3.5" />
-              <span>{trimmed.toUpperCase()}</span>
-            </div>
-          );
-        }
-
-        // Detect Subjects (e.g. "Subjects:", "Recommended Subjects:")
-        if (trimmed.startsWith('Subjects:') || trimmed.startsWith('Academic Focus:')) {
-          return (
-            <div key={i} className="flex items-center gap-2 text-purple-600 font-bold text-xs mt-4 mb-1">
-              <GradIcon className="w-3.5 h-3.5" />
-              <span>{trimmed.toUpperCase()}</span>
-            </div>
-          );
-        }
-
-        // Regular text
-        if (!trimmed) return <div key={i} className="h-2" />;
-        return <p key={i} className="text-sm leading-relaxed whitespace-pre-wrap break-words">{trimmed}</p>;
-      })}
+    <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-headings:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0.5">
+      <ReactMarkdown
+        components={{
+          h1: ({children}) => <h1 className="text-lg font-bold mt-3 mb-2">{children}</h1>,
+          h2: ({children}) => <h2 className="text-base font-bold mt-3 mb-2">{children}</h2>,
+          h3: ({children}) => <h3 className="text-sm font-bold mt-2 mb-1">{children}</h3>,
+          p: ({children}) => <p className="text-sm leading-relaxed my-1.5">{children}</p>,
+          strong: ({children}) => <strong className="font-bold">{children}</strong>,
+          em: ({children}) => <em className="italic">{children}</em>,
+          ul: ({children}) => <ul className="list-disc pl-4 my-2 space-y-1">{children}</ul>,
+          ol: ({children}) => <ol className="list-decimal pl-4 my-2 space-y-1">{children}</ol>,
+          li: ({children}) => <li className="text-sm leading-relaxed">{children}</li>,
+          br: () => <br />,
+        }}
+      >
+        {content}
+      </ReactMarkdown>
     </div>
   );
 };

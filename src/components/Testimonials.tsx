@@ -15,8 +15,8 @@ const testimonials = [
   },
   {
     name: "John Kamau",
-    role: "Career Head, Nairobi School",
-    quote: "As an educator, this tool has made my work 10x easier. The AI insights are accurate and locally relevant to Kenyan trends.",
+    role: "Parent & Mentor",
+    quote: "As a parent, this tool has made it easy to guide my child through their career choices. The AI insights are accurate and locally relevant to Kenyan trends.",
     initials: "JK"
   },
   {

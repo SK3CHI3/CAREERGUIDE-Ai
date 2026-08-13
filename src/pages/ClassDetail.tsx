@@ -3,8 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { classService, type ClassRecord, type StudentInClass } from '@/lib/class-service'
 import { gradeUploadService } from '@/lib/grade-upload-service'
-import GradeUpload from '@/components/teacher/GradeUpload'
-import StudentInsightDialog from '@/components/teacher/StudentInsightDialog'
+import GradeUpload from '@/components/mentor/GradeUpload'
+import StudentInsightDialog from '@/components/mentor/StudentInsightDialog'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -213,7 +213,7 @@ const ClassDetail: React.FC = () => {
                 <div className="text-center">
                     <AlertCircle className="w-10 h-10 text-destructive mx-auto mb-3" />
                     <p className="text-foreground">Class not found.</p>
-                    <Button variant="outline" className="mt-4" onClick={() => navigate('/teacher')}>Back to Dashboard</Button>
+                    <Button variant="outline" className="mt-4" onClick={() => navigate('/mentor')}>Back to Dashboard</Button>
                 </div>
             </div>
         )
@@ -236,7 +236,7 @@ const ClassDetail: React.FC = () => {
             <header className="border-b border-card-border bg-background/80 backdrop-blur-md sticky top-0 z-10">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center gap-4 h-16">
-                        <Button variant="ghost" size="icon" onClick={() => navigate('/teacher')}>
+                        <Button variant="ghost" size="icon" onClick={() => navigate('/mentor')}>
                             <ArrowLeft className="w-5 h-5" />
                         </Button>
                         <div className="flex items-center gap-2">
@@ -535,7 +535,7 @@ const ClassDetail: React.FC = () => {
                                 />
                             </div>
                             <div className="col-span-2 space-y-2">
-                                <Label>Teacher Comment (optional)</Label>
+                                <Label>Mentor Comment (optional)</Label>
                                 <Textarea
                                     placeholder="e.g. Great improvement this term"
                                     value={gradeForm.teacher_comment}

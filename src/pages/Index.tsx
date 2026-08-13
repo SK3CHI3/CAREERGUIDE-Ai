@@ -11,7 +11,7 @@ import FeatureShowcase from "@/components/FeatureShowcase";
 import Testimonials from "@/components/Testimonials";
 import BackgroundGradient from "@/components/BackgroundGradient";
 import StatsPartnersSection from "@/components/StatsPartnersSection.tsx";
-import CallingCard from "@/components/CallingCard";
+import CounselorBookingSection from "@/components/CounselorBookingSection";
 import { useAuth } from "@/contexts/AuthContext";
 import { getDashboardPathForRole } from "@/types/roles";
 
@@ -23,7 +23,7 @@ const Index = () => {
   // Redirect if already authenticated
   useEffect(() => {
     if (!loading && user && profile) {
-      const dashboardPath = getDashboardPathForRole(profile.role as "student" | "admin" | "school" | "teacher");
+      const dashboardPath = getDashboardPathForRole(profile.role as "student" | "admin" | "mentor");
       navigate(dashboardPath, { replace: true });
     }
   }, [user, profile, loading, navigate]);
@@ -90,7 +90,7 @@ const Index = () => {
                 "@type": "Organization",
                 "name": "CareerGuide AI"
               },
-              "description": "Professional AI-driven mapping of school results to university degrees and global career paths."
+              "description": "Professional AI-driven mapping of academic results to university degrees and global career paths."
             }
           ])}
         </script>
@@ -141,6 +141,15 @@ const Index = () => {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8 }}
         >
+          <CounselorBookingSection />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+        >
           <CareerPaths />
         </motion.div>
 
@@ -148,14 +157,6 @@ const Index = () => {
           <QuickAssessmentSection />
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
-          <CallingCard />
-        </motion.div>
       </main>
       <Footer />
     </div>

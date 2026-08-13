@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, DollarSign, Clock, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { dashboardService, CareerPath } from "@/lib/dashboard-service";
 import CareerDetailModal from "./CareerDetailModal";
 import { useAuth } from "@/contexts/AuthContext";
@@ -19,6 +20,7 @@ const getDemandColor = (demand: string) => {
 };
 
 const CareerPaths = () => {
+  const navigate = useNavigate()
   const isMobile = useIsMobile()
   const [dynamicCareerPaths, setDynamicCareerPaths] = useState<CareerPath[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -203,7 +205,7 @@ const CareerPaths = () => {
         
         <div className="text-center mt-12">
           <Button 
-            onClick={() => window.location.href = '/careers'}
+            onClick={() => navigate('/careers')}
             size="lg"
             className="bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow px-10"
           >

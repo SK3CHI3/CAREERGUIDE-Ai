@@ -15,8 +15,8 @@
   # Function logic handles specific filtering for /blog and /careers
 
 [build.environment]
-  # Node.js version (2025 LTS)
-  NODE_VERSION = "20"
+  # Node.js version (22 LTS)
+  NODE_VERSION = "22"
   # Ensure npm is available
   NPM_FLAGS = "--version"
 

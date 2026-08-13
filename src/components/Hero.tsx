@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, GraduationCap, School } from "lucide-react";
+import { ArrowRight, GraduationCap, BookOpen } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { getDashboardPathForRole } from "@/types/roles";
@@ -12,17 +12,17 @@ const DotLottieReact = lazy(() => import("@lottiefiles/dotlottie-react").then(mo
 const Hero = () => {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
-  const [selectedRole, setSelectedRole] = useState<"student" | "school" | null>(null);
+  const [selectedRole, setSelectedRole] = useState<"student" | "mentor" | null>(null);
   const [showRoleOptions, setShowRoleOptions] = useState(true);
 
   const dashboardPath =
     user && profile
       ? getDashboardPathForRole(
-        profile.role as "student" | "admin" | "school" | "teacher"
+        profile.role as "student" | "admin" | "mentor"
       )
       : "/student";
 
-  const handleRoleSelect = (role: "student" | "school") => {
+  const handleRoleSelect = (role: "student" | "mentor") => {
     setSelectedRole(role);
     setShowRoleOptions(false);
   };
@@ -38,27 +38,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="min-h-screen flex items-center pt-16 relative overflow-hidden">
-      {/* Background - Pure Gradient (Exact Restoration) */}
-      <div className="absolute inset-0 -z-10 bg-surface">
-        <div className="absolute inset-0 bg-gradient-to-br from-surface via-surface/95 to-primary/5" />
-        
-        {/* Mobile-only background image with brand-color shade */}
-        <div className="absolute inset-0 lg:hidden opacity-[0.35] pointer-events-none">
-          <img 
-            src="/images/kenyan-student-graduating.png" 
-            alt="Kenyan student graduation background" 
-            className="w-full h-full object-cover"
-          />
-          {/* Brand-color "Shade" overlay from below */}
-          <div className="absolute inset-0 bg-gradient-to-t from-primary/60 via-surface/40 to-surface/20" />
-        </div>
-
-        {/* Brand color accents */}
-        <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-primary/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/3" />
-        <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-secondary/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/3" />
-      </div>
-
+    <section className="min-h-screen flex items-center pt-16 relative overflow-hidden bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-16 lg:py-20 w-full relative text-center lg:text-left">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* LEFT CONTENT */}
@@ -90,11 +70,11 @@ const Hero = () => {
                   <Button
                     size="lg"
                     className="w-full sm:w-auto bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow h-14 sm:h-16 text-base sm:text-lg px-4 sm:px-8 font-bold"
-                    onClick={() => handleRoleSelect("school")}
+                    onClick={() => handleRoleSelect("mentor")}
                   >
-                    <School className="w-5 h-5 mr-1.5 sm:mr-2 flex-shrink-0" />
-                    <span className="hidden sm:inline">I'm a School</span>
-                    <span className="sm:hidden">School</span>
+                    <BookOpen className="w-5 h-5 mr-1.5 sm:mr-2 flex-shrink-0" />
+                    <span className="hidden sm:inline">I'm a Mentor</span>
+                    <span className="sm:hidden">Mentor</span>
                   </Button>
                   <Button
                     variant="outline"
@@ -112,7 +92,7 @@ const Hero = () => {
                     className="w-full sm:flex-1 bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow h-14 sm:h-16 text-base sm:text-lg px-8 font-bold"
                     onClick={handleGetStarted}
                   >
-                    {selectedRole === "student" ? "Start your journey" : "Onboard your school"}
+                    {selectedRole === "student" ? "Start your journey" : "Start guiding students"}
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </Button>
                   <Button
@@ -150,14 +130,12 @@ const Hero = () => {
               aria-hidden="true"
             >
               <div className="aspect-[4/3] w-full flex items-center justify-center">
-                <Suspense fallback={<BrandedLoader size="lg" />}>
-                  <DotLottieReact
-                    src="https://lottie.host/63e138b4-6a2a-42d0-88d6-ce61ba658d0c/PqnRt9UrJM.lottie"
-                    loop={true}
-                    autoplay={true}
-                    className="w-full h-full"
-                  />
-                </Suspense>
+                {/* Using local STUDENT.svg animation file */}
+                <img 
+                  src="/images/STUDENT.svg" 
+                  alt="Student career animation"
+                  className="w-full h-full object-contain"
+                />
               </div>
             </div>
 

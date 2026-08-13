@@ -12,7 +12,7 @@ type AuthMode = 'login' | 'signup'
 const Auth = () => {
   const [searchParams] = useSearchParams()
   const initialMode = (searchParams.get('mode') as AuthMode) || 'login'
-  const defaultRole = searchParams.get('role') as 'student' | 'school' | null
+  const defaultRole = searchParams.get('role') as 'student' | 'mentor' | null
 
   const [mode, setMode] = useState<AuthMode>(initialMode)
   const { user, profile, loading, profileLoading, profileError } = useAuth()

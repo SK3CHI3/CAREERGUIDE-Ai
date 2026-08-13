@@ -115,17 +115,16 @@ const GradesManager = ({ onGradesUpdated, readOnly = false }: GradesManagerProps
   const loadGradesData = async () => {
     try {
       setIsLoading(true)
-      const [gradesData, subjectsData, categoriesData, termsData] = await Promise.all([
+      const [gradesData, subjectsData] = await Promise.all([
         loadGrades(),
-        dashboardService.getCbeSubjects(),
-        loadGradeCategories(),
-        loadAcademicTerms()
+        dashboardService.getCbeSubjects()
       ])
 
       setGrades(gradesData)
       setSubjects(subjectsData)
-      setGradeCategories(categoriesData)
-      setAcademicTerms(termsData)
+      // Grade categories and academic terms are no longer used in v3
+      setGradeCategories([])
+      setAcademicTerms([])
     } catch (error) {
       console.error('Failed to load grades data:', error)
       setError('Failed to load grades data')
@@ -526,10 +525,10 @@ const GradesManager = ({ onGradesUpdated, readOnly = false }: GradesManagerProps
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="teacher_comment">Teacher Comment (Optional)</Label>
+                  <Label htmlFor="teacher_comment">Mentor Comment (Optional)</Label>
                   <Textarea
                     {...form.register('teacher_comment')}
-                    placeholder="Any additional comments from your teacher..."
+                    placeholder="Any additional comments from your mentor..."
                     rows={3}
                   />
                 </div>

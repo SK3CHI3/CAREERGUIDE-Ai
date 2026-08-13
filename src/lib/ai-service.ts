@@ -296,7 +296,7 @@ ACADEMIC PERFORMANCE:
 - Performance Trend: ${userContext.academicPerformance.performanceTrend}
 ` : ''
 
-      const prompt = `You are a Senior Pedagogical Consultant & Career Mentor. Your task is to provide a Teacher with specific, actionable guidance strategies for a student named ${userContext.name || 'this student'}.
+      const prompt = `You are a Senior Pedagogical Consultant & Career Mentor. Your task is to provide a Mentor with specific, actionable guidance strategies for a student named ${userContext.name || 'this student'}.
 
 STUDENT PROFILE:
 ${userContext.schoolLevel ? `- Level: ${userContext.schoolLevel}` : ''} ${userContext.currentGrade ? `(Grade ${userContext.currentGrade})` : ''}
@@ -305,23 +305,23 @@ ${assessmentInfo}
 ${academicInfo}
 
 TASK:
-Provide a strategic "Teacher Guidance Report" that is realistic and tactical.
+Provide a strategic "Mentor Guidance Report" that is realistic and tactical.
 
 STRUCTURE YOUR RESPONSE IN THESE SECTIONS (NO MARKDOWN ** or ##):
 
 1. STUDENT TRIANGULATION SUMMARY
 A one-sentence summary of who this student is based on the intersection of their personality, academics, and practical constraints.
 
-2. PEDAGOGICAL TACTICS
-Provide 3 concrete classroom or school-level actions the teacher can take to support this student's specific career trajectory.
+2. GUIDANCE TACTICS
+Provide 3 concrete actions the mentor can take to support this student's specific career trajectory.
 If they are weak in a subject core to their goal, suggest a specific remedial approach.
 If they have financial/geographical constraints, suggest specific resources (TVET, bursaries, digital skills).
 
 3. MENTORSHIP TALKING POINTS
-Provide 2-3 specific questions or topics the teacher should bring up in a 1-on-1 mentorship session.
+Provide 2-3 specific questions or topics the mentor should bring up in a 1-on-1 guidance session.
 
 4. REAL-WORLD REALITY CHECK
-Highlight one major opportunity or hurdle the teacher should prepare the student for (e.g., automation risk, market demand in Kenya).
+Highlight one major opportunity or hurdle the mentor should prepare the student for (e.g., automation risk, market demand in Kenya).
 
 FORMATTING:
 - Use clear headings in ALL CAPS.
@@ -332,7 +332,7 @@ FORMATTING:
       const response = await this.sendMessage(prompt, [], userContext)
       return response
     } catch (error) {
-      console.error('Failed to generate teacher insights:', error)
+      console.error('Failed to generate mentor insights:', error)
       return "I'm sorry, I couldn't generate insights for this student right now. Please check if the student has completed their profile and grades are uploaded."
     }
   }
@@ -417,15 +417,16 @@ Return EXACTLY this JSON format (array of 3 objects):
           console.log('Successfully parsed', parsed.length, 'career recommendations')
           return parsed
         }
-        console.warn('Parsed result did not match expected structure, using fallback')
-        return this.getFallbackRecommendations(userContext)
+        console.error('Parsed result did not match expected structure:', parsed)
+        throw new Error('AI returned invalid career recommendation structure')
       } catch (parseError) {
         console.error('Failed to parse career recommendations:', parseError)
-        return this.getFallbackRecommendations(userContext)
+        console.error('Raw response:', response)
+        throw parseError
       }
     } catch (error) {
       console.error('Failed to generate career recommendations:', error)
-      return this.getFallbackRecommendations(userContext)
+      throw error
     }
   }
 
@@ -525,54 +526,6 @@ Return EXACTLY this JSON format (array of 3 objects):
       console.error('JSON string at failure:', jsonString);
       throw new Error(`JSON parsing failed: ${repairError instanceof Error ? repairError.message : String(repairError)}`);
     }
-  }
-
-  private getFallbackRecommendations(userContext: UserContext): any[] {
-    // Return a diverse set of standard careers if AI fails
-    return [
-      {
-        title: "Software Engineering & Data Science",
-        matchPercentage: 92,
-        estimatedClusterPoints: 42.5,
-        kuccpsCluster: "Cluster 5",
-        universities: ["JKUAT", "UoN", "Strathmore"],
-        isTechnicalMisfit: false,
-        reasoning: "Strong alignment with analytical thinking and digital economy trends.",
-        actionabilityScore: 95,
-        description: "Design and build software solutions for the global market.",
-        salaryRange: "KSh 120,000 - 450,000",
-        education: "BSc. Computer Science or Software Engineering",
-        whyRecommended: "Digital transformation is a key pillar of Vision 2030, offering massive growth."
-      },
-      {
-        title: "Agricultural Tech & Agribusiness",
-        matchPercentage: 88,
-        estimatedClusterPoints: 34.0,
-        kuccpsCluster: "Cluster 13",
-        universities: ["Egerton", "JKUAT"],
-        isTechnicalMisfit: false,
-        reasoning: "Leverages Kenya's economic backbone with modern technological integration.",
-        actionabilityScore: 90,
-        description: "Innovate food production and supply chain management.",
-        salaryRange: "KSh 80,000 - 300,000",
-        education: "BSc. Agribusiness or Agricultural Economics",
-        whyRecommended: "High demand for food security specialists and modern farming consultants."
-      },
-      {
-        title: "Creative Arts & Digital Media",
-        matchPercentage: 85,
-        estimatedClusterPoints: 28.5,
-        kuccpsCluster: "Cluster 19",
-        universities: ["Kenyatta University", "Daystar"],
-        isTechnicalMisfit: false,
-        reasoning: "Excellent fit for creative archetypes in the growing gig economy.",
-        actionabilityScore: 85,
-        description: "Content creation, digital marketing, and multimedia production.",
-        salaryRange: "KSh 60,000 - 250,000",
-        education: "BA. Communication or Digital Media",
-        whyRecommended: "The creative economy is one of the fastest-growing sectors in the region."
-      }
-    ];
   }
 
   // Note: Conversations are now stored in localStorage only (not in database)

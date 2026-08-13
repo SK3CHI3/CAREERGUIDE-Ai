@@ -35,7 +35,7 @@ const Careers = () => {
         const paths = await dashboardService.getCareerPaths();
         setCareers(paths);
         setFilteredCareers(paths);
-        
+
         // Handle direct linking via slug
         if (slug) {
           const matchedCareer = paths.find(c => c.slug === slug || c.id === slug);
@@ -54,6 +54,8 @@ const Careers = () => {
   }, [slug]);
 
   useEffect(() => {
+    if (careers.length === 0) return; // Don't filter if no data yet
+    
     const filtered = careers.filter(career => {
       const matchesSearch = career.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           career.description.toLowerCase().includes(searchQuery.toLowerCase());
@@ -241,7 +243,7 @@ const Careers = () => {
                         Details
                       </Button>
                       <Button 
-                        onClick={() => window.location.href = `/quick-assessment?career=${encodeURIComponent(career.title)}`}
+                        onClick={() => navigate(`/quick-assessment?career=${encodeURIComponent(career.title)}`)}
                         className="bg-primary/10 hover:bg-primary text-primary hover:text-white border border-primary/20 transition-all font-bold"
                       >
                         Assess Fit
@@ -307,7 +309,7 @@ const Careers = () => {
           </p>
           <Button 
             size="lg" 
-            onClick={() => window.location.href = '/quick-assessment'}
+            onClick={() => navigate('/quick-assessment')}
             className="bg-gradient-primary shadow-glow hover:scale-105 transition-transform"
           >
             Start AI Career Chat

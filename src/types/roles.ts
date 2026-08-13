@@ -1,14 +1,14 @@
 /**
- * User roles for school-integrated pivot.
+ * User roles for v3 — student-focused career guidance tool.
+ * Mentors help students make better career choices.
  * No parent role – parents share the student dashboard.
  */
-export type UserRole = 'student' | 'admin' | 'school' | 'teacher'
+export type UserRole = 'student' | 'admin' | 'mentor'
 
 export const ROLE_DASHBOARD_PATH: Record<UserRole, string> = {
   student: '/student',
   admin: '/admin',
-  school: '/school',
-  teacher: '/teacher',
+  mentor: '/mentor',
 }
 
 export function getDashboardPathForRole(role: UserRole): string {

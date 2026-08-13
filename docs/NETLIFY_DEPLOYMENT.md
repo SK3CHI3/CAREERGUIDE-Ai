@@ -21,8 +21,8 @@
 Set these in Netlify Dashboard → Site Settings → Environment Variables:
 
 ```
-VITE_SUPABASE_URL=https://yrgtkuwejsaxhsfozxfh.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlyZ3RrdXdlanNheGhzZm96eGZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYzMzEyMzUsImV4cCI6MjA3MTkwNzIzNX0.bQEGRE4OU5_cBJd5DNtdZ-DSdhO9wIKGc2L1DaR9l-s
+VITE_SUPABASE_URL=
+VITE_SUPABASE_ANON_KEY=
 VITE_DEEPSEEK_API_KEY=your_deepseek_api_key_here
 ```
 

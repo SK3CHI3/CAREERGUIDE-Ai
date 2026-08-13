@@ -16,8 +16,9 @@ The system uses **Realistic Triangulation Logic** to synthesize disparate data p
 
 ## 3. Presentation Layer
 - **Student Dashboard**: Displays the "Personality Radar," "Actionability Meter," and 3-pillar career matches.
-- **Teacher Dashboard**: Provides "AI Insights" through the `StudentInsightDialog`. Teachers see pedagogical strategies tailored to the student's unique triangulation.
+- **Mentor Dashboard**: Provides "AI Insights" through the `StudentInsightDialog`. Mentors see pedagogical strategies tailored to the student's unique triangulation.
 - **AI Chat**: A dynamic, contextual conversation interface that allows students to dive deeper into specific career fields using the same "triangulated" context.
+- **Counselor Booking**: Students can book 1-on-1 sessions with verified career counselors for personalized guidance.
 
 ## 4. Connectivity Diagram
 ```mermaid
@@ -27,13 +28,15 @@ graph TD
     C --> D[AICareerService]
     D --> E[Realistic Triangulation logic]
     E --> F[DeepSeek API]
-    F --> G[Career Recommendations & Teacher Insights]
+    F --> G[Career Recommendations & Mentor Insights]
     G --> H[Student Dashboard]
-    G --> I[Teacher Dashboard / AI Insights Dialog]
+    G --> I[Mentor Dashboard / AI Insights Dialog]
     H --> J[AIChat Exploration]
+    H --> K[Counselor Booking System]
 ```
 
 ## 5. Summary of Impacts
 - **Students** get actionable, realistic advice that factors in their actual environment.
-- **Teachers** get tactical mentorship tips to support students effectively.
+- **Students** can also access personalized 1-on-1 guidance through the counselor booking system.
+- **Mentors** get tactical mentorship tips to support students effectively.
 - **System** remains performant through a robust caching layer.

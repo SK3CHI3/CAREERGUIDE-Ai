@@ -1,39 +1,56 @@
-# CareerPath AI
+# CareerGuide AI — AI Career Guidance for Kenyan Students
 
-CareerPath AI is a dedicated platform designed to guide students through the complexities of the Competency-Based Education (CBE) curriculum in Kenya. By centering student potential and real-world opportunities, we help bridge the gap between academic choices and future professional success.
+**CareerGuide AI** is a free AI-powered career guidance platform built for Kenyan students navigating the CBC and 8-4-4 education systems. Get personalized career recommendations, track academic performance, and chat with an AI career counselor — all tailored to Kenya's job market.
 
-## The Story 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-careerguideai.co.ke-blue)](https://careerguideai.co.ke)
+[![Built with](https://img.shields.io/badge/Built%20with-React%20%2B%20Supabase-green)]()
+[![License](https://img.shields.io/badge/License-Proprietary-red)]()
 
-The inspiration for CareerPath AI stems from a personal journey. Growing up under the traditional education system, many students were forced to make life-altering academic decisions without professional guidance. This often led to missed opportunities and misaligned paths—such as abandoning foundational sciences before discovering a passion for engineering. 
+## About
 
-In today's multifaceted CBE environment, the challenge is even greater. CareerPath AI was built to ensure that no student has to navigate these critical transition points alone, providing a data-driven companion for every step of their career discovery process.
+CareerGuide AI combines RIASEC personality profiling, academic performance, and Kenya's labour market data to deliver personalized career guidance. Students get AI-powered career recommendations, a conversational AI career counselor, and access to verified professional counselors for 1-on-1 sessions. Mentors (parents, guardians, and educators) can track student progress and guide career decisions.
 
-## Key Features
+## Tech Stack
 
-### Intelligent Assessments
-The platform utilize comprehensive analysis to align student personalities (RIASEC) with academic performance and socio-economic realities. This ensures that every recommendation is both aspirational and actionable.
+**Frontend:** React 19 · TypeScript · Vite 8 · Tailwind CSS 4 · shadcn/ui
+**Backend:** Supabase (PostgreSQL + Auth + RLS + Storage)
+**AI:** DeepSeek V3.1 (streaming chat + JSON recommendations)
+**Charts:** Recharts (pie, radar, bar)
+**Payments:** IntaSend (M-Pesa)
+**Deploy:** Netlify
 
-### Institutional Management
-Schools and teachers are equipped with dedicated dashboards to monitor student progress, manage class enrollments, and access automated guidance reports for personalized classroom intervention.
+## Screenshots
 
-### Verified Counselor Access
-Students can book one-on-one sessions with professional career counselors. This direct access to human expertise complements our AI insights, providing a holistic support system.
+| Student Dashboard | AI Career Chat | Career Directory |
+|---|---|---|
+| Personalized career matches with RIASEC radar chart | Full-page AI counselor conversation | 500+ Kenya-specific career paths |
 
-### Dynamic Career Pathways
-Explore an extensive directory of career pathways, enriched with market intelligence, required skills, and education requirements.
+## Documentation
 
-### Field Day Coordination
-A streamlined process for students and schools to request and manage industrial visits, fostering real-world exposure and industry connections.
+- [V3 Migration Guide](docs/V3_MIGRATION.md) — Architecture changes, database migrations, and what was removed
+- [Developer Guide](docs/DEVELOPER.md) — Contributing and local development setup
+- [Security](docs/SECURITY.md) — Authentication, RLS policies, and data protection
+- [Deployment](docs/NETLIFY_DEPLOYMENT.md) — Production deployment and CI/CD
+- [IntaSend Integration](docs/INTASEND_INTEGRATION.md) — Payment processing with M-Pesa and credit cards
+- [Career Guidance Flow](docs/CAREER_GUIDANCE_FLOW.md) — Complete user journey from assessment to career planning
+- [Counselor Booking](docs/COUNSELOR_BOOKING.md) — 1-on-1 counselor session booking system
+- [Mentor System](docs/MENTOR_SYSTEM_FLOW.md) — Mentor role and student management flow
+- [Pricing Strategy](docs/PRICING_STRATEGY.md) — Revenue model and pricing tiers
 
-## Technology Stack
+## Pricing
 
-The platform is built with a modern, high-performance stack:
-- Frontend: React with TypeScript and Vite
-- Styling: Tailwind CSS and Shadcn/UI
-- Backend: Supabase (PostgreSQL, Auth, Storage)
-- Intelligence: Advanced AI models for personalized analysis
-- Payments: IntaSend for secure, local transactions
+| Plan | Price | Features |
+|------|-------|----------|
+| **Free Trial** | KSh 0 | Full access for the current academic term |
+| **Individual** | KSh 499/term | Full access, paid via M-Pesa |
+| **Counselor Session** | KSh 1,000/hr | 1-on-1 with a verified career counselor |
 
----
+*3-day grace period after expiry before access is locked.*
 
-CareerPath AI is dedicated to empowering the next generation of professionals through informed decision-making.
+## Contributing
+
+This is a proprietary project. For bug reports or feature requests, please open an issue.
+
+## License
+
+Proprietary. All rights reserved. See [LICENSE](LICENSE) for details.

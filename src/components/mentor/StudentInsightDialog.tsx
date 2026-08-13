@@ -75,7 +75,7 @@ const StudentInsightDialog: React.FC<StudentInsightDialogProps> = ({
 
             setInsight(result)
         } catch (error) {
-            console.error('Error generating teacher insight:', error)
+            console.error('Error generating mentor insight:', error)
             toast({
                 title: 'Error',
                 description: 'Failed to generate AI insights. Please ensure the student has completed their profile.',
@@ -135,7 +135,7 @@ const StudentInsightDialog: React.FC<StudentInsightDialogProps> = ({
                             <Bot className="w-6 h-6 text-primary-foreground" />
                         </div>
                         <div>
-                            <DialogTitle className="text-xl">Teacher Insight Report</DialogTitle>
+                            <DialogTitle className="text-xl">Mentor Insight Report</DialogTitle>
                             <DialogDescription>AI-generated guidance strategies for {studentName}</DialogDescription>
                         </div>
                     </div>

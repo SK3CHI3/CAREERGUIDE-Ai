@@ -78,6 +78,7 @@ export default async (request: Request, context: any) => {
               "articleBody": cleanBody,
               "image": post.cover_image_url,
               "datePublished": post.published_at,
+              "dateModified": post.updated_at || post.published_at,
               "author": {
                 "@type": "Organization",
                 "name": "CareerGuide AI",

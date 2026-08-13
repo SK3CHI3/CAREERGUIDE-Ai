@@ -16,7 +16,7 @@ interface Profile {
   phone: string | null
   full_name: string | null
   avatar_url: string | null
-  role: 'student' | 'admin' | 'school' | 'teacher'
+  role: 'student' | 'admin' | 'mentor'
   school_id?: string | null
   school_level?: 'primary' | 'secondary' | 'tertiary'
   current_grade?: string
@@ -37,6 +37,8 @@ interface Profile {
   payment_amount?: number
   payment_currency?: string
   intasend_transaction_id?: string
+  mentor_student_count?: '1-5' | '6-20' | '21-50' | '50+' | null
+  mentor_type?: 'individual' | 'classroom' | 'school' | 'organization' | null
   created_at: string
   updated_at: string
 }
@@ -49,7 +51,7 @@ interface AuthContextType {
   profileLoading: boolean
   profileError: Error | null
   isMFAEnabled: boolean
-  signUp: (email: string, password: string, fullName: string, upiOrPhone: string, role?: Profile['role']) => Promise<{ data: any; error: AuthError | null }>
+  signUp: (email: string, password: string, fullName: string, upiOrPhone: string, role?: Profile['role'], mentorData?: { studentCount?: Profile['mentor_student_count']; mentorType?: Profile['mentor_type'] }) => Promise<{ data: any; error: AuthError | null }>
   signIn: (identifier: string, password: string) => Promise<{ error: AuthError | null }>
   signOut: () => Promise<{ error: AuthError | null }>
   updateProfile: (updates: Partial<Profile>) => Promise<{ error: Error | null }>
@@ -223,16 +225,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [user])
 
   // Sign up with email and password
-  // upiOrPhone: UPI number for students (6-char NEMIS code), phone for schools
-  const signUp = async (email: string, password: string, fullName: string, upiOrPhone: string, role: Profile['role'] = 'student') => {
+  // upiOrPhone: UPI number for students (6-char NEMIS code), phone for mentors
+  const signUp = async (email: string, password: string, fullName: string, upiOrPhone: string, role: Profile['role'] = 'student', mentorData?: { studentCount?: Profile['mentor_student_count']; mentorType?: Profile['mentor_type'] }) => {
     const isStudent = role === 'student'
+    const isMentor = role === 'mentor'
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
           full_name: fullName,
-          // Store UPI for students, phone for schools/teachers
+          // Store UPI for students, phone for mentors
           ...(isStudent ? { upi_number: upiOrPhone } : { phone: upiOrPhone }),
           role: role,
         },
@@ -242,18 +245,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!error && data.user) {
       if (isStudent) {
         await supabase.from('profiles').update({ upi_number: upiOrPhone } as any).eq('id', data.user.id)
-        
+
         // Sync any orphaned grades and class enrollments that were uploaded before the student created an account
         const { error: syncError } = await supabase.rpc('sync_student_data' as any, {
           p_user_id: data.user.id,
           p_upi: upiOrPhone.toUpperCase()
         })
-        
+
         if (syncError) {
           console.error("Warning: Failed to sync orphaned student data automatically:", syncError)
         }
       } else {
-        await supabase.from('profiles').update({ phone: upiOrPhone } as any).eq('id', data.user.id)
+        // For mentors, save phone + mentor fields
+        const updateData: any = { phone: upiOrPhone }
+        if (isMentor && mentorData) {
+          if (mentorData.studentCount) updateData.mentor_student_count = mentorData.studentCount
+          if (mentorData.mentorType) updateData.mentor_type = mentorData.mentorType
+        }
+        await supabase.from('profiles').update(updateData).eq('id', data.user.id)
       }
     }
     return { data, error }

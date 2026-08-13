@@ -126,8 +126,8 @@ const FeatureShowcase = () => {
                   <Bot className="w-5 h-5" />
                 </div>
                 <div className="pt-0.5">
-                  <h4 className="text-[15px] font-bold text-card-foreground mb-1">AI-Powered Matching</h4>
-                  <p className="text-sm text-foreground-muted leading-snug font-medium">Personalized recommendations based on your unique profile.</p>
+                  <h4 className="text-[15px] font-bold text-card-foreground mb-1">AI-Powered Career Matching</h4>
+                  <p className="text-sm text-foreground-muted leading-snug font-medium">Career matches based on your interests, personality, academic strengths, and Kenya's job market trends.</p>
                 </div>
               </div>
 
@@ -173,19 +173,19 @@ const FeatureShowcase = () => {
 
         </div>
 
-        {/* For Schools Section */}
+        {/* For Mentors Section */}
         <div className="grid lg:grid-cols-2 gap-16 items-center">
-          
+
           {/* Left Content */}
           <div className="space-y-8">
             <h2 className="text-4xl md:text-5xl font-bold font-serif text-foreground leading-tight">
-              What do schools get?
+              What do mentors get?
             </h2>
-            
+
             <p className="text-lg text-foreground-muted leading-relaxed max-w-lg font-medium">
-              Empower your teachers with data-driven insights to support every student's unique journey through the CBE curriculum.
+              Empower your mentees with data-driven insights to support their unique career journey through the CBE curriculum.
             </p>
-            
+
             <div className="space-y-6 pt-4">
               <div className="flex items-start gap-5 bg-card p-5 rounded-2xl shadow-sm border border-border">
                 <div className="bg-secondary/10 p-2.5 rounded-full text-secondary shrink-0 border border-secondary/20">
@@ -196,8 +196,8 @@ const FeatureShowcase = () => {
                   <p className="text-sm text-foreground-muted leading-snug font-medium">Use precision AI insights to help students synchronize their educational journey with future opportunities.</p>
                 </div>
               </div>
-              
-              {/* School Career Days Sync */}
+
+              {/* Mentor Career Days Sync */}
               <div className="flex items-start gap-5 bg-secondary/5 p-6 rounded-2xl border border-secondary/20 shadow-glow-sm relative overflow-hidden group hover:scale-[1.02] transition-all">
                 <div className="absolute top-0 right-0 p-3 opacity-10">
                   <Building2 className="w-12 h-12 text-secondary" />
@@ -208,48 +208,48 @@ const FeatureShowcase = () => {
                 <div className="pt-0.5">
                   <h4 className="text-lg font-bold text-card-foreground mb-1.5">Career Days Sync</h4>
                   <p className="text-sm text-foreground-muted leading-relaxed font-medium">
-                    Host industry experts at your school and organize immersion days where students spend quality time with professional mentors.
+                    Connect students with industry experts and organize immersive experiences that enhance their career preparation.
                   </p>
                 </div>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-6 pt-6">
-              <Button 
+              <Button
                 className="bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-full px-7 py-6 text-[15px] font-semibold shadow-sm transition-all border-none"
-                onClick={() => navigate('/auth')}
+                onClick={() => navigate('/auth?role=mentor')}
               >
-                Onboard my school <ArrowRight className="w-4 h-4 ml-2" />
+                Become a mentor <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
           </div>
-          
+
           {/* Right Dashboard Mockup */}
           <div className="bg-card rounded-2xl shadow-elevated border border-border overflow-hidden h-[540px] flex flex-col group/school relative">
             {/* Header */}
             <div className="bg-secondary px-6 py-[18px] flex-shrink-0 flex items-center gap-3.5 text-secondary-foreground relative z-20">
               <div className="bg-white/10 border border-white/20 p-2 rounded-lg shrink-0">
-                <Building2 className="w-5 h-5 text-secondary-foreground/90" />
+                <UserCircle2 className="w-5 h-5 text-secondary-foreground/90" />
               </div>
               <div>
-                <h3 className="font-semibold text-[15px] leading-tight text-white/95">Nairobi High School</h3>
-                <p className="text-secondary-foreground/70 text-[13px] font-medium mt-0.5">School Dashboard</p>
+                <h3 className="font-semibold text-[15px] leading-tight text-white/95">Mentor Dashboard</h3>
+                <p className="text-secondary-foreground/70 text-[13px] font-medium mt-0.5">Guiding Students</p>
               </div>
             </div>
-            
+
             {/* Body */}
             <div className="p-8 flex-1 flex flex-col justify-between overflow-hidden relative z-10">
               {/* Looping Graphic Background */}
               <div className="absolute inset-x-0 bottom-0 h-64 opacity-[0.04] pointer-events-none overflow-hidden flex items-center justify-center">
-                 <motion.div 
-                  animate={{ 
+                 <motion.div
+                  animate={{
                     scale: [1, 1.5, 1],
                     y: [0, -20, 0]
                   }}
-                  transition={{ 
-                    duration: 10, 
-                    repeat: Infinity, 
-                    ease: "easeInOut" 
+                  transition={{
+                    duration: 10,
+                    repeat: Infinity,
+                    ease: "easeInOut"
                   }}
                   className="w-[600px] h-[600px] bg-secondary rounded-full blur-[100px]"
                  />
@@ -269,10 +269,10 @@ const FeatureShowcase = () => {
                   <div className="text-[12px] text-foreground-muted font-medium">Success</div>
                 </div>
               </div>
-              
+
               <div className="py-6 border-b border-border relative z-20">
                 <div className="flex justify-between items-end mb-4">
-                  <h4 className="text-[13px] font-bold text-foreground">Potential Metrics</h4>
+                  <h4 className="text-[13px] font-bold text-foreground">Student Progress</h4>
                   <span className="text-[11px] text-foreground-muted font-medium">Active now</span>
                 </div>
                 <div className="space-y-3">
@@ -283,7 +283,7 @@ const FeatureShowcase = () => {
                     <div key={i} className="flex items-center text-[11px]">
                       <span className="w-10 text-foreground-muted font-medium">{row.label}</span>
                       <div className="flex-1 h-2 bg-surface-light rounded-full mx-3 overflow-hidden">
-                        <motion.div 
+                        <motion.div
                           initial={{ width: 0 }}
                           whileInView={{ width: row.width }}
                           transition={{ duration: 1, delay: i * 0.2 }}
@@ -295,7 +295,7 @@ const FeatureShowcase = () => {
                   ))}
                 </div>
               </div>
-              
+
               <div className="pt-6 relative z-20">
                 <h4 className="text-[13px] font-bold text-foreground mb-3">Recent Insights</h4>
                 <ul className="text-[12px] space-y-2 text-foreground-muted font-medium italic">

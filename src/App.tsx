@@ -13,6 +13,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import FeedbackWidget from "./components/FeedbackWidget";
 import CookieBanner from "./components/CookieBanner";
 import InstallPrompt from "./components/InstallPrompt";
+import SmartRoot from "./components/SmartRoot";
 
 // Lazy load pages for performance
 const Index = lazy(() => import("./pages/Index"));
@@ -20,18 +21,13 @@ const Auth = lazy(() => import("./pages/Auth"));
 const About = lazy(() => import("./pages/About"));
 const FAQ = lazy(() => import("./pages/FAQ"));
 const StudentDashboard = lazy(() => import("./pages/StudentDashboard"));
+const StudentChatPage = lazy(() => import("./pages/StudentChatPage"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
-const SchoolDashboard = lazy(() => import("./pages/SchoolDashboard"));
-const SchoolTeachers = lazy(() => import("./pages/SchoolTeachers"));
-const SchoolClasses = lazy(() => import("./pages/SchoolClasses"));
-const SchoolStudents = lazy(() => import("./pages/SchoolStudents"));
-const TeacherDashboard = lazy(() => import("./pages/TeacherDashboard"));
+const TeacherDashboard = lazy(() => import("./pages/MentorDashboard"));
 const StudentCounselingPage = lazy(() => import("./pages/StudentCounselingPage"));
 const ClassDetail = lazy(() => import("./pages/ClassDetail"));
-const AcceptInvite = lazy(() => import("./pages/AcceptInvite"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Counselors = lazy(() => import("./pages/Counselors"));
-const SchoolInsightsPage = lazy(() => import("./pages/SchoolInsightsPage"));
 const QuickAssessment = lazy(() => import("./pages/QuickAssessment"));
 const Careers = lazy(() => import("./pages/Careers"));
 const HowItWorks = lazy(() => import("./pages/HowItWorks"));
@@ -55,7 +51,7 @@ const App = () => (
           <ScrollToTop />
           <Suspense fallback={<BrandedLoader fullScreen />}>
             <Routes>
-              <Route path="/" element={<Index />} />
+              <Route path="/" element={<SmartRoot />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/about" element={<About />} />
               <Route path="/how-it-works" element={<HowItWorks />} />
@@ -63,12 +59,23 @@ const App = () => (
               <Route path="/careers" element={<Careers />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/quick-assessment" element={<QuickAssessment />} />
+              <Route path="/counselors" element={<Counselors />} />
               <Route
                 path="/student"
                 element={
                   <ProtectedRoute requiredRole="student">
                     <PaymentGate>
                       <StudentDashboard />
+                    </PaymentGate>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/student/chat"
+                element={
+                  <ProtectedRoute requiredRole="student">
+                    <PaymentGate>
+                      <StudentChatPage />
                     </PaymentGate>
                   </ProtectedRoute>
                 }
@@ -102,62 +109,21 @@ const App = () => (
                 }
               />
               <Route
-                path="/school"
+                path="/mentor"
                 element={
-                  <ProtectedRoute requiredRole="school">
-                    <SchoolDashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/school/teachers"
-                element={
-                  <ProtectedRoute requiredRole="school">
-                    <SchoolTeachers />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/school/classes"
-                element={
-                  <ProtectedRoute requiredRole="school">
-                    <SchoolClasses />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/school/students"
-                element={
-                  <ProtectedRoute requiredRole="school">
-                    <SchoolStudents />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/school/insights"
-                element={
-                  <ProtectedRoute requiredRole="school">
-                    <SchoolInsightsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/teacher"
-                element={
-                  <ProtectedRoute requiredRole="teacher">
+                  <ProtectedRoute requiredRole="mentor">
                     <TeacherDashboard />
                   </ProtectedRoute>
                 }
               />
               <Route
-                path="/teacher/class/:classId"
+                path="/mentor/class/:classId"
                 element={
-                  <ProtectedRoute requiredRole="teacher">
+                  <ProtectedRoute requiredRole="mentor">
                     <ClassDetail />
                   </ProtectedRoute>
                 }
               />
-              <Route path="/invite" element={<AcceptInvite />} />
               <Route
                 path="/dashboard"
                 element={

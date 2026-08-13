@@ -17,40 +17,27 @@ declare global {
 
 export const CounselorDirectory = ({ limit }: { limit?: number }) => {
   const { user, profile } = useAuth();
-  const [counselors, setCounselors] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  
+  const [isLoading, setIsLoading] = useState(false);
+
   // Payment States
   const [isIntaSendLoaded, setIsIntaSendLoaded] = useState(false);
   const [intaSendInstance, setIntaSendInstance] = useState<any>(null);
   const [processingId, setProcessingId] = useState<string | null>(null);
   const { toast } = useToast();
- 
+
+  // Single hardcoded counselor
+  const counselor = {
+    id: 'victor-omollo',
+    full_name: 'Victor Omollo',
+    title: 'Career Guidance Specialist',
+    bio: 'Experienced career counselor specializing in helping students navigate their educational and professional paths in Kenya.',
+    hourly_rate: 1000,
+    image_url: null
+  };
+
   useEffect(() => {
-    loadCounselors();
     loadIntaSend();
   }, []);
- 
-  const loadCounselors = async () => {
-    setIsLoading(true);
-    // Join with profiles to get the full_name if it's missing in counselor_profiles
-    const { data: profilesData, error } = await (supabase
-      .from('counselor_profiles') as any)
-      .select('*, profiles(full_name)')
-      .eq('is_active', true);
-
-    if (!error && profilesData) {
-      // Map the data so counselor.full_name is correctly populated from the join if needed
-      const processedData = (profilesData as any[]).map(c => ({
-        ...c,
-        full_name: c.full_name || c.profiles?.full_name || 'Verified Counselor'
-      }));
-      
-      const filtered = limit ? processedData.slice(0, limit) : processedData;
-      setCounselors(filtered);
-    }
-    setIsLoading(false);
-  };
 
   const loadIntaSend = () => {
     if (window.IntaSend) {
@@ -137,75 +124,53 @@ export const CounselorDirectory = ({ limit }: { limit?: number }) => {
 
   return (
     <div className="space-y-8">
-      {/* Redundant title and description removed */}
-
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
-        {counselors.map((counselor) => (
-          <Card key={counselor.id} className="group relative bg-card border-card-border shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-300 overflow-hidden flex flex-col rounded-2xl">
-            <div className="h-24 sm:h-28 bg-gradient-to-r from-blue-600/10 to-purple-600/10 relative overflow-hidden">
-              {/* Background Logo Watermark */}
-              <div className="absolute top-2 right-2 opacity-[0.05] grayscale brightness-0 dark:invert group-hover:scale-110 transition-transform duration-500">
-                <img src="/logos/CareerGuide_Logo.webp" alt="" className="h-20 w-auto" />
-              </div>
-              
-              {counselor.image_url && (
-                <img src={counselor.image_url} alt="Cover" className="w-full h-full object-cover opacity-30 mt-4" />
-              )}
+      <div className="grid grid-cols-1 gap-3 md:gap-6">
+        <Card className="group relative bg-card border-card-border shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-300 overflow-hidden flex flex-col rounded-2xl">
+          <div className="h-24 sm:h-28 bg-gradient-to-r from-blue-600/10 to-purple-600/10 relative overflow-hidden">
+            {/* Background Logo Watermark */}
+            <div className="absolute top-2 right-2 opacity-[0.05] grayscale brightness-0 dark:invert group-hover:scale-110 transition-transform duration-500">
+              <img src="/logos/CareerGuide_Logo.webp" alt="" className="h-20 w-auto" />
             </div>
-            <div className="px-4 sm:px-6 flex justify-between items-end -mt-10 sm:-mt-12 relative z-10">
-              <div className="relative group/avatar">
-                <Avatar className="w-20 h-20 sm:w-24 sm:h-24 border-4 border-card rounded-2xl shadow-xl bg-background">
-                  <AvatarImage src={counselor.image_url || ""} className="object-cover" />
-                  <AvatarFallback className="text-2xl sm:text-3xl font-bold bg-primary/10 text-primary">{counselor.full_name?.substring(0, 2) || 'C'}</AvatarFallback>
-                </Avatar>
-                {/* Brand Badge on Avatar */}
-                <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-card border-2 border-background rounded-lg flex items-center justify-center shadow-lg transform group-hover/avatar:scale-110 transition-transform duration-300">
-                  <img src="/logos/CareerGuide_Logo.webp" alt="Verified" className="w-6 h-auto" />
-                </div>
-              </div>
-
-              <Badge variant="outline" className="mb-2 bg-background/90 backdrop-blur font-extrabold border-primary/30 text-primary shadow-sm py-1 text-[10px] sm:text-xs">
-                KSh {Number(counselor.hourly_rate).toLocaleString()}/hr
-              </Badge>
-            </div>
-
-            
-            <CardContent className="pt-4 sm:pt-5 px-4 sm:px-6 flex-1 flex flex-col">
-              <h3 className="text-lg sm:text-xl font-bold text-foreground leading-tight tracking-tight mb-0.5">{counselor.full_name || 'Verified Counselor'}</h3>
-              <p className="text-xs sm:text-sm font-semibold text-primary/80 mb-3 sm:mb-4">{counselor.title}</p>
-              
-              <p className="text-sm text-foreground-subtle line-clamp-3 mb-6 flex-1 leading-relaxed">
-                {counselor.bio}
-              </p>
-
-
-              <div className="space-y-2 mt-auto">
-                <Button 
-                  className="w-full" 
-                  disabled={processingId === counselor.id || !isIntaSendLoaded}
-                  onClick={() => initiateBooking(counselor)}
-                >
-                  {processingId === counselor.id ? (
-                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Processing...</>
-                  ) : (
-                    <><Video className="w-4 h-4 mr-2" /> Book Call</>
-                  )}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-
-        {counselors.length === 0 && (
-          <div className="col-span-full py-12 text-center border-2 border-dashed border-card-border rounded-xl">
-            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-              <Phone className="w-8 h-8 text-foreground-muted" />
-            </div>
-            <h3 className="text-lg font-medium text-foreground mb-1">No Counselors Available</h3>
-            <p className="text-foreground-muted">Check back later as we register new career experts.</p>
           </div>
-        )}
+          <div className="px-4 sm:px-6 flex justify-between items-end -mt-10 sm:-mt-12 relative z-10">
+            <div className="relative group/avatar">
+              <Avatar className="w-20 h-20 sm:w-24 sm:h-24 border-4 border-card rounded-2xl shadow-xl bg-background">
+                <AvatarFallback className="text-2xl sm:text-3xl font-bold bg-primary/10 text-primary">{counselor.full_name?.substring(0, 2) || 'C'}</AvatarFallback>
+              </Avatar>
+              {/* Brand Badge on Avatar */}
+              <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-card border-2 border-background rounded-lg flex items-center justify-center shadow-lg transform group-hover/avatar:scale-110 transition-transform duration-300">
+                <img src="/logos/CareerGuide_Logo.webp" alt="Verified" className="w-6 h-auto" />
+              </div>
+            </div>
+
+            <Badge variant="outline" className="mb-2 bg-background/90 backdrop-blur font-extrabold border-primary/30 text-primary shadow-sm py-1 text-[10px] sm:text-xs">
+              KSh {Number(counselor.hourly_rate).toLocaleString()}/hr
+            </Badge>
+          </div>
+
+          <CardContent className="pt-4 sm:pt-5 px-4 sm:px-6 flex-1 flex flex-col">
+            <h3 className="text-lg sm:text-xl font-bold text-foreground leading-tight tracking-tight mb-0.5">{counselor.full_name || 'Verified Counselor'}</h3>
+            <p className="text-xs sm:text-sm font-semibold text-primary/80 mb-3 sm:mb-4">{counselor.title}</p>
+
+            <p className="text-sm text-foreground-subtle line-clamp-3 mb-6 flex-1 leading-relaxed">
+              {counselor.bio}
+            </p>
+
+            <div className="space-y-2 mt-auto">
+              <Button
+                className="w-full"
+                disabled={processingId === counselor.id || !isIntaSendLoaded}
+                onClick={() => initiateBooking(counselor)}
+              >
+                {processingId === counselor.id ? (
+                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Processing...</>
+                ) : (
+                  <><Video className="w-4 h-4 mr-2" /> Book Call</>
+                )}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

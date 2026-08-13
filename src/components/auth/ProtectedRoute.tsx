@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { AlertCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -16,6 +16,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   requiredRole 
 }) => {
   const { user, profile, loading, profileLoading, profileError, refreshProfile, signOut } = useAuth()
+  const navigate = useNavigate()
 
   if (loading || (user && profileLoading)) {
     return (
@@ -49,7 +50,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
                 variant="ghost"
                 onClick={async () => {
                   await signOut()
-                  window.location.href = '/auth'
+                  navigate('/auth', { replace: true })
                 }}
               >
                 Sign out

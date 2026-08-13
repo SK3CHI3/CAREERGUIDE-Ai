@@ -10,7 +10,7 @@ export type TermDates = {
 
 export interface SubscriptionStatus {
   isActive: boolean
-  type: 'individual' | 'institutional' | 'trial' | 'none'
+  type: 'individual' | 'trial' | 'none'
   expiresAt: string | null
   isTrialEligible: boolean
 }
@@ -68,59 +68,7 @@ class SubscriptionService {
     const now = new Date()
     const gracePeriodMs = GRACE_PERIOD_DAYS * 24 * 60 * 60 * 1000
     
-    // 1. Check if institutional subscription exists via school
-    if (profile.school_id) {
-      const { data: school } = await supabase
-        .from('schools')
-        .select('created_at')
-        .eq('id', profile.school_id)
-        .single()
-      
-      if (school) {
-        const { data: schoolSub } = await supabase
-          .from('school_subscriptions')
-          .select('*')
-          .eq('school_id', profile.school_id)
-          .order('expires_at', { ascending: false })
-          .limit(1)
-          .maybeSingle()
-
-        if (schoolSub && schoolSub.expires_at) {
-          const actualExpiry = new Date(schoolSub.expires_at)
-          const graceExpiry = new Date(actualExpiry.getTime() + gracePeriodMs)
-          
-          if (now <= graceExpiry) {
-            return {
-              isActive: true,
-              type: 'institutional',
-              expiresAt: schoolSub.expires_at,
-              isTrialEligible: false
-            }
-          }
-        }
-
-        // Check if school is in its first term (Free Trial)
-        const currentTerm = await this.getCurrentTerm()
-        if (currentTerm) {
-          const schoolCreated = new Date(school.created_at!)
-          const termStart = new Date(currentTerm.dates.start)
-          const termEnd = new Date(currentTerm.dates.end)
-          const trialGraceEnd = new Date(termEnd.getTime() + gracePeriodMs)
-          
-          // If school was created in this term or earlier, but term hasn't ended yet (+ grace)
-          if (schoolCreated <= trialGraceEnd && schoolCreated >= termStart) {
-            return {
-              isActive: true,
-              type: 'trial',
-              expiresAt: currentTerm.dates.end,
-              isTrialEligible: true
-            }
-          }
-        }
-      }
-    }
-
-    // 2. Check individual subscription
+    // 1. Check individual subscription
     if (profile.subscription_expires_at) {
       const individualExpiry = new Date(profile.subscription_expires_at)
       const individualGraceExpiry = new Date(individualExpiry.getTime() + gracePeriodMs)
@@ -128,14 +76,14 @@ class SubscriptionService {
       if (now <= individualGraceExpiry) {
         return {
           isActive: true,
-          type: (profile.subscription_type as 'individual' | 'institutional' | 'trial') || 'individual',
+          type: (profile.subscription_type as 'individual' | 'trial') || 'individual',
           expiresAt: profile.subscription_expires_at,
           isTrialEligible: !profile.is_trial_used
         }
       }
     }
 
-    // 3. Check if user is eligible for trial (First Term Free)
+    // 2. Check if user is eligible for trial (First Term Free)
     if (!profile.is_trial_used) {
         const currentTerm = await this.getCurrentTerm()
         if (currentTerm) {

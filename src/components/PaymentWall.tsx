@@ -26,36 +26,10 @@ const PaymentWall: React.FC<PaymentWallProps> = ({ onPaymentSuccess }) => {
   const [error, setError] = useState<string | null>(null)
   const [isIntaSendLoaded, setIsIntaSendLoaded] = useState(false)
   const [intaSendInstance, setIntaSendInstance] = useState<any>(null)
-  const [pricingInfo, setPricingInfo] = useState<{ amount: number; label: string; count: number }>({ 
-    amount: 499, 
-    label: 'Individual Student Subscription',
-    count: 1
+  const [pricingInfo] = useState<{ amount: number; label: string }>({
+    amount: 499,
+    label: 'Student Subscription',
   })
-
-  useEffect(() => {
-    const calculatePricing = async () => {
-      if (profile?.role === 'school') {
-        const { count } = await supabase
-          .from('class_enrollments')
-          .select('*', { count: 'exact', head: true })
-          .eq('school_id', profile.school_id)
-        
-        const studentCount = count || 0
-        setPricingInfo({
-          amount: studentCount * 100,
-          label: 'Institutional Subscription',
-          count: studentCount
-        })
-      } else {
-        setPricingInfo({
-          amount: 499,
-          label: 'Individual Student Subscription',
-          count: 1
-        })
-      }
-    }
-    calculatePricing()
-  }, [profile])
 
   useEffect(() => {
     console.log('🔄 Loading IntaSend SDK from CDN...')
@@ -358,7 +332,7 @@ const PaymentWall: React.FC<PaymentWallProps> = ({ onPaymentSuccess }) => {
                 <span className="font-extrabold text-primary text-xl sm:text-2xl">KSh {pricingInfo.amount.toLocaleString()}</span>
               </div>
               <div className="flex justify-between items-center text-xs sm:text-sm text-foreground-muted">
-                <span>{profile?.role === 'school' ? `Covering ${pricingInfo.count} students` : 'Single term access'}</span>
+                <span>Single term access</span>
                 <span>Active until end of academic term</span>
               </div>
             </div>

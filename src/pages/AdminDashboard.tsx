@@ -19,7 +19,8 @@ import {
   MessageCircle, CheckCircle2, Bug, Lightbulb, HelpCircle,
   LayoutDashboard, Settings, Bell, Menu, X, ChevronRight,
   Database, LineChart, PieChart as PieChartIcon,
-  MessageSquarePlus, FileText, Briefcase, Calendar
+  MessageSquarePlus, FileText, Briefcase, Calendar,
+  Video, CreditCard
 } from 'lucide-react'
 import BrandedLoader from '@/components/BrandedLoader'
 import { supabase } from '@/lib/supabase'
@@ -33,7 +34,7 @@ import { ThemeToggle } from '@/components/ThemeToggle'
 interface AdminStats {
   totalStudents: number
   totalSchools: number
-  totalTeachers: number
+  totalMentors: number
   totalAssessments: number
   studentGrowth: { month: string; students: number; schools: number }[]
   careerDistribution: { name: string; value: number; color: string }[]
@@ -43,6 +44,12 @@ interface AdminStats {
   }[]
   subscriptionBreakdown: { name: string; value: number; color: string }[]
   totalRevenue: number
+  quickAssessmentRevenue: number
+  quickAssessmentCount: number
+  counselorSessionRevenue: number
+  counselorSessionCount: number
+  subscriptionRevenue: number
+  subscriptionCount: number
   globalActivities: any[]
 }
 
@@ -54,7 +61,7 @@ interface School {
   created_at: string
   logo_url?: string | null
   student_count?: number
-  teacher_count?: number
+  mentor_count?: number
 }
 
 interface AnalyticsData {
@@ -166,18 +173,34 @@ const AdminDashboard = () => {
       const [
         { count: totalStudents },
         { count: totalSchools },
-        { count: totalTeachers },
+        { count: totalMentors },
         { count: totalAssessments },
         { data: paymentsData },
       ] = await Promise.all([
         supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'student'),
         supabase.from('schools').select('id', { count: 'exact', head: true }),
-        supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'teacher'),
+        supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'mentor'),
         supabase.from('user_activities').select('id', { count: 'exact', head: true }).in('activity_type', ['assessment', 'riasec_assessment']),
-        supabase.from('payments').select('amount').eq('status', 'completed')
+        supabase.from('payments').select('amount, payment_type').eq('status', 'completed')
       ])
 
       const totalRevenue = (paymentsData ?? []).reduce((sum: number, p: any) => sum + Number(p.amount), 0)
+
+      // Payment type breakdown
+      const paymentBreakdown = (paymentsData ?? []).reduce((acc: Record<string, { count: number; total: number }>, p: any) => {
+        const type = p.payment_type || 'subscription'
+        if (!acc[type]) acc[type] = { count: 0, total: 0 }
+        acc[type].count += 1
+        acc[type].total += Number(p.amount)
+        return acc
+      }, {})
+
+      const quickAssessmentRevenue = paymentBreakdown?.quick_assessment?.total || 0
+      const quickAssessmentCount = paymentBreakdown?.quick_assessment?.count || 0
+      const counselorSessionRevenue = paymentBreakdown?.counselor_session?.total || 0
+      const counselorSessionCount = paymentBreakdown?.counselor_session?.count || 0
+      const subscriptionRevenue = paymentBreakdown?.subscription?.total || 0
+      const subscriptionCount = paymentBreakdown?.subscription?.count || 0
 
       const { data: allProfiles } = await supabase
         .from('profiles')
@@ -283,13 +306,19 @@ const AdminDashboard = () => {
       setStats({
         totalStudents: totalStudents ?? 0,
         totalSchools: totalSchools ?? 0,
-        totalTeachers: totalTeachers ?? 0,
+        totalMentors: totalMentors ?? 0,
         totalAssessments: totalAssessments ?? 0,
         studentGrowth,
         careerDistribution,
         recentUsers,
         subscriptionBreakdown,
         totalRevenue,
+        quickAssessmentRevenue,
+        quickAssessmentCount,
+        counselorSessionRevenue,
+        counselorSessionCount,
+        subscriptionRevenue,
+        subscriptionCount,
         globalActivities: globalActivities ?? []
       })
 
@@ -304,9 +333,9 @@ const AdminDashboard = () => {
         const schoolsWithCounts = await Promise.all(schoolsData.map(async (s) => {
           const [{ count: sCount }, { count: tCount }] = await Promise.all([
             supabase.from('school_members').select('id', { count: 'exact', head: true }).eq('school_id', s.id).eq('role', 'student'),
-            supabase.from('school_members').select('id', { count: 'exact', head: true }).eq('school_id', s.id).eq('role', 'teacher'),
+            supabase.from('school_members').select('id', { count: 'exact', head: true }).eq('school_id', s.id).eq('role', 'mentor'),
           ])
-          return { ...s, student_count: sCount ?? 0, teacher_count: tCount ?? 0 }
+          return { ...s, student_count: sCount ?? 0, mentor_count: tCount ?? 0 }
         }))
         setSchools(schoolsWithCounts)
       }
@@ -637,14 +666,68 @@ const AdminDashboard = () => {
                       trend="+85"
                       description="Unique RIASEC and Interest tests completed."
                     />
-                    <StatCard 
-                      label="Platform Value" 
-                      value={`KES ${stats.totalRevenue.toLocaleString()}`} 
-                      icon={TrendingUp} 
-                      color="#fbbf24" 
+                    <StatCard
+                      label="Platform Value"
+                      value={`KES ${stats.totalRevenue.toLocaleString()}`}
+                      icon={TrendingUp}
+                      color="#fbbf24"
                       trend="+18%"
                       description="Estimated ecosystem value based on activity."
                     />
+                  </div>
+
+                  {/* Revenue Breakdown */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Card className="bg-gradient-to-br from-blue-500/10 to-blue-600/5 border-blue-500/20 shadow-sm">
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm flex items-center gap-2 text-foreground">
+                          <FileText className="w-4 h-4 text-blue-500" />
+                          Quick Assessments
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-2xl font-bold text-foreground">
+                          KES {stats.quickAssessmentRevenue.toLocaleString()}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {stats.quickAssessmentCount} assessments @ KES 50 each
+                        </p>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="bg-gradient-to-br from-green-500/10 to-green-600/5 border-green-500/20 shadow-sm">
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm flex items-center gap-2 text-foreground">
+                          <Video className="w-4 h-4 text-green-500" />
+                          Counselor Sessions
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-2xl font-bold text-foreground">
+                          KES {stats.counselorSessionRevenue.toLocaleString()}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {stats.counselorSessionCount} sessions booked
+                        </p>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="bg-gradient-to-br from-purple-500/10 to-purple-600/5 border-purple-500/20 shadow-sm">
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm flex items-center gap-2 text-foreground">
+                          <CreditCard className="w-4 h-4 text-purple-500" />
+                          Subscriptions
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-2xl font-bold text-foreground">
+                          KES {stats.subscriptionRevenue.toLocaleString()}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {stats.subscriptionCount} active subscriptions
+                        </p>
+                      </CardContent>
+                    </Card>
                   </div>
 
                   {/* Charts Grid */}
@@ -864,7 +947,7 @@ const AdminDashboard = () => {
                                   <Badge variant="outline" className={`text-[9px] uppercase font-black px-2 py-0 border-border bg-muted ${
                                     u.role === 'admin' ? 'text-rose-400' : 
                                     u.role === 'school' ? 'text-amber-400' : 
-                                    u.role === 'teacher' ? 'text-blue-400' : 'text-muted-foreground'
+                                    u.role === 'mentor' ? 'text-blue-400' : 'text-muted-foreground'
                                   }`}>
                                     {u.role}
                                   </Badge>
@@ -1125,10 +1208,10 @@ const AdminDashboard = () => {
                           <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                           <CardContent className="p-6">
                             <div className="flex justify-between items-start mb-4">
-                              <p className="text-[10px] uppercase font-black text-slate-400 tracking-widest">Active Teachers</p>
+                              <p className="text-[10px] uppercase font-black text-slate-400 tracking-widest">Active Mentors</p>
                               <BookOpen className="w-4 h-4 text-violet-400 opacity-50" />
                             </div>
-                            <p className="text-4xl font-black text-white tabular-nums">{selectedSchool.teacher_count || 0}</p>
+                            <p className="text-4xl font-black text-white tabular-nums">{selectedSchool.mentor_count || 0}</p>
                           </CardContent>
                         </Card>
                         <Card className="bg-slate-950/40 backdrop-blur-md border-white/5 shadow-glass relative overflow-hidden group">
@@ -1183,7 +1266,7 @@ const AdminDashboard = () => {
                               <div className="flex flex-col sm:flex-row sm:items-center justify-between p-6 hover:bg-rose-500/[0.02] transition-colors gap-4">
                                 <div>
                                   <p className="font-bold text-rose-500 mb-1">Suspend Institution Access</p>
-                                  <p className="text-xs text-slate-400 leading-relaxed max-w-xl">Temporarily block all teacher and student access associated with this school. This action is immediately enforced.</p>
+                                  <p className="text-xs text-slate-400 leading-relaxed max-w-xl">Temporarily block all mentor and student access associated with this school. This action is immediately enforced.</p>
                                 </div>
                                 <Button variant="destructive" className="bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white border border-rose-500/20 shrink-0 shadow-none">Suspend Access</Button>
                               </div>
@@ -1237,8 +1320,8 @@ const AdminDashboard = () => {
                           <CardContent className="p-6">
                             <div className="grid grid-cols-2 gap-4 mb-6">
                               <div className="space-y-1">
-                                <p className="text-[10px] uppercase font-black text-slate-300 tracking-thinner">Teachers</p>
-                                <p className="text-xl font-black text-white">{s.teacher_count}</p>
+                                <p className="text-[10px] uppercase font-black text-slate-300 tracking-thinner">Mentors</p>
+                                <p className="text-xl font-black text-white">{s.mentor_count}</p>
                               </div>
                               <div className="space-y-1">
                                 <p className="text-[10px] uppercase font-black text-slate-300 tracking-thinner">Students</p>

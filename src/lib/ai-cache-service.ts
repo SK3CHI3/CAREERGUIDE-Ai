@@ -141,16 +141,21 @@ class AICacheService {
             console.log('L1 Cache Hit: Career Recommendations (Cookies/Local)');
             return l1Data;
           }
+        } else {
+          console.log('L1 Cache fingerprint mismatch, checking L2...');
         }
       }
 
-      // 2. Fallback to L2 Cache (Supabase)
-      const isValid = await this.isCacheValid(userId, 'career_recommendations', currentHash)
-      if (!isValid) {
-        console.log('Cache is invalid, returning null for re-fetch')
-        return null
+      // 1b. Try L1 cache without hash validation (for app reload scenarios)
+      const l1DataNoHash = cacheUtils.getFromL1(userId, 'career_recommendations');
+      if (l1DataNoHash) {
+        console.log('L1 Cache Hit (no hash validation): Career Recommendations');
+        return l1DataNoHash;
       }
 
+      // 2. Always try L2 Cache (Supabase) - don't block on hash mismatch
+      // Hash mismatch means data might be stale, but we should still return it
+      // The caller can decide whether to refresh
       // @ts-ignore - Database types not fully generated
       const { data, error } = await supabase
         .from('cached_career_recommendations')
@@ -159,21 +164,43 @@ class AICacheService {
         .order('match_percentage', { ascending: false })
 
       if (error) {
-        console.warn('Error fetching cached career recommendations:', error)
-        return null
+        console.warn('Error fetching cached career recommendations from L2:', error);
+        return null;
       }
 
-      return data || []
+      if (data && data.length > 0) {
+        console.log(`L2 Cache Hit: Found ${data.length} career recommendations in Supabase`);
+        // Sync to L1 for faster future reads
+        cacheUtils.saveToL1(userId, 'career_recommendations', data);
+        if (currentHash) {
+          cacheUtils.setCacheFingerprint(userId, currentHash);
+        }
+        return data;
+      }
+
+      return null;
     } catch (error) {
-      console.error('Error getting cached career recommendations:', error)
-      return null
+      console.error('Error getting cached career recommendations:', error);
+      return null;
     }
   }
 
   async saveCareerRecommendations(userId: string, recommendations: Record<string, unknown>[], hash?: string): Promise<void> {
     try {
-      // 1. Save to L1 Cache (LocalStorage + Cookie)
-      cacheUtils.saveToL1(userId, 'career_recommendations', recommendations);
+      // Normalize recommendations to consistent format
+      const normalizedRecommendations = recommendations.map(rec => ({
+        career_name: (rec.career_name || rec.title || rec.name || '').toString(),
+        match_percentage: Number(rec.match_percentage || rec.matchPercentage || rec.value || 0),
+        description: (rec.description || '').toString(),
+        salary_range: (rec.salary_range || rec.salaryRange || '').toString(),
+        education: (rec.education || rec.education_required || '').toString(),
+        growth: (rec.growth || rec.growth_prospect || '').toString(),
+        why_recommended: (rec.why_recommended || rec.whyRecommended || '').toString(),
+        actionability_score: Number(rec.actionability_score || rec.actionabilityScore || 85)
+      }));
+
+      // 1. Save to L1 Cache (LocalStorage + Cookie) - normalized format
+      cacheUtils.saveToL1(userId, 'career_recommendations', normalizedRecommendations);
       if (hash) cacheUtils.setCacheFingerprint(userId, hash);
 
       // 2. Save to L2 Cache (Supabase)
@@ -189,15 +216,15 @@ class AICacheService {
       }
 
       // Insert new recommendations
-      const recommendationsToSave = recommendations.map(rec => ({
+      const recommendationsToSave = normalizedRecommendations.map(rec => ({
         user_id: userId,
-        career_name: (rec.career_name || rec.title || rec.name || '').toString(),
-        match_percentage: Number(rec.match_percentage || rec.matchPercentage || rec.value || 0),
-        description: (rec.description || '').toString(),
-        salary_range: (rec.salary_range || rec.salaryRange || '').toString(),
-        education: (rec.education || rec.education_required || '').toString(),
-        growth: (rec.growth || rec.growth_prospect || '').toString(),
-        why_recommended: (rec.why_recommended || rec.whyRecommended || '').toString()
+        career_name: rec.career_name,
+        match_percentage: rec.match_percentage,
+        description: rec.description,
+        salary_range: rec.salary_range,
+        education: rec.education,
+        growth: rec.growth,
+        why_recommended: rec.why_recommended
       }))
 
       // Ensure unique career names in case AI generates duplicates
@@ -309,16 +336,19 @@ class AICacheService {
             console.log('L1 Cache Hit: Course Recommendations');
             return l1Data;
           }
+        } else {
+          console.log('L1 Cache fingerprint mismatch for courses, checking L2...');
         }
       }
 
-      // 2. Fallback to L2
-      const isValid = await this.isCacheValid(userId, 'course_recommendations', currentHash)
-      if (!isValid) {
-        console.log('Course recommendations cache is missing/invalid')
-        return null
+      // 1b. Try L1 cache without hash validation (for app reload scenarios)
+      const l1DataNoHash = cacheUtils.getFromL1(userId, 'course_recommendations');
+      if (l1DataNoHash) {
+        console.log('L1 Cache Hit (no hash validation): Course Recommendations');
+        return l1DataNoHash;
       }
 
+      // 2. Always try L2 Cache (Supabase) - don't block on hash mismatch
       // @ts-ignore - Database types not fully generated
       const { data, error } = await supabase
         .from('cached_course_recommendations')
@@ -327,21 +357,26 @@ class AICacheService {
         .maybeSingle()
 
       if (error) {
-        console.warn('Error fetching cached course recommendations from L2:', error)
-        return null
+        console.warn('Error fetching cached course recommendations from L2:', error);
+        return null;
       }
 
       const courses = (data?.courses as Record<string, unknown>[]) ?? null;
 
-      // Sync L1 if we found it in L2
-      if (courses && currentHash) {
+      if (courses && courses.length > 0) {
+        console.log(`L2 Cache Hit: Found ${courses.length} course recommendations in Supabase`);
+        // Sync to L1 for faster future reads
         cacheUtils.saveToL1(userId, 'course_recommendations', courses);
+        if (currentHash) {
+          cacheUtils.setCacheFingerprint(userId, currentHash);
+        }
+        return courses;
       }
 
-      return courses;
+      return null;
     } catch (error) {
-      console.error('Error getting cached course recommendations:', error)
-      return null
+      console.error('Error getting cached course recommendations:', error);
+      return null;
     }
   }
 

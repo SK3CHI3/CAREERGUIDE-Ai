@@ -105,13 +105,21 @@ serve(async (req) => {
       });
     }
 
+    // DETERMINE PAYMENT TYPE
+    let paymentType: 'subscription' | 'quick_assessment' | 'counselor_session' = 'subscription';
+    if (api_ref.startsWith('QA_')) {
+      paymentType = 'quick_assessment';
+    } else if (api_ref.startsWith('BOOK_')) {
+      paymentType = 'counselor_session';
+    }
+
     // RECORD PAYMENT IN AUDIT TABLE
     let userId: string | null = null;
     let schoolId: string | null = null;
-    
+
     if (api_ref.includes('_')) {
        const parts = api_ref.split('_');
-       userId = parts[1]; // PAY_{userId}_... or BOOK_{userId}_...
+       userId = parts[1]; // PAY_{userId}_..., BOOK_{userId}_..., QA_{userId}_...
     }
 
     // Fetch user current school if applicable
@@ -125,6 +133,7 @@ serve(async (req) => {
        school_id: schoolId,
        amount: value,
        status: 'completed',
+       payment_type: paymentType,
        intasend_transaction_id: transId,
        api_ref: api_ref,
        payload: body

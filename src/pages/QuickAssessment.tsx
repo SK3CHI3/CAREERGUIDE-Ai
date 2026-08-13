@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Sparkles, Download, ArrowRight, ArrowLeft, CheckCircle, Brain, Target, User, Heart, Compass, ShieldAlert, Rocket, Lock, Zap, GraduationCap } from "lucide-react";
+import { Sparkles, Download, ArrowRight, ArrowLeft, CheckCircle, Brain, Target, User, Heart, ShieldAlert, Rocket, Lock, GraduationCap } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import BrandedLoader from "@/components/BrandedLoader";
@@ -16,7 +16,7 @@ import { ReportGenerator, type GuestProfile, type CareerRecommendation } from "@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import BackgroundGradient from "@/components/BackgroundGradient";
-import { RIASEC_ACTIVITIES, RIASEC_LABELS } from "@/data/riasec-assessment";
+import { INTEREST_CATEGORIES } from "@/data/interest-categories";
 
 const QuickAssessment = () => {
     const navigate = useNavigate();
@@ -44,8 +44,9 @@ const QuickAssessment = () => {
         'Kiswahili': ''
     });
 
-    // Phase 2: RIASEC
-    const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
+    // Phase 2: Interests
+    const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+    const [customInterest, setCustomInterest] = useState("");
 
     // Phase 3: Values & Work Style
     const [selectedValues, setSelectedValues] = useState<string[]>([]);
@@ -113,12 +114,12 @@ const QuickAssessment = () => {
         legacy: ["Form 1", "Form 2", "Form 3", "Form 4", "Form 4 Leaver", "University Year 1", "University Year 2", "University Year 3", "University Year 4"]
     };
 
-    const valueOptions = ["High Income / Wealth", "Helping Others / Impact", "Work-Life Balance", "Leadership / Power", "Creativity / Innovation", "Stability / Security"];
-    const workStyleOptions = ["Solo / Independent", "Collaborative Team", "Remote / Tech-Focused", "Outdoors / Active", "Corporate Office", "Hands-on / Fieldwork"];
+    const valueOptions = ["Financial success and prosperity", "Making a meaningful impact on society", "Work-life balance and personal time", "Leadership and influence", "Creativity and innovation", "Job security and stability"];
+    const workStyleOptions = ["Independent and autonomous", "Collaborative team environment", "Fast-paced and dynamic", "Structured and systematic", "Creative and flexible", "Research and analysis focused"];
 
-    const barrierOptions = ["Financial Constraints", "Unsure of my interests", "Fear of failure", "Lack of mentorship/guidance", "Poor academic grades currently", "No barriers right now"];
-    const experienceOptions = ["School Clubs / Leader", "Volunteering / Community Service", "Hobby / Personal Projects", "Part-time Job / Internship", "None yet"];
-    const readinessOptions = ["Ready to apply now!", "Exploring my options", "Completely stuck / Need help"];
+    const barrierOptions = ["Financial constraints", "Unclear about my interests and strengths", "Fear of making the wrong choice", "Lack of mentorship or guidance", "Academic performance concerns", "No significant barriers at the moment"];
+    const experienceOptions = ["School clubs, student leadership, or competitions", "Volunteering or community service", "Personal projects, creative work, or independent research", "Part-time job or internship", "None yet"];
+    const readinessOptions = ["Ready to take action now", "Exploring my options carefully", "Need help understanding my path forward"];
     const getAvailableSubjects = () => {
         if (!curriculum || !grade) return [];
         
@@ -201,7 +202,7 @@ const QuickAssessment = () => {
             }
         }
         
-        if (currentStep === 2 && selectedActivities.length === 0) return setError("Please select at least one activity");
+        if (currentStep === 2 && selectedInterests.length === 0) return setError("Please select at least one interest");
         if (currentStep === 3) {
             if (selectedValues.length === 0) return setError("Please select your core values");
             if (!workStyle) return setError("Please select your preferred work style");
@@ -237,26 +238,6 @@ const QuickAssessment = () => {
         setCurrentStep(prev => prev - 1);
     };
 
-    const calculateRiasec = () => {
-        const scores = { realistic: 0, investigative: 0, artistic: 0, social: 0, enterprising: 0, conventional: 0 };
-        selectedActivities.forEach(id => {
-            const activity = RIASEC_ACTIVITIES.find(a => a.id === id);
-            if (activity) {
-                const key = activity.code === 'R' ? 'realistic' :
-                    activity.code === 'I' ? 'investigative' :
-                        activity.code === 'A' ? 'artistic' :
-                            activity.code === 'S' ? 'social' :
-                                activity.code === 'E' ? 'enterprising' : 'conventional';
-                scores[key]++;
-            }
-        });
-        const sortedTypes = Object.entries(scores)
-            .sort((a, b) => b[1] - a[1])
-            .filter(s => s[1] > 0)
-            .map(s => RIASEC_LABELS[s[0].charAt(0).toUpperCase() as keyof typeof RIASEC_LABELS]);
-        return { scores, personalityTypes: sortedTypes };
-    };
-
     const [isPaid, setIsPaid] = useState(isCareerFitMode);
     const [reportHtml, setReportHtml] = useState<string | null>(null);
 
@@ -264,8 +245,6 @@ const QuickAssessment = () => {
         setIsLoading(true);
         setError(null);
         try {
-            const { personalityTypes, scores } = calculateRiasec();
-            const topPersonality = personalityTypes[0] || 'Balanced';
             const mbtiCode = `${mbtiEnergy === 'Introvert' ? 'I' : 'E'}N${mbtiDecisions === 'Thinker' ? 'T' : 'F'}${mbtiStructure === 'Judging' ? 'J' : 'P'}`;
 
             const selectedGrades = Object.entries(subjectGrades).filter(([_, g]) => g !== '');
@@ -281,7 +260,7 @@ const QuickAssessment = () => {
                 const calculatedTotalPoints = selectedGrades.reduce((sum, [_, g]) => sum + (gradePoints[g] || 0), 0);
                 totalPointsVal = calculatedTotalPoints;
                 const meanPoints = calculatedTotalPoints / selectedGrades.length;
-                
+
                 const getGradeFromPoints = (points: number) => {
                     if (points >= 11.5) return 'A';
                     if (points >= 10.5) return 'A-';
@@ -305,7 +284,7 @@ const QuickAssessment = () => {
                 grade,
                 pathway: pathway || undefined,
                 subjects: selectedSubjects,
-                interests: [`RIASEC Type: ${personalityTypes.join(', ')}`],
+                interests: selectedInterests,
                 values: selectedValues,
                 workStyle,
                 mbti: mbtiCode,
@@ -346,7 +325,8 @@ const QuickAssessment = () => {
                 - System: ${payload.curriculum}
                 - Grade: ${grade}
                 ${pathway ? `- Pathway: ${pathway.toUpperCase()}` : ''}
-                - Personality: RIASEC (${topPersonality}), MBTI (${mbtiCode})
+                - Interests: ${selectedInterests.join(', ')}
+                - Personality: MBTI (${mbtiCode})
                 - Values: ${selectedValues.join(', ')}
                 - Barrier: ${barrier}
                 ${targetCareer ? `- Target Career Fit Request: ${targetCareer}` : ''}
@@ -356,7 +336,7 @@ const QuickAssessment = () => {
             const summaryString = await aiCareerService.sendMessage(
                 summaryPrompt,
                 [],
-                { ...payload, assessmentResults: { riasec_scores: scores, personality_type: personalityTypes } }
+                { ...payload, assessmentResults: { personality_type: [mbtiCode] } }
             );
 
             const updatedProfile = {
@@ -622,19 +602,91 @@ const QuickAssessment = () => {
                                 <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
                                     <div className="text-center">
                                         <h2 className="text-2xl md:text-3xl font-bold flex items-center justify-center gap-2"><Target className="w-8 h-8 text-primary" /> Phase 2: Interests</h2>
-                                        <p className="text-muted-foreground mt-2">Pick 3-5 activities that sound genuinely fun to you.</p>
+                                        <p className="text-muted-foreground mt-2">Tap a category to pick specific interests, or add your own.</p>
                                     </div>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[50vh] overflow-y-auto p-2 custom-scrollbar">
-                                        {RIASEC_ACTIVITIES.slice(0, 16).map(a => (
-                                            <button key={a.id} type="button" onClick={() => setSelectedActivities(p => p.includes(a.id) ? p.filter(x => x !== a.id) : [...p, a.id])}
-                                                className={`p-4 rounded-xl border-2 transition-all text-left flex items-start gap-4 ${selectedActivities.includes(a.id) ? 'border-primary bg-primary/10 ring-1 ring-primary' : 'border-card-border hover:border-primary/20 bg-card/50'}`}>
-                                                <div className={`mt-0.5 w-5 h-5 shrink-0 rounded border-2 flex items-center justify-center ${selectedActivities.includes(a.id) ? 'border-primary bg-primary text-primary-foreground' : 'border-muted-foreground/30'}`}>
-                                                    {selectedActivities.includes(a.id) && <CheckCircle className="w-3 h-3" />}
+                                    <div className="space-y-3 max-h-[60vh] overflow-y-auto p-2 custom-scrollbar">
+                                        {INTEREST_CATEGORIES.map(cat => {
+                                            const isExpanded = selectedInterests.some(i => cat.items.includes(i));
+                                            return (
+                                                <div key={cat.id} className="space-y-2">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            const allSelected = cat.items.every(item => selectedInterests.includes(item));
+                                                            if (allSelected) {
+                                                                setSelectedInterests(prev => prev.filter(i => !cat.items.includes(i)));
+                                                            } else {
+                                                                setSelectedInterests(prev => [...new Set([...prev, ...cat.items])]);
+                                                            }
+                                                        }}
+                                                        className={`w-full p-3 rounded-xl border-2 transition-all text-left font-semibold text-sm flex items-center justify-between ${isExpanded ? 'border-primary bg-primary/10 text-primary' : 'border-card-border hover:border-primary/50 bg-card/50'}`}
+                                                    >
+                                                        <span>{cat.label}</span>
+                                                        <span className="text-xs font-normal text-muted-foreground">
+                                                            {cat.items.filter(i => selectedInterests.includes(i)).length}/{cat.items.length}
+                                                        </span>
+                                                    </button>
+                                                    {isExpanded && (
+                                                        <div className="flex flex-wrap gap-2 pl-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                                                            {cat.items.map(item => (
+                                                                <button
+                                                                    key={item}
+                                                                    type="button"
+                                                                    onClick={() => setSelectedInterests(prev => prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item])}
+                                                                    className={`px-3 py-1.5 text-xs rounded-lg border-2 transition-all ${selectedInterests.includes(item) ? 'border-primary bg-primary text-primary-foreground' : 'border-card-border hover:border-primary/50 bg-background/50'}`}
+                                                                >
+                                                                    {item}
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                    )}
                                                 </div>
-                                                <p className="text-[15px] font-medium leading-tight text-foreground">{a.text}</p>
-                                            </button>
-                                        ))}
+                                            );
+                                        })}
+                                    </div>
+
+                                    {/* Custom Interest Input */}
+                                    <div className="space-y-2 pt-2">
+                                        <Label className="text-sm font-semibold">Don't see yours? Add it here.</Label>
+                                        <div className="flex gap-2">
+                                            <Input
+                                                value={customInterest}
+                                                onChange={e => setCustomInterest(e.target.value)}
+                                                placeholder="Type your interest..."
+                                                className="flex-1 h-10 rounded-xl border-2"
+                                                onKeyDown={e => {
+                                                    if (e.key === 'Enter' && customInterest.trim()) {
+                                                        setSelectedInterests(prev => [...prev, customInterest.trim()]);
+                                                        setCustomInterest('');
+                                                    }
+                                                }}
+                                            />
+                                            <Button
+                                                type="button"
+                                                onClick={() => {
+                                                    if (customInterest.trim()) {
+                                                        setSelectedInterests(prev => [...prev, customInterest.trim()]);
+                                                        setCustomInterest('');
+                                                    }
+                                                }}
+                                                className="h-10 px-4 rounded-xl bg-primary"
+                                            >
+                                                Add
+                                            </Button>
+                                        </div>
+                                        {selectedInterests.length > 0 && (
+                                            <div className="flex flex-wrap gap-2 pt-2">
+                                                {selectedInterests.map(i => (
+                                                    <span key={i} className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-md bg-primary/10 text-primary border border-primary/20">
+                                                        {i}
+                                                        <button type="button" onClick={() => setSelectedInterests(prev => prev.filter(x => x !== i))} className="hover:text-destructive">
+                                                            ×
+                                                        </button>
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
 
                                     <div className="pt-4 flex justify-between">
@@ -791,82 +843,59 @@ const QuickAssessment = () => {
                                 </motion.div>
                             )}
 
-                            {/* STEP 7: RESULTS (PREVIEW & PAYWALL) */}
-                            {/* STEP 7: RESULTS (PREVIEW & PAYWALL) */}
+                            {/* STEP 7: RESULTS */}
                             {currentStep === 7 && (
-                                <motion.div key="step7" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-6 py-4 max-w-2xl mx-auto">
+                                <motion.div key="step7" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 py-4 max-w-3xl mx-auto">
+                                    {/* Success Header */}
                                     <div className="text-center space-y-2">
-                                        <div className="w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-1">
+                                        <div className="w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center mx-auto">
                                             <CheckCircle className="w-6 h-6 text-green-500" />
                                         </div>
                                         <h2 className="text-xl md:text-2xl font-black tracking-tight">Diagnostic Analysis Complete</h2>
-                                        <p className="text-xs text-muted-foreground px-4">Your personalized career roadmap and alignment profile are ready.</p>
+                                        <p className="text-sm text-muted-foreground">Your personalized career roadmap is ready.</p>
                                     </div>
 
-                                    <div className="flex flex-col gap-6">
-                                        {/* PREVIEW PANEL - CLICKABLE */}
-                                        <div className="relative group w-full">
-                                            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2 flex items-center gap-2 px-1">
-                                                <Compass className="w-3 h-3" /> Report Preview (Tap to Unlock)
-                                            </div>
-                                            <button 
-                                                onClick={() => !isPaid && paywallRef.current?.handlePayment()}
-                                                disabled={isPaid}
-                                                className={`relative w-full rounded-xl border-2 border-card-border overflow-hidden bg-white aspect-[3/4] transition-all text-left ${!isPaid ? 'max-h-[260px] cursor-pointer hover:border-primary/50' : 'max-h-none'}`}
-                                            >
-                                                {/* Actual Content Rendering */}
-                                                <div 
-                                                    className="p-4 origin-top scale-[0.55] sm:scale-[0.8] w-[182%] sm:w-[125%] pointer-events-none"
-                                                    dangerouslySetInnerHTML={{ __html: reportHtml || '' }}
-                                                />
-                                                
-                                                {/* Glassmorphism Blur Overlay */}
-                                                {!isPaid && (
-                                                    <div className="absolute inset-0 z-20 flex flex-col justify-end">
-                                                        <div className="h-full w-full backdrop-blur-[3.5px] bg-gradient-to-t from-background/90 via-background/40 to-transparent flex items-center justify-center p-6 text-center">
-                                                            <div className="bg-white/95 dark:bg-card/95 p-4 rounded-2xl shadow-2xl border border-primary/10 max-w-[190px] transform group-hover:scale-[1.02] transition-all duration-300">
-                                                                <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-2">
-                                                                    <Lock className="w-5 h-5 text-primary" />
-                                                                </div>
-                                                                <p className="text-[12px] font-black tracking-tight">Unlock Analysis</p>
-                                                                <p className="text-[9px] text-muted-foreground leading-tight mt-1">Tap here to unlock your full diagnostic report</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            </button>
-                                            
-                                            {isPaid && (
-                                                <div className="mt-4 flex justify-center">
-                                                    <Button onClick={downloadReport} className="w-full h-14 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg">
-                                                        <Download className="mr-2 w-5 h-5" /> Download Full PDF Report
-                                                    </Button>
-                                                </div>
-                                            )}
-                                        </div>
+                                    {/* Report Preview - Full width, centered, blurred */}
+                                    <div className="relative w-full rounded-2xl border-2 border-card-border overflow-hidden bg-white shadow-lg">
+                                        {/* Blurred Preview Content */}
+                                        <div
+                                            className={`p-6 md:p-8 transition-all duration-300 ${!isPaid ? 'blur-[2px] select-none pointer-events-none' : ''}`}
+                                            style={{ userSelect: isPaid ? 'text' : 'none' }}
+                                            dangerouslySetInnerHTML={{ __html: reportHtml || '' }}
+                                        />
 
-                                        {/* PAYWALL PANEL */}
-                                        <div className="w-full">
-                                            {!isPaid ? (
-                                                <ReportPaywall 
-                                                    ref={paywallRef}
-                                                    onPaymentSuccess={handlePaymentSuccess} 
-                                                    studentName={name}
-                                                    email={email}
-                                                />
-                                            ) : (
-                                                <div className="bg-green-500/5 border-2 border-green-500/20 rounded-2xl p-6 text-center space-y-4">
-                                                    <div className="w-14 h-14 bg-green-500/10 rounded-full flex items-center justify-center mx-auto">
-                                                        <Zap className="w-7 h-7 text-green-500" />
+                                        {/* Unlock Overlay (only when unpaid) */}
+                                        {!isPaid && (
+                                            <div className="absolute inset-0 z-20 flex items-center justify-center bg-gradient-to-t from-background/80 via-background/40 to-transparent">
+                                                <div className="text-center space-y-3 p-6">
+                                                    <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+                                                        <Lock className="w-6 h-6 text-primary" />
                                                     </div>
-                                                    <h3 className="text-xl font-bold text-green-600">Report Unlocked!</h3>
-                                                    <p className="text-sm text-muted-foreground">Your comprehensive diagnostic is ready for download.</p>
-                                                    <Button onClick={() => navigate('/student')} className="w-full h-12 rounded-xl border-2 border-primary text-primary hover:bg-primary/5 font-bold">
-                                                        Consult with Career Counselor
-                                                    </Button>
+                                                    <p className="text-sm font-semibold text-foreground">Full report available after payment</p>
                                                 </div>
-                                            )}
-                                        </div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Action Section */}
+                                    <div className="space-y-4">
+                                        {!isPaid ? (
+                                            <ReportPaywall
+                                                ref={paywallRef}
+                                                onPaymentSuccess={handlePaymentSuccess}
+                                                studentName={name}
+                                                email={email}
+                                            />
+                                        ) : (
+                                            <div className="space-y-3">
+                                                <Button onClick={downloadReport} className="w-full h-14 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg text-base">
+                                                    <Download className="mr-2 w-5 h-5" /> Download Full PDF Report
+                                                </Button>
+                                                <Button variant="outline" onClick={() => navigate('/student')} className="w-full h-12 border-2 border-primary text-primary hover:bg-primary/5 font-bold">
+                                                    Consult with Career Counselor
+                                                </Button>
+                                            </div>
+                                        )}
                                     </div>
                                 </motion.div>
                             )}
