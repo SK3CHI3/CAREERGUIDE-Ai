@@ -198,73 +198,29 @@ Focus on:
       }
 
       try {
-        const jsonMatch = aiResponse.match(/\[[\s\S]*?\]/)
-        if (jsonMatch) {
-          const parsed = JSON.parse(jsonMatch[0])
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            setCourses(parsed)
-            
-            // Save to cache
-            if (user?.id) {
-              await aiCacheService.saveCourseRecommendations(user.id, parsed)
-            }
-            if (onCoursesLoaded) onCoursesLoaded(parsed)
-
-          } else {
-            throw new Error('Invalid course data format')
-          }
-        } else {
-          throw new Error('Could not parse course recommendations')
+        // Use greedy match to capture the full outer array (handles nested arrays like skills)
+        const jsonMatch = aiResponse.match(/\[[\s\S]*\]/)
+        if (!jsonMatch) {
+          throw new Error('No JSON array found in response')
         }
+
+        const parsed = JSON.parse(jsonMatch[0])
+        if (!Array.isArray(parsed) || parsed.length === 0) {
+          throw new Error('Invalid course data format - expected non-empty array')
+        }
+
+        setCourses(parsed)
+
+        // Save to cache
+        if (user?.id) {
+          await aiCacheService.saveCourseRecommendations(user.id, parsed)
+        }
+        if (onCoursesLoaded) onCoursesLoaded(parsed)
+
       } catch (parseError) {
-        // Fallback courses
-        setCourses([
-          {
-            title: "Introduction to Digital Skills",
-            provider: "Coursera",
-            duration: "4 weeks",
-            difficulty: "Beginner",
-            rating: 4.6,
-            students: 50000,
-            description: "Learn essential digital skills for the modern workplace",
-            skills: ["Digital Literacy", "Computer Basics", "Online Communication"],
-            link: "https://coursera.org/learn/digital-skills",
-            free: true,
-            language: "English",
-            certificate: true,
-            whyRecommended: "Builds foundational digital skills needed for most careers"
-          },
-          {
-            title: "Mathematics for Data Science",
-            provider: "Khan Academy",
-            duration: "6 weeks",
-            difficulty: "Intermediate",
-            rating: 4.8,
-            students: 100000,
-            description: "Master mathematical concepts used in data analysis and science",
-            skills: ["Statistics", "Algebra", "Data Analysis"],
-            link: "https://khanacademy.org/math",
-            free: true,
-            language: "English",
-            certificate: false,
-            whyRecommended: "Strengthens mathematical foundation for analytical careers"
-          },
-          {
-            title: "Communication Skills for Success",
-            provider: "edX",
-            duration: "3 weeks",
-            difficulty: "Beginner",
-            rating: 4.7,
-            students: 75000,
-            description: "Develop effective communication skills for professional success",
-            skills: ["Public Speaking", "Writing", "Presentation"],
-            link: "https://edx.org/learn/communication",
-            free: true,
-            language: "English",
-            certificate: true,
-            whyRecommended: "Essential soft skills for any career path"
-          }
-        ])
+        console.error('Failed to parse course recommendations:', parseError)
+        console.error('Raw AI response:', aiResponse)
+        setError('Failed to parse course recommendations. Please try again.')
       }
     } catch (error) {
       console.error('Error generating course recommendations:', error)
