@@ -141,6 +141,8 @@ class AICacheService {
             console.log('L1 Cache Hit: Career Recommendations (Cookies/Local)');
             return l1Data;
           }
+        } else {
+          console.log('L1 Cache fingerprint mismatch, checking L2...');
         }
       }
 
@@ -151,13 +153,9 @@ class AICacheService {
         return l1DataNoHash;
       }
 
-      // 2. Fallback to L2 Cache (Supabase) - skip hash validation for initial load
-      const isValid = await this.isCacheValid(userId, 'career_recommendations', currentHash)
-      if (!isValid) {
-        console.log('Cache is invalid, returning null for re-fetch')
-        return null
-      }
-
+      // 2. Always try L2 Cache (Supabase) - don't block on hash mismatch
+      // Hash mismatch means data might be stale, but we should still return it
+      // The caller can decide whether to refresh
       // @ts-ignore - Database types not fully generated
       const { data, error } = await supabase
         .from('cached_career_recommendations')
@@ -166,14 +164,24 @@ class AICacheService {
         .order('match_percentage', { ascending: false })
 
       if (error) {
-        console.warn('Error fetching cached career recommendations:', error)
-        return null
+        console.warn('Error fetching cached career recommendations from L2:', error);
+        return null;
       }
 
-      return data || []
+      if (data && data.length > 0) {
+        console.log(`L2 Cache Hit: Found ${data.length} career recommendations in Supabase`);
+        // Sync to L1 for faster future reads
+        cacheUtils.saveToL1(userId, 'career_recommendations', data);
+        if (currentHash) {
+          cacheUtils.setCacheFingerprint(userId, currentHash);
+        }
+        return data;
+      }
+
+      return null;
     } catch (error) {
-      console.error('Error getting cached career recommendations:', error)
-      return null
+      console.error('Error getting cached career recommendations:', error);
+      return null;
     }
   }
 

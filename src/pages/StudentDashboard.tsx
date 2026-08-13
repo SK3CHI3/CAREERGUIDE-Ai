@@ -365,29 +365,6 @@ const StudentDashboard = () => {
         return;
       }
 
-      // No cached data, try to load from cache without hash validation (for app reload)
-      console.log('🔍 No cached data with hash, trying cache without validation...');
-      const cachedWithoutHash = await aiCacheService.getCachedCareerRecommendations(user.id);
-
-      if (cachedWithoutHash && cachedWithoutHash.length > 0) {
-        console.log('✅ Using cached recommendations (no hash validation):', cachedWithoutHash.length);
-
-        const top3 = cachedWithoutHash.slice(0, 3).map((rec, index) => ({
-          name: rec.career_name,
-          value: rec.match_percentage,
-          color: index === 0 ? '#3b82f6' : index === 1 ? '#10b981' : '#f59e0b',
-          description: rec.description || "Exciting career opportunity aligned with your interests and skills.",
-          salaryRange: rec.salary_range || 'KES 40K - 100K',
-          growth: rec.growth || 'Moderate Growth',
-          education: rec.education || "Bachelor's Degree or Diploma Required",
-          actionabilityScore: rec.actionability_score || 85
-        }));
-
-        setCareerData(top3);
-        console.log('✅ Cached recommendations loaded (no hash)');
-        return;
-      }
-
       // No cached data at all, generate fresh recommendations
       console.log('🤖 No cached data found, generating fresh career recommendations with AI...');
 
