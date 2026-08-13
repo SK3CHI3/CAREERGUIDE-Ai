@@ -16,7 +16,7 @@ const StatsPartnersSection = () => {
       <div className="relative z-10 w-full">
 
         {/* Content Container - Full width, no max-width constraint */}
-        <div className="min-h-[500px] relative w-full">
+        <div className="min-h-[700px] relative w-full">
 
           {/* Top left text */}
           <div className="absolute top-4 left-4 sm:top-8 sm:left-8 md:top-16 md:left-16">
