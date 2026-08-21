@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Mail, ArrowRight } from "lucide-react";
+import { Calendar, ArrowRight } from "lucide-react";
 
 const StatsPartnersSection = () => {
   return (
@@ -25,9 +25,23 @@ const StatsPartnersSection = () => {
             <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg text-left">
               Making an Impact Across Kenya
             </h2>
-            <p className="text-lg md:text-xl text-white/90 leading-relaxed drop-shadow-md text-left max-w-lg">
+            <p className="text-lg md:text-xl text-white/90 leading-relaxed drop-shadow-md text-left max-w-lg mb-8">
               Join thousands of Kenyan students who've found their path with CareerGuide AI
             </p>
+            <div className="flex flex-col gap-6">
+              <div>
+                <p className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">70+</p>
+                <p className="text-sm md:text-base text-white/80 drop-shadow-md">Students Guided</p>
+              </div>
+              <div>
+                <p className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">500+</p>
+                <p className="text-sm md:text-base text-white/80 drop-shadow-md">Career Paths</p>
+              </div>
+              <div>
+                <p className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">100+</p>
+                <p className="text-sm md:text-base text-white/80 drop-shadow-md">Assessments Completed</p>
+              </div>
+            </div>
           </div>
 
           {/* Bottom right CTA */}
@@ -36,10 +50,10 @@ const StatsPartnersSection = () => {
               <h3 className="text-xl md:text-2xl font-bold text-white drop-shadow-lg">Want to help shape our future?</h3>
               <p className="text-white/90 drop-shadow-md">Collaborate with CareerGuide AI to expand career guidance for students nationwide.</p>
               <Button
-                onClick={() => window.location.href = 'mailto:hello@careerguideai.com'}
+                onClick={() => window.open('https://calendly.com/victor-omollo/30min', '_blank', 'noopener,noreferrer')}
                 className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-8 py-6 text-lg font-bold shadow-glow group transition-all"
               >
-                <Mail className="w-5 h-5 mr-2" />
+                <Calendar className="w-5 h-5 mr-2" />
                 Partner With Us
                 <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Button>
