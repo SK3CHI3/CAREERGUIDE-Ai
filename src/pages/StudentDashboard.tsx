@@ -739,7 +739,7 @@ const StudentDashboard = () => {
       <main className="mx-auto w-full max-w-7xl px-4 pb-28 pt-5 sm:px-6 sm:py-8">
         {/* Tabs Navigation */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
-          <TabsList className="sr-only">
+          <TabsList className="student-desktop-tabs grid h-11 w-full grid-cols-5 sr-only">
             <TabsTrigger value="overview" className="text-xs sm:text-sm">Overview</TabsTrigger>
             <TabsTrigger value="careers" className="text-xs sm:text-sm relative">
               Careers
@@ -752,6 +752,7 @@ const StudentDashboard = () => {
             </TabsTrigger>
             <TabsTrigger value="chat" className="text-xs sm:text-sm">Chat</TabsTrigger>
             <TabsTrigger value="progress" className="text-xs sm:text-sm">Journey</TabsTrigger>
+            <TabsTrigger value="profile" className="text-xs sm:text-sm">Profile</TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}

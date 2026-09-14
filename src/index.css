@@ -481,8 +481,61 @@
   .student-shell .student-bottom-nav button.is-active { color: #2457d6; font-weight: 700; }
 
   @media (min-width: 768px) {
-    .student-shell .student-overview > .grid.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 15rem)); }
+    .student-shell .student-overview > .grid.grid-cols-2:not(.student-stats-grid) { grid-template-columns: repeat(2, minmax(0, 15rem)); }
     .student-shell .student-bottom-nav { position: static; width: min(100%, 34rem); margin: 2rem auto 0; border: 1px solid #e5e7eb; border-radius: 1rem; }
+  }
+
+  /* Keep the detailed, original dashboard on laptops and desktop screens.
+     The streamlined PWA view remains the experience below this breakpoint. */
+  @media (min-width: 1024px) {
+    .student-shell .student-desktop-tabs {
+      position: static;
+      display: grid !important;
+      width: 100%;
+      height: 2.75rem;
+      margin: 0;
+      overflow: visible;
+      clip: auto;
+      clip-path: none;
+      white-space: normal;
+    }
+
+    .student-shell .student-bottom-nav { display: none; }
+
+    .student-shell .student-overview > .student-recommended-action,
+    .student-shell .student-overview > .grid:not(.student-stats-grid):not(.student-legacy-overview),
+    .student-shell .student-weekly-activities,
+    .student-shell .student-career-toolkit,
+    .student-shell .student-explore > header,
+    .student-shell .student-explore > .student-match-section,
+    .student-shell .student-explore > .student-primary-button,
+    .student-shell .student-explore > .student-catalogue-section,
+    .student-shell .student-explore > .student-career-empty,
+    .student-shell .student-chat-view > header,
+    .student-shell .student-chat-message,
+    .student-shell .student-chat-prompts,
+    .student-shell .student-chat-view > .student-primary-button,
+    .student-shell .student-plan-view > header,
+    .student-shell .student-timeline { display: none; }
+
+    .student-shell .student-stats-grid { display: grid; }
+    .student-shell .student-legacy-overview,
+    .student-shell .student-legacy-careers,
+    .student-shell .student-legacy-chat,
+    .student-shell .student-legacy-plan { display: block; }
+    .student-shell .student-legacy-overview.grid { display: grid; }
+
+    .student-shell .student-profile-view { width: min(100%, 56rem); margin: 0 auto; padding-top: 0.5rem; }
+    .student-shell .student-profile-view > header { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 1rem; align-items: center; border: 1px solid #e2e8f0; border-radius: 1rem; background: #fff; padding: 1.25rem; }
+    .student-shell .student-profile-view > header h1 { grid-column: 2; margin: 0; font-size: 1.55rem; }
+    .student-shell .student-profile-view > header span { grid-column: 2; margin-top: 0.25rem; font-size: 0.85rem; }
+    .student-shell .student-profile-view > header .avatar { grid-row: span 2; }
+    .student-shell .student-profile-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; overflow: visible; border: 0; background: transparent; }
+    .student-shell .student-profile-list button { min-height: 7.5rem; grid-template-columns: 2rem minmax(0, 1fr) auto; align-items: start; border: 1px solid #e2e8f0; border-radius: 1rem; background: #fff; padding: 1.25rem; transition: border-color 160ms ease, box-shadow 160ms ease; }
+    .student-shell .student-profile-list button + button { border-top: 1px solid #e2e8f0; }
+    .student-shell .student-profile-list button:hover { border-color: #b8cdfc; box-shadow: 0 10px 24px rgb(37 87 214 / 0.08); }
+    .student-shell .student-profile-list b { font-size: 0.95rem; }
+    .student-shell .student-profile-list p { font-size: 0.78rem; line-height: 1.45; }
   }
 
   @media (min-width: 640px) {
