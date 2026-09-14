@@ -127,7 +127,7 @@
 
   /* Apply Libre Baskerville serif font to headings only */
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
+    font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif !important;
   }
 
   button,
