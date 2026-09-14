@@ -196,7 +196,7 @@
   }
 
   .auth-shell .auth-display {
-    font-family: Georgia, 'Times New Roman', serif;
+    font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
   }
 
   .auth-shell .auth-card {
@@ -255,7 +255,7 @@
 
   .onboarding-shell .onboarding-title {
     color: #0f172a;
-    font-family: Georgia, 'Times New Roman', serif;
+    font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
     line-height: 1.05;
   }
 
@@ -362,7 +362,7 @@
   .student-shell .student-priorities-card h2 {
     margin-top: 0.55rem;
     color: #172033;
-    font-family: Georgia, 'Times New Roman', serif;
+    font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
     font-size: 1.15rem;
     font-weight: 700;
     line-height: 1.15;
@@ -397,7 +397,7 @@
 
   .student-shell .student-snapshot-card { min-width: 0; padding: 0.75rem; }
   .student-shell .student-snapshot-card p { color: #7b8492; font-size: 0.62rem; }
-  .student-shell .student-snapshot-card strong { display: block; margin-top: 0.35rem; color: #14213d; font-family: Georgia, 'Times New Roman', serif; font-size: 1.35rem; font-weight: 700; }
+  .student-shell .student-snapshot-card strong { display: block; margin-top: 0.35rem; color: #14213d; font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif; font-size: 1.35rem; font-weight: 700; }
   .student-shell .student-snapshot-card span { display: block; margin-top: 0.2rem; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; }
   .student-shell .student-top-career-card { width: 100%; text-align: left; }
   .student-shell .student-top-career-card:hover { border-color: #b8cdfc; background: #f8faff; }
@@ -427,7 +427,7 @@
   .student-shell .student-plan-view h1,
   .student-shell .student-profile-view h1 {
     color: #172033;
-    font-family: Georgia, 'Times New Roman', serif;
+    font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
     font-size: 1.7rem;
     font-weight: 700;
     line-height: 1.05;
@@ -443,7 +443,7 @@
   .student-shell .student-career-list { overflow: hidden; border: 1px solid #e5e7eb; border-radius: 0.85rem; background: #fff; }
   .student-shell .student-career-list button { display: flex; width: 100%; align-items: flex-start; justify-content: space-between; gap: 0.75rem; padding: 0.9rem; text-align: left; }
   .student-shell .student-career-list button + button { border-top: 1px solid #edf0f4; }
-  .student-shell .student-career-list h2 { color: #1e293b; font-family: Georgia, 'Times New Roman', serif; font-size: 1rem; font-weight: 700; }
+  .student-shell .student-career-list h2 { color: #1e293b; font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif; font-size: 1rem; font-weight: 700; }
   .student-shell .student-career-list p { display: -webkit-box; margin-top: 0.28rem; overflow: hidden; color: #6b7280; font-size: 0.68rem; line-height: 1.4; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
   .student-shell .student-career-list small { display: block; margin-top: 0.6rem; color: #8a94a3; font-size: 0.6rem; }
   .student-shell .student-career-list small b { color: #334155; }
@@ -456,7 +456,7 @@
   .student-billing-card { display: flex; align-items: flex-start; gap: 1rem; border: 1px solid #dbe4f0; border-radius: 1.1rem; background: #fff; padding: 1.15rem; box-shadow: 0 6px 18px rgb(15 23 42 / .04); }
   .student-billing-plan-icon { display: grid; width: 2.5rem; height: 2.5rem; flex: 0 0 auto; place-items: center; border-radius: .8rem; background: #eaf1ff; color: #2457d6; }
   .student-billing-eyebrow, .student-billing-includes > p { color: #2457d6; font-size: .68rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
-  .student-billing-card h2, .student-billing-callout h2 { margin-top: .15rem; color: #172033; font-family: Georgia, 'Times New Roman', serif; font-size: 1.15rem; font-weight: 700; }
+  .student-billing-card h2, .student-billing-callout h2 { margin-top: .15rem; color: #172033; font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif; font-size: 1.15rem; font-weight: 700; }
   .student-billing-card p:not(.student-billing-eyebrow), .student-billing-callout p { margin-top: .3rem; color: #64748b; font-size: .82rem; line-height: 1.45; }
   .student-billing-active, .student-billing-inactive { display: inline-flex; align-items: center; gap: .35rem; border-radius: 999px; padding: .32rem .55rem; font-size: .68rem; font-weight: 750; white-space: nowrap; }
   .student-billing-active { background: #dcfce7; color: #16773b; }
@@ -470,7 +470,7 @@
   .student-billing-payment { margin-top: 1rem; }
   .student-shell .student-match-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 0.65rem; }
   .student-shell .student-match-heading p { color: #2457d6; font-size: 0.62rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
-  .student-shell .student-match-heading h2 { margin-top: .18rem; color: #172033; font-family: Georgia, 'Times New Roman', serif; font-size: 1.05rem; font-weight: 700; }
+  .student-shell .student-match-heading h2 { margin-top: .18rem; color: #172033; font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif; font-size: 1.05rem; font-weight: 700; }
   .student-shell .student-match-heading > span { color: #7b8492; font-size: .64rem; white-space: nowrap; }
   .student-shell .student-catalogue-list > button > svg { flex: 0 0 auto; margin-top: .4rem; }
 
@@ -635,7 +635,7 @@
   .chat-page-back { color: #536174; }
   .chat-page-back:hover { background: #f0f4fa; color: var(--chat-blue); }
   .chat-adviser-icon { background: #e8efff; color: var(--chat-blue); }
-  .chat-page-title { color: var(--chat-ink); font-family: Georgia, 'Times New Roman', serif; }
+  .chat-page-title { color: var(--chat-ink); font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif; }
   .chat-online-dot { background: #22a05a; box-shadow: 0 0 0 3px #dcfce7; }
   .chat-online-label { color: #16803d; }
   .chat-level-badge { border: 1px solid #dbe6ff; background: #f3f6ff; color: var(--chat-blue); text-transform: capitalize; }
@@ -668,7 +668,7 @@
   .subject-guide-page { background: #f7f9fc; }
   .subject-guide-main { max-width: 64rem; }
   .subject-guide-intro > p { color: #2457d6; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
-  .subject-guide-intro h1 { margin-top: 0.55rem; color: #172033; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(2rem, 5vw, 3.15rem); line-height: 1.05; }
+  .subject-guide-intro h1 { margin-top: 0.55rem; color: #172033; font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif; font-size: clamp(2rem, 5vw, 3.15rem); line-height: 1.05; }
   .subject-guide-intro > span { display: block; color: #64748b; font-size: 0.95rem; line-height: 1.55; }
   .subject-selection-guide { max-width: 52rem; margin: 0 auto; }
   .subject-guide-progress { padding: 0.8rem 1rem; border: 1px solid #e4e9f0; border-radius: 0.9rem; background: #fff; }
@@ -676,7 +676,7 @@
   .subject-progress-dot.bg-primary { border-color: #2457d6; background: #2457d6; color: #fff; }
   .subject-progress-line { height: 2px; margin: 0 0.45rem; }
   .subject-guide-card, .subject-results-summary, .personalized-pathway-card { border: 1px solid #e1e7ef; border-radius: 1rem; background: #fff; box-shadow: 0 8px 24px rgb(15 23 42 / 0.04); }
-  .subject-guide-card [data-slot="card-title"], .subject-results-summary h3, .personalized-pathway-card [data-slot="card-title"] { color: #172033 !important; font-family: Georgia, 'Times New Roman', serif; }
+  .subject-guide-card [data-slot="card-title"], .subject-results-summary h3, .personalized-pathway-card [data-slot="card-title"] { color: #172033 !important; font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif; }
   .subject-guide-card h3, .subject-pathway-card h3, .personalized-pathway-card h3 { color: #172033 !important; }
   .subject-guide-card p, .subject-pathway-card p { color: #64748b !important; }
   .subject-guide-card [data-slot="card-content"] > p { color: #64748b; font-size: 0.9rem; line-height: 1.55; }
@@ -708,12 +708,12 @@
   .counseling-back:hover { background: #f0f4fa; color: #2457d6; }
   .counseling-divider { background: #dce3ed; }
   .counseling-title-icon { color: #2457d6; }
-  .counseling-page-title { color: #172033; font-family: Georgia, 'Times New Roman', serif; }
+  .counseling-page-title { color: #172033; font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif; }
   .counseling-main { max-width: 60rem; }
   .adviser-chat-standalone { overflow: hidden; border: 1px solid #e0e7ef; border-radius: 1rem; background: #fff; box-shadow: 0 10px 30px rgb(15 23 42 / 0.05); }
   .adviser-chat-header { border-bottom: 1px solid #e5eaf1; background: #fff; }
   .adviser-chat-logo { border: 1px solid #dbe6ff; background: #f2f6ff; }
-  .adviser-chat-title { color: #172033; font-family: Georgia, 'Times New Roman', serif; }
+  .adviser-chat-title { color: #172033; font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif; }
   .adviser-online-dot { background: #22a05a; box-shadow: 0 0 0 3px #dcfce7; }
   .adviser-online-label { color: #16803d; }
   .adviser-reset { color: #718096; }
@@ -748,7 +748,7 @@
   .career-detail-modal .text-slate-300, .career-detail-modal .text-white { color: #243247; }
   .career-category { border-color: #dbe6ff; background: #f3f6ff; color: #2457d6; }
   .career-demand { color: #718096; }
-  .career-detail-title { color: #172033; font-family: Georgia, 'Times New Roman', serif; }
+  .career-detail-title { color: #172033; font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif; }
   .career-detail-subtitle { color: #64748b; }
   .career-detail-rule { background: #e7ecf2; }
   .career-detail-section-label { color: #718096; }
@@ -771,15 +771,15 @@
   .academic-modal { border: 1px solid #dfe6ee; background: #f8fafc; color: #172033; }
   .academic-modal-header { gap: 0.35rem; border-bottom: 1px solid #e7ecf2; padding-bottom: 1rem; }
   .academic-modal-header > p { color: #2457d6; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
-  .academic-modal-header h2 { color: #172033; font-family: Georgia, 'Times New Roman', serif; }
+  .academic-modal-header h2 { color: #172033; font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif; }
   .academic-modal-header > span { color: #64748b; font-size: 0.82rem; }
   .grades-summary-card, .grades-record-card { border: 1px solid #e1e7ef; border-radius: 0.85rem; background: #fff !important; box-shadow: 0 5px 16px rgb(15 23 42 / 0.035); }
   .grades-summary-card .text-foreground-muted { color: #718096; }
-  .grades-summary-card .text-2xl { color: #172033; font-family: Georgia, 'Times New Roman', serif; }
+  .grades-summary-card .text-2xl { color: #172033; font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif; }
   .grades-tabs-list { height: auto; gap: 0.2rem; border: 1px solid #e1e7ef; border-radius: 0.7rem; background: #fff; padding: 0.25rem; }
   .grades-tabs-list button { border-radius: 0.45rem; color: #64748b; font-size: 0.76rem; }
   .grades-tabs-list button[data-state="active"] { background: #2457d6; color: #fff; box-shadow: none; }
-  .grades-record-card [data-slot="card-title"] { color: #172033; font-family: Georgia, 'Times New Roman', serif; }
+  .grades-record-card [data-slot="card-title"] { color: #172033; font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif; }
   .grades-record-card [data-slot="card-description"] { color: #64748b; }
   .grades-record-card h3, .grades-record-card p { color: #172033; }
   .grades-record-card .text-muted-foreground { color: #64748b; }
@@ -794,7 +794,7 @@
   .short-courses-modal { border: 1px solid #dfe6ee; background: #f8fafc; color: #172033; }
   .short-courses-header { gap: 0.35rem; border-bottom: 1px solid #e7ecf2; background: #fff; padding: 1.25rem 1.5rem 1rem; }
   .short-courses-header > p { color: #2457d6; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
-  .short-courses-header h2 { color: #172033; font-family: Georgia, 'Times New Roman', serif; font-size: 1.55rem; }
+  .short-courses-header h2 { color: #172033; font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif; font-size: 1.55rem; }
   .short-courses-header > span { color: #64748b; font-size: 0.82rem; }
   .short-courses-body { max-height: calc(88vh - 10rem); overflow-y: auto; padding: 1rem 1.5rem 1.5rem; scrollbar-width: none; }
   .short-courses-body::-webkit-scrollbar { display: none; }
@@ -843,7 +843,7 @@
   .student-courses-back { margin: -0.45rem 0 1.25rem -0.75rem; color: #64748b; font-size: 0.8rem; }
   .student-courses-intro { margin-bottom: 1.5rem; }
   .student-courses-intro > span { display: inline-flex; align-items: center; gap: 0.4rem; color: #2457d6; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
-  .student-courses-intro h1 { margin: 0.55rem 0 0.45rem; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(1.8rem, 5vw, 2.5rem); font-weight: 700; line-height: 1.08; }
+  .student-courses-intro h1 { margin: 0.55rem 0 0.45rem; font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif; font-size: clamp(1.8rem, 5vw, 2.5rem); font-weight: 700; line-height: 1.08; }
   .student-courses-intro p { max-width: 38rem; color: #64748b; font-size: 0.92rem; line-height: 1.55; }
   .student-courses-list { width: 100%; }
   .student-courses-list .course-recommendation-list { max-height: none; padding-right: 0; scrollbar-width: none; }
