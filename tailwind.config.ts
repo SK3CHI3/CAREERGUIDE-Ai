@@ -21,7 +21,7 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				sans: ['Libre Baskerville', 'Georgia', 'Times New Roman', 'serif'],
+				sans: ['ui-sans-serif', 'system-ui', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
