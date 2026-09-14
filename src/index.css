@@ -270,7 +270,14 @@
     --primary-foreground: 0 0% 100%;
     background: #f8fafc;
     color: #0f172a;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-x: clip;
   }
+
+  .student-shell main,
+  .student-shell [role='tabpanel'] { min-width: 0; max-width: 100%; }
 
   .student-shell .student-header {
     border-color: #e2e8f0;
@@ -479,6 +486,13 @@
 
   .student-shell .student-bottom-nav button { display: flex; flex-direction: column; align-items: center; gap: 0.18rem; color: #7b8492; font-size: 0.58rem; font-weight: 500; }
   .student-shell .student-bottom-nav button.is-active { color: #2457d6; font-weight: 700; }
+
+  @media (max-width: 640px) {
+    .student-shell > main { padding-right: 1rem; padding-left: 1rem; }
+    .student-shell .student-match-heading { align-items: flex-start; }
+    .student-shell .student-match-heading > span { max-width: 7rem; white-space: normal; text-align: right; }
+    .student-shell .student-bottom-nav { right: 0.5rem; left: 0.5rem; }
+  }
 
   @media (min-width: 768px) {
     .student-shell .student-overview > .grid.grid-cols-2:not(.student-stats-grid) { grid-template-columns: repeat(2, minmax(0, 15rem)); }
