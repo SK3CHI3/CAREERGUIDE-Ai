@@ -409,6 +409,10 @@
   .student-shell .student-check.is-complete { border-color: #2563eb; background: #eff6ff; }
 
   .student-shell .student-stats-grid { display: none; }
+  /* The desktop tab bar is intentionally absent from the PWA layout. `sr-only`
+     still reserves an absolutely-positioned 100%-wide box, which was creating
+     a horizontal overflow strip on narrow screens. */
+  .student-shell .student-desktop-tabs { display: none; }
   .student-shell .student-legacy-overview,
   .student-shell .student-legacy-careers,
   .student-shell .student-legacy-chat,
