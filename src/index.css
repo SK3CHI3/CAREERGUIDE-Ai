@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    --app-font: Georgia, 'Times New Roman', serif;
+    --app-font: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
   }
 
   html,
