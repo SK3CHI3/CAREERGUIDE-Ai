@@ -22,6 +22,8 @@ const About = lazy(() => import("./pages/About"));
 const FAQ = lazy(() => import("./pages/FAQ"));
 const StudentDashboard = lazy(() => import("./pages/StudentDashboard"));
 const StudentChatPage = lazy(() => import("./pages/StudentChatPage"));
+const StudentCoursesPage = lazy(() => import("./pages/StudentCoursesPage"));
+const StudentGradesPage = lazy(() => import("./pages/StudentGradesPage"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const TeacherDashboard = lazy(() => import("./pages/MentorDashboard"));
 const StudentCounselingPage = lazy(() => import("./pages/StudentCounselingPage"));
@@ -29,6 +31,7 @@ const ClassDetail = lazy(() => import("./pages/ClassDetail"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Counselors = lazy(() => import("./pages/Counselors"));
 const QuickAssessment = lazy(() => import("./pages/QuickAssessment"));
+const SubjectGuide = lazy(() => import("./pages/SubjectGuide"));
 const Careers = lazy(() => import("./pages/Careers"));
 const HowItWorks = lazy(() => import("./pages/HowItWorks"));
 const BlogIndex = lazy(() => import("./pages/BlogIndex"));
@@ -59,6 +62,7 @@ const App = () => (
               <Route path="/careers" element={<Careers />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/quick-assessment" element={<QuickAssessment />} />
+              <Route path="/subject-guide" element={<SubjectGuide />} />
               <Route path="/counselors" element={<Counselors />} />
               <Route
                 path="/student"
@@ -76,6 +80,26 @@ const App = () => (
                   <ProtectedRoute requiredRole="student">
                     <PaymentGate>
                       <StudentChatPage />
+                    </PaymentGate>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/student/courses"
+                element={
+                  <ProtectedRoute requiredRole="student">
+                    <PaymentGate>
+                      <StudentCoursesPage />
+                    </PaymentGate>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/student/grades"
+                element={
+                  <ProtectedRoute requiredRole="student">
+                    <PaymentGate>
+                      <StudentGradesPage />
                     </PaymentGate>
                   </ProtectedRoute>
                 }

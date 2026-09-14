@@ -100,33 +100,103 @@ export const KUCCPS_CLUSTERS: KUCCPSCluster[] = [
 export const UNIVERSITY_DATA: UniversityStrength[] = [
   {
     name: "University of Nairobi (UoN)",
-    departments: ["Medicine", "Law", "Engineering", "Architecture", "Economics", "Veterinary Medicine", "Journalism"],
+    departments: ["Medicine", "Law", "Engineering", "Architecture", "Economics", "Veterinary Medicine", "Journalism", "Pharmacy", "Computer Science", "Education"],
     rank: 1
   },
   {
     name: "Kenyatta University (KU)",
-    departments: ["Education", "Health Sciences", "Environmental Studies", "Business", "Pure Sciences", "Fine Arts"],
+    departments: ["Education", "Health Sciences", "Environmental Studies", "Business", "Pure Sciences", "Fine Arts", "Nursing", "Sports Science"],
     rank: 2
   },
   {
     name: "JKUAT",
-    departments: ["Engineering", "Computer Science", "IT", "Architecture", "Agriculture", "Food Science"],
+    departments: ["Engineering", "Computer Science", "IT", "Architecture", "Agriculture", "Food Science", "Pharmacy", "Veterinary Medicine"],
     rank: 3
   },
   {
     name: "Moi University",
-    departments: ["Medicine", "Law", "Engineering", "Education", "Forest Resources"],
+    departments: ["Medicine", "Law", "Engineering", "Education", "Forest Resources", "Environmental Studies", "Nursing"],
     rank: 4
   },
   {
     name: "Strathmore University",
-    departments: ["Business", "Finance", "Accounting", "IT", "Law", "Hospitality"],
+    departments: ["Business", "Finance", "Accounting", "IT", "Law", "Hospitality", "Actuarial Science"],
     rank: 1 // Private rank
   },
   {
     name: "USIU-Africa",
-    departments: ["International Relations", "Psychology", "Pharmacy", "Business Administration", "Journalism"],
+    departments: ["International Relations", "Psychology", "Pharmacy", "Business Administration", "Journalism", "Biochemistry"],
     rank: 2 // Private rank
+  },
+  {
+    name: "Egerton University",
+    departments: ["Agriculture", "Veterinary Medicine", "Food Science", "Education", "Engineering", "Health Sciences"],
+    rank: 5
+  },
+  {
+    name: "Maseno University",
+    departments: ["Fisheries", "Education", "Health Sciences", "Agriculture", "Social Sciences"],
+    rank: 6
+  },
+  {
+    name: "Masinde Muliro University of Science & Technology",
+    departments: ["Engineering", "Science", "Technology", "Education", "Computer Science"],
+    rank: 7
+  },
+  {
+    name: "Technical University of Kenya (TUK)",
+    departments: ["Engineering", "Technology", "Applied Sciences", "Computer Science", "Architecture"],
+    rank: 8
+  },
+  {
+    name: "Technical University of Mombasa (TUM)",
+    departments: ["Engineering", "Maritime Studies", "Technology", "Computer Science"],
+    rank: 9
+  },
+  {
+    name: "University of Eldoret",
+    departments: ["Agriculture", "Engineering", "Education", "Environmental Studies"],
+    rank: 10
+  },
+  {
+    name: "Pwani University",
+    departments: ["Agriculture", "Education", "Social Sciences", "Health Sciences"],
+    rank: 11
+  },
+  {
+    name: "Kisii University",
+    departments: ["Education", "Health Sciences", "Agriculture", "Social Sciences"],
+    rank: 12
+  },
+  {
+    name: "Laikipia University",
+    departments: ["Education", "Science", "Social Sciences", "Tourism"],
+    rank: 13
+  },
+  {
+    name: "South Eastern Kenya University (SEKU)",
+    departments: ["Agriculture", "Education", "Water Resources", "Environmental Studies"],
+    rank: 14
+  },
+  {
+    name: "Multimedia University of Kenya",
+    departments: ["Media", "Communication", "IT", "Engineering"],
+    rank: 15
+  },
+  {
+    name: "KCA University",
+    departments: ["Business", "IT", "Accounting", "Finance", "Actuarial Science"],
+    rank: 3 // Private rank
+  },
+  {
+    name: "Daystar University",
+    departments: ["Communication", "Business", "Social Sciences", "Journalism"],
+    rank: 4 // Private rank
+  },
+  {
+    name: "Mount Kenya University",
+    departments: ["Pharmacy", "Nursing", "Business", "Education", "Health Sciences"],
+    rank: 5 // Private rank
   }
 ];
 

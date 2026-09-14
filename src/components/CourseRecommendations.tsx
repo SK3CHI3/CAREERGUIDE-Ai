@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { ExternalLink, Clock, Users, Star, Loader2, BookOpen, Award, Globe, RefreshCw } from 'lucide-react'
-import { aiCacheService } from '@/lib/ai-cache-service'
+import { dashboardService } from '@/lib/dashboard-service'
 import { useAuth } from '@/contexts/AuthContext'
 
 export interface CourseRecommendation {
@@ -65,7 +65,7 @@ const CourseRecommendations: React.FC<CourseRecommendationsProps> = ({
       }
 
       try {
-        const cachedCourses = await aiCacheService.getCachedCourseRecommendations(user.id)
+        const cachedCourses = await dashboardService.getCourseRecommendations(user.id)
         if (cachedCourses && cachedCourses.length > 0) {
           console.log('✅ Using cached course recommendations')
           const typedCourses = cachedCourses as unknown as CourseRecommendation[];
@@ -93,7 +93,7 @@ const CourseRecommendations: React.FC<CourseRecommendationsProps> = ({
     // Check cache first unless forcing refresh
     if (!forceRefresh && user?.id) {
       try {
-        const cachedCourses = await aiCacheService.getCachedCourseRecommendations(user.id)
+        const cachedCourses = await dashboardService.getCourseRecommendations(user.id)
         if (cachedCourses && cachedCourses.length > 0) {
           console.log('✅ Using cached course recommendations')
           setCourses(cachedCourses as unknown as CourseRecommendation[])
@@ -213,7 +213,7 @@ Focus on:
 
         // Save to cache
         if (user?.id) {
-          await aiCacheService.saveCourseRecommendations(user.id, parsed)
+          await dashboardService.saveCourseRecommendations(user.id, parsed)
         }
         if (onCoursesLoaded) onCoursesLoaded(parsed)
 
@@ -262,7 +262,7 @@ Focus on:
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto pr-1 space-y-3 max-h-[480px] custom-scrollbar">
+      <div className="course-recommendation-list flex-1 overflow-y-auto pr-1 space-y-3 max-h-[480px] custom-scrollbar">
         {courses.slice(0, 3).map((course, index) => (
           <div key={index} className="group relative bg-surface/30 border border-card-border/40 rounded-2xl p-4 transition-all duration-300 hover:border-primary/30 hover:shadow-md hover:bg-surface/50">
             <div className="flex items-start justify-between gap-4 mb-3">

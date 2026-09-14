@@ -30,7 +30,7 @@ const Navigation = () => {
   const dashboardPath = user && profile ? getDashboardPathForRole(profile.role) : "/student";
 
   return (
-    <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-card-border">
+    <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-card-border safe-area-top">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -117,9 +117,9 @@ const Navigation = () => {
             <ThemeToggle />
             <Button
               variant="ghost"
-              size="sm"
+              size="icon"
               onClick={() => setIsOpen(!isOpen)}
-              className="text-foreground-muted"
+              className="text-foreground-muted h-10 w-10"
             >
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </Button>

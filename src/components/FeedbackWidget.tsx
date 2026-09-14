@@ -62,7 +62,7 @@ const FeedbackWidget = () => {
     ];
 
     return (
-        <div className="fixed top-0 right-0 bottom-0 z-[100] flex items-center pointer-events-none">
+        <div className="hidden md:flex fixed top-0 right-0 bottom-0 z-[100] items-center pointer-events-none">
             {/* The Tab Trigger */}
             {!isOpen && (
                 <motion.button

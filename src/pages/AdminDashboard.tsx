@@ -27,6 +27,7 @@ import { supabase } from '@/lib/supabase'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BlogManagement } from '@/components/BlogManagement'
 import { CareerPathwaysManagement } from '@/components/CareerPathwaysManagement'
+import { KUCCPSClustersManagement } from '@/components/KUCCPSClustersManagement'
 import { AdminCounselorManager } from '@/components/AdminCounselorManager'
 import { AdminFieldDayRequests } from '@/components/AdminFieldDayRequests'
 import { ThemeToggle } from '@/components/ThemeToggle'
@@ -143,6 +144,7 @@ const AdminDashboard = () => {
     { id: 'feedbacks', label: 'Feedbacks', icon: MessageCircle },
     { id: 'blog', label: 'Blog', icon: FileText },
     { id: 'careers', label: 'Career Pathways', icon: Briefcase },
+    { id: 'kuccps', label: 'KUCCPS Clusters', icon: GraduationCap },
     { id: 'field_days', label: 'Field Days', icon: Calendar },
     { id: 'counselor_chats', label: 'Counselor Chats', icon: MessageSquarePlus },
     { id: 'settings', label: 'Settings', icon: Settings },
@@ -864,6 +866,10 @@ const AdminDashboard = () => {
 
               {activeTab === 'careers' && (
                 <CareerPathwaysManagement />
+              )}
+
+              {activeTab === 'kuccps' && (
+                <KUCCPSClustersManagement />
               )}
 
               {activeTab === 'counselor_chats' && (

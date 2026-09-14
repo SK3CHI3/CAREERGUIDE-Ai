@@ -130,13 +130,13 @@ const StudentChatPage = () => {
           const welcomeMessage: ChatMessage = {
             id: crypto.randomUUID(),
             role: 'assistant',
-            content: `Habari yako, ${context.name ? context.name.split(' ')[0] : 'there'}! 👋
+            content: `Habari yako, ${context.name ? context.name.split(' ')[0] : 'there'}.
 
 I'm your AI career counselor, specialized in Kenya's education system. I'm here to help you discover your perfect career path based on your interests, abilities, and goals.
 
 ${context.schoolLevel ? `I see you're in ${context.schoolLevel} education` : 'I\'d love to learn more about your educational background'}${context.currentGrade ? ` (Grade ${context.currentGrade})` : ''}.
 
-What subjects do you enjoy most in your current studies? 🎯`,
+What subjects do you enjoy most in your current studies?`,
             timestamp: new Date()
           };
           setConversation([welcomeMessage]);
@@ -260,29 +260,29 @@ What subjects do you enjoy most in your current studies? 🎯`,
   }
 
   return (
-    <div className="h-screen flex flex-col bg-background">
+    <div className="chat-page-shell h-[100dvh] flex flex-col">
       {/* Header */}
-      <header className="border-b border-card-border bg-background/95 backdrop-blur-md sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <header className="chat-page-header sticky top-0 z-10">
+        <div className="chat-page-header-inner max-w-5xl mx-auto px-4 sm:px-6">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => navigate('/student')}
-                className="h-9 w-9"
+                className="chat-page-back h-9 w-9"
               >
                 <ArrowLeft className="w-4 h-4" />
               </Button>
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-primary rounded-xl flex items-center justify-center shadow-lg">
-                  <Sparkles className="w-5 h-5 text-primary-foreground" />
+                <div className="chat-adviser-icon w-10 h-10 rounded-xl flex items-center justify-center">
+                  <Sparkles className="w-5 h-5" />
                 </div>
                 <div>
-                  <h1 className="text-base font-bold">AI Career Counselor</h1>
+                  <h1 className="chat-page-title text-base font-bold">Career adviser</h1>
                   <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                    <span className="text-[10px] font-medium text-green-600 uppercase tracking-wider">Online</span>
+                    <span className="chat-online-dot w-2 h-2 rounded-full" />
+                    <span className="chat-online-label text-[10px] font-medium uppercase tracking-wider">Ready to help</span>
                   </div>
                 </div>
               </div>
@@ -291,7 +291,7 @@ What subjects do you enjoy most in your current studies? 🎯`,
             <div className="flex items-center gap-2">
               <ThemeToggle />
               {userContext.schoolLevel && (
-                <Badge variant="secondary" className="text-[10px] py-0.5 px-2 bg-primary/5 text-primary border-primary/10">
+                <Badge variant="secondary" className="chat-level-badge text-[10px] py-0.5 px-2">
                   {userContext.schoolLevel}
                 </Badge>
               )}
@@ -300,7 +300,7 @@ What subjects do you enjoy most in your current studies? 🎯`,
                 variant="ghost"
                 onClick={handleRefresh}
                 disabled={isRefreshing}
-                className="text-xs h-8 hover:bg-destructive/10 hover:text-destructive transition-colors"
+                className="chat-reset text-xs h-8 transition-colors"
               >
                 {isRefreshing ? (
                   <Loader2 className="w-3 h-3 animate-spin mr-1.5" />
@@ -315,15 +315,15 @@ What subjects do you enjoy most in your current studies? 🎯`,
       </header>
 
       {/* Chat Messages */}
-      <div className="flex-1 overflow-hidden">
+      <div className="chat-message-area flex-1 overflow-hidden">
         <ScrollArea className="h-full">
-          <div className="max-w-3xl mx-auto px-4 py-6 space-y-4">
+          <div className="chat-message-list max-w-3xl mx-auto px-4 py-6 space-y-5">
             {conversation.map((msg) => (
               <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`flex max-w-[90%] sm:max-w-[80%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'} gap-2 items-end`}>
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm ${msg.role === 'user'
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-gradient-primary text-primary-foreground'
+                  <div className={`chat-message-avatar w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${msg.role === 'user'
+                    ? 'chat-message-avatar-user'
+                    : 'chat-message-avatar-adviser'
                     }`}>
                     {msg.role === 'user' ? (
                       <User className="w-4 h-4" />
@@ -331,9 +331,9 @@ What subjects do you enjoy most in your current studies? 🎯`,
                       <Sparkles className="w-4 h-4" />
                     )}
                   </div>
-                  <div className={`p-3 sm:p-4 rounded-2xl shadow-sm ${msg.role === 'user'
-                    ? 'bg-primary text-primary-foreground rounded-br-none'
-                    : 'bg-card border border-card-border rounded-bl-none'
+                  <div className={`chat-message-bubble p-3 sm:p-4 rounded-2xl ${msg.role === 'user'
+                    ? 'chat-message-user rounded-br-none'
+                    : 'chat-message-adviser rounded-bl-none'
                     }`}>
                     <MessageContent content={msg.content} role={msg.role as 'user' | 'assistant'} />
                     <p className={`text-[10px] mt-1.5 opacity-60 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
@@ -347,10 +347,10 @@ What subjects do you enjoy most in your current studies? 🎯`,
             {isLoading && (
               <div className="flex justify-start">
                 <div className="flex gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center">
-                    <Sparkles className="w-4 h-4 text-primary-foreground" />
+                  <div className="chat-message-avatar chat-message-avatar-adviser w-8 h-8 rounded-lg flex items-center justify-center">
+                    <Sparkles className="w-4 h-4" />
                   </div>
-                  <div className="bg-card border border-card-border p-4 rounded-2xl">
+                  <div className="chat-message-bubble chat-message-adviser p-4 rounded-2xl">
                     <div className="flex items-center space-x-2">
                       <Loader2 className="w-4 h-4 animate-spin text-primary" />
                       <span className="text-sm text-foreground-muted">AI is thinking...</span>
@@ -366,7 +366,7 @@ What subjects do you enjoy most in your current studies? 🎯`,
       </div>
 
       {/* Chat Input */}
-      <div className="border-t border-card-border bg-background/95 backdrop-blur-md p-4">
+      <div className="chat-composer-wrap p-4">
         <div className="max-w-3xl mx-auto">
           {error && (
             <Alert variant="destructive" className="mb-3 text-xs">
@@ -383,7 +383,7 @@ What subjects do you enjoy most in your current studies? 🎯`,
                 variant="outline"
                 size="sm"
                 onClick={() => setMessage(q)}
-                className="whitespace-nowrap rounded-full h-8 text-xs bg-background/50 border-primary/20 hover:border-primary px-4 py-1 flex-shrink-0"
+                className="chat-suggestion whitespace-nowrap rounded-full h-8 text-xs px-4 py-1 flex-shrink-0"
               >
                 {q}
               </Button>
@@ -391,7 +391,7 @@ What subjects do you enjoy most in your current studies? 🎯`,
           </div>
 
           {/* Input Field */}
-          <div className="flex gap-2 items-center bg-card border border-card-border rounded-2xl p-2 shadow-inner focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+          <div className="chat-composer flex gap-2 items-center rounded-2xl p-2 transition-all">
             <input
               type="text"
               placeholder="Ask about careers, subjects, university paths..."
@@ -404,13 +404,13 @@ What subjects do you enjoy most in your current studies? 🎯`,
                 }
               }}
               disabled={isLoading}
-              className="flex-1 border-0 bg-transparent focus:outline-none min-h-[44px] text-sm sm:text-base px-3 disabled:opacity-50"
+              className="chat-composer-input flex-1 border-0 bg-transparent focus:outline-none min-h-[44px] text-sm sm:text-base px-3 disabled:opacity-50"
             />
             <Button
               onClick={handleSend}
               disabled={isLoading || !message.trim()}
               size="icon"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl w-10 h-10 shrink-0 shadow-lg shadow-primary/20 disabled:opacity-50"
+              className="chat-send-button rounded-xl w-10 h-10 shrink-0 disabled:opacity-50"
             >
               {isLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -421,8 +421,8 @@ What subjects do you enjoy most in your current studies? 🎯`,
           </div>
 
           <div className="flex items-center justify-between mt-2 px-1">
-            <p className="text-[10px] text-foreground-muted flex items-center">
-              <Sparkles className="w-3 h-3 mr-1 text-primary" />
+            <p className="chat-composer-note text-[10px] flex items-center">
+              <Sparkles className="w-3 h-3 mr-1" />
               AI-powered career guidance
             </p>
             {userContext.name && (

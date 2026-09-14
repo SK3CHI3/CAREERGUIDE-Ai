@@ -2,55 +2,55 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
   <url>
     <loc>https://careerguideai.co.ke</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-09-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://careerguideai.co.ke/about</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-09-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://careerguideai.co.ke/how-it-works</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-09-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-09-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://careerguideai.co.ke/quick-assessment</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-09-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://careerguideai.co.ke/blog</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-09-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://careerguideai.co.ke/faq</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-09-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://careerguideai.co.ke/terms</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-09-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://careerguideai.co.ke/privacy</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-09-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
@@ -91,8 +91,188 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/carpenter</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/digital-content-creation</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/podcaster</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/cardiovascular-technologist</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/clinical-psychologist</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/clinical-trial-coordinator</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/dermatologist</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/hospice-manager</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/laboratory-technologist</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/medical-coder</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/medical-laboratory-scientist</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/medical-research-assistant</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/medical-sales-rep</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/medical-social-worker</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/medical-transcriptionist</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/mental-health-counselor</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/nursing-officer</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/nutritionistdietician</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/nutritionistdietitian</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/orthopedic-surgeon</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/paramedic</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/paramedicemt</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/physical-therapist</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/physiotherapist</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/speech-pathologist</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/tourism-management</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/wedding-planner</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/sports-physiotherapist</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/ecommerce-digital-business</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/agricultural-extension</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/health-services-administration</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/clinical-medicine-surgery</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -116,13 +296,13 @@
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/barista-2</loc>
-    <lastmod>2026-04-10</lastmod>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/printmaker</loc>
-    <lastmod>2026-04-10</lastmod>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -133,13 +313,13 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/accountant</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/actor</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/actor</loc>
+    <loc>https://careerguideai.co.ke/careers/accountant</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -175,12 +355,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/aerospace-engineer-2</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/agribusiness-consultant</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -200,12 +374,6 @@
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/agricultural-engineer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/agricultural-extension-officer</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -259,12 +427,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/anesthesiologist</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/angel-investor</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -272,12 +434,6 @@
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/animation-director</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/animator</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -301,12 +457,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/aquaculture-specialist-2</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/aquarist</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -325,8 +475,14 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/archivist</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/animator</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/anesthesiologist</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -355,19 +511,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/auto-mechanic</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/auto-mechanic-2</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/auto-parts-specialist</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -397,14 +541,14 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/bank-manager</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/auto-parts-specialist</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/barista</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/banking-finance</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -416,12 +560,6 @@
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/biomedical-engineer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/biomedical-engineer-2</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -439,12 +577,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/biotechnologist-2</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/blockchain-consultant</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -452,12 +584,6 @@
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/blockchain-developer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/blockchain-developer-2</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -476,30 +602,12 @@
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/broadcasterradio-presenter</loc>
-    <lastmod>2026-04-10</lastmod>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/business-development-executive</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/car-dealer-broker</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/cardiologist</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/cardiovascular-technologist</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -529,18 +637,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/chef-de-cuisine</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/chef-de-cuisine-2</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/chemical-engineer</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -549,6 +645,24 @@
   <url>
     <loc>https://careerguideai.co.ke/careers/chief-sustainability-officer-cso</loc>
     <lastmod>2026-04-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/cardiologist</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/chef-de-cuisine-2</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/car-dealer-broker</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -565,49 +679,13 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/civil-engineering</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/climate-change-negotiator</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/clinical-medicine-officer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/clinical-officer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/clinical-psychologist</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/clinical-social-worker</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/clinical-trial-coordinator</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/cloud-architect</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -625,37 +703,19 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://careerguideai.co.ke/careers/clinical-medicine-officer</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/civil-engineering</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://careerguideai.co.ke/careers/coffee-grader-qgrader</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/community-health-worker</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/community-health-worker-2</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/compliance-officer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/concierge</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/content-creator</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -679,12 +739,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/copywriter</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/copywriter-2</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -703,13 +757,31 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/corporate-trainer</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/content-creator</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/corporate-trainer-2</loc>
+    <loc>https://careerguideai.co.ke/careers/community-health-worker</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/concierge</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/compliance-regulatory-affairs</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/corporate-trainer</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -739,12 +811,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/curriculum-developer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/curriculum-developer-2</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -763,20 +829,14 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/customer-success-manager</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/customer-success-manager-2</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/customs-broker</loc>
     <lastmod>2026-04-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/marketing-customer-relations</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -799,12 +859,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/cybersecurity-analyst-2</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/cybersecurity-consultant</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -812,12 +866,6 @@
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/cybersecurity-trainer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/dancerchoreographer</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -871,12 +919,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/data-scientist-ai-ops</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/database-administrator-dba</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -889,37 +931,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/dental-hygienist</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/dentist</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/dermatologist</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/dermatologist-2</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/devops-engineer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/devops-engineer-2</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -931,25 +943,25 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://careerguideai.co.ke/careers/dental-hygienist</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/dentist</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://careerguideai.co.ke/careers/digital-archivist</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/digital-content-creation</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/digital-identity-specialist</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/digital-marketer</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -991,14 +1003,14 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/ecommerce-manager</loc>
+    <loc>https://careerguideai.co.ke/careers/ecommerce-specialist</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/ecommerce-specialist</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/digital-marketing</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -1063,19 +1075,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/electrician-2</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/embedded-systems-engineer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/embedded-systems-engineer-2</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -1105,12 +1105,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/epidemiologist</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/epidemiologist-2</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -1130,19 +1124,13 @@
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/event-planner</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/event-planner-2</loc>
-    <lastmod>2026-04-10</lastmod>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/executive-chef</loc>
-    <lastmod>2026-04-10</lastmod>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -1165,18 +1153,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/farm-manager-agribusiness</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/fashion-designer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/fashion-designer-2</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -1189,12 +1165,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/film-director</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/film-director-2</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -1202,12 +1172,6 @@
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/financial-controller</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/financial-controller-2</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -1249,31 +1213,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/fisheries-officer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/fitness-trainer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/fleet-manager</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/flight-attendant</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/flight-attendant-2</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -1297,13 +1237,25 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/foley-artist</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/flight-attendant-2</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/food-scientist</loc>
+    <loc>https://careerguideai.co.ke/careers/fitness-trainer</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/fisheries-aquatic-sciences</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/foley-artist</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -1339,12 +1291,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/forestry-manager</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/freight-forwarder</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -1363,8 +1309,8 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/game-developer-2</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/forestry-management</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -1393,31 +1339,13 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/geologist-2</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/geomatics-engineer</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/geriatric-care-specialist</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/grant-writer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/graphic-designer</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -1441,32 +1369,14 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/hairstylist-pro</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/graphic-designer</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/health-informatics-manager</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/health-informatics-specialist</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/health-services-manager</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/heavy-equipment-operator</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/geriatric-care-specialist</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -1495,32 +1405,26 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/hospice-manager</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/hotel-manager</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/health-informatics-specialist</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/hotel-manager-2</loc>
-    <lastmod>2026-04-10</lastmod>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/human-resource-manager</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/hairstylist-pro</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/human-resource-manager-2</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/health-informatics</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -1550,12 +1454,6 @@
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/hydrologist</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/illustrator</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -1591,14 +1489,14 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/interior-designer</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/illustrator</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/interior-designer-2</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/human-resource-management</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -1610,12 +1508,6 @@
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/international-trade-lawyer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/investment-analyst</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -1633,12 +1525,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/it-project-manager</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/it-project-manager-2</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -1651,14 +1537,20 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/jewelry-designer</loc>
+    <loc>https://careerguideai.co.ke/careers/journalist</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/journalist</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/interior-designer</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/jewelry-designer</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -1682,18 +1574,6 @@
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/junior-developer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/laboratory-technologist</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/land-valuer</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -1729,26 +1609,14 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/librarian-2</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/librarianarchivist</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/livestock-production-officer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/logistics-coordinator</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/land-valuer</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -1760,12 +1628,6 @@
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/loss-adjuster</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/luxury-travel-manager</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -1801,14 +1663,20 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/makeup-artist-pro</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/luxury-travel-manager</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/management-consultant</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/business-administration</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/livestock-production</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -1838,12 +1706,6 @@
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/marine-pilot</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/marketing-manager</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -1879,50 +1741,8 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/medical-coder</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/medical-doctor</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/medical-laboratory-scientist</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/medical-research-assistant</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/medical-sales-rep</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/medical-social-worker</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/medical-transcriptionist</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/mental-health-counselor</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/marketing-management</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -1939,31 +1759,19 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/meteorologist-2</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/microbiologist</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/midwife</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/medical-doctor</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/mobile-app-developer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/mobile-app-developer-iosandroid</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -1987,12 +1795,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/museum-curator</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/museum-curator-2</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -2005,20 +1807,20 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/museum-registrar</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/music-producer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/music-producer-2</loc>
     <lastmod>2026-04-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/museum-registrar</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/midwife</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -2065,24 +1867,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/nursing-officer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/nutritionistdietician</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/nutritionistdietitian</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/occupational-health-safety-ohs-officer</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -2095,43 +1879,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/occupational-therapist</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/occupational-therapist-2</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/online-tutor</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/operations-manager</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/optometrist</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/optometrist-2</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/orthopedic-surgeon</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -2143,43 +1891,31 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/paramedic</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/occupational-therapist-2</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/paramedic-lead</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/paramedicemt</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/optometrist-2</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/pastorreligious-leader</loc>
-    <lastmod>2026-04-10</lastmod>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/pastry-chef</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/operations-management</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/personal-bodyguard</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/personal-trainer</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -2197,44 +1933,32 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/pharmacist</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/pharmacist-2</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/physical-medicine-specialist</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/physical-therapist</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/physiotherapist</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/pilot</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/plumber</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/pharmacist</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/physical-medicine-specialist</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/personal-trainer</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/pastry-chef</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -2246,12 +1970,6 @@
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/podcast-producer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/podcaster</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -2281,12 +1999,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/port-manager</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/precision-agriculture-tech</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -2311,13 +2023,13 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/private-investigator</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/maritime-studies-logistics</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/private-investigator-2</loc>
+    <loc>https://careerguideai.co.ke/careers/private-investigator</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -2329,62 +2041,50 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/procurement-officer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/producer-filmmedia</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/product-manager</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/professional-athlete</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/professional-athlete-2</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/proofreadereditor</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/professional-nurse</loc>
-    <lastmod>2026-04-10</lastmod>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/project-management-officer</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/professional-athlete</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/proofreadereditor</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/product-management</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/property-manager</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/project-management</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/property-sales-agent</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/procurement-supply</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/property-real-estate-management</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -2395,37 +2095,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/public-health-nursing</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/public-health-officer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/public-health-officer-2</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/public-health-policy-maker</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/public-relations-officer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/public-relations-officer-2</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -2455,25 +2125,31 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://careerguideai.co.ke/careers/public-health-nursing</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/property-sales-agent</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/public-relations-communication</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/public-health</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://careerguideai.co.ke/careers/quantity-surveyor</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/quantity-surveyor-2</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/radiographer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/radiographer-2</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -2485,19 +2161,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/real-estate-valuer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/registrar</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/rehabilitation-counselor</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -2527,13 +2191,25 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/renewable-energy-policy-maker</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/radiographer-2</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/restaurant-manager</loc>
+    <loc>https://careerguideai.co.ke/careers/rehabilitation-counselor</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/real-estate-valuer</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/renewable-energy-policy-maker</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -2545,19 +2221,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/risk-manager</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/robotics-engineer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/robotics-engineer-2</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -2581,20 +2245,26 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/school-administratorprincipal</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/school-counselor</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/school-counselor-2</loc>
     <lastmod>2026-04-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/restaurant-manager</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/risk-management-insurance</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/school-administration-leadership</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -2606,18 +2276,6 @@
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/scrum-master</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/sculptor</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/sculptor-2</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -2677,6 +2335,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://careerguideai.co.ke/careers/sculptor</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://careerguideai.co.ke/careers/ship-captain</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -2696,12 +2360,6 @@
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/social-media-manager</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/social-media-manager-2</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -2731,12 +2389,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/soil-scientist</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/soil-scientist-2</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -2755,19 +2407,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/sommelier</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/sound-designer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/sound-designer-for-games</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -2797,12 +2437,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/special-needs-educator</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/special-needs-educator-2</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -2816,13 +2450,13 @@
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/speech-and-language-pathologist</loc>
-    <lastmod>2026-04-10</lastmod>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/speech-pathologist</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/sommelier</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -2833,37 +2467,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/speech-therapist</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/speechwriter</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/sports-coach</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/sports-coach-2</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/sports-physiotherapist</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/stadium-manager</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -2905,8 +2509,20 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/supply-chain-analyst-2</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/speech-therapist</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/sports-coach</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/stadium-manager</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -2918,18 +2534,6 @@
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/supply-chain-manager</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/supply-chain-manager-2</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/surgeon</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -2965,20 +2569,14 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/tax-consultant</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/surgeon</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/tax-consultant-2</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/taxidermist</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/taxation</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -3001,12 +2599,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/technical-recruiter</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/technical-support-manager</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -3019,31 +2611,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/technical-writer-2</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/tour-consultant</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/tourism-management</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/translator</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/translatorinterpreter</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -3055,20 +2623,20 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/travel-agent</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/taxidermist</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/travel-agent-2</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/tour-consultant</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/travel-photographer</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/technical-recruitment</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -3097,12 +2665,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/university-lecturer</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/university-lecturer-2</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -3115,14 +2677,20 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/urban-planner</loc>
+    <loc>https://careerguideai.co.ke/careers/urban-planner-2</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/urban-planner-2</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/travel-photographer</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/travel-agent-2</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -3134,12 +2702,6 @@
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/urban-sociologist</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/urological-surgeon</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -3163,12 +2725,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/ux-researcher-2</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/uxui-designer</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -3181,20 +2737,20 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/veterinary-officer</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/urological-surgeon</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/veterinary-surgeon</loc>
-    <lastmod>2026-04-10</lastmod>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/veterinary-surgeon-2</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://careerguideai.co.ke/careers/veterinary-medicine</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -3259,12 +2815,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/wedding-planner</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://careerguideai.co.ke/careers/welder</loc>
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -3289,20 +2839,20 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://careerguideai.co.ke/careers/wildlife-veterinarian</loc>
+    <loc>https://careerguideai.co.ke/careers/youth-leader</loc>
     <lastmod>2026-04-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://careerguideai.co.ke/careers/wildlife-veterinarian</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://careerguideai.co.ke/careers/yoga-instructor</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://careerguideai.co.ke/careers/youth-leader</loc>
-    <lastmod>2026-04-10</lastmod>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

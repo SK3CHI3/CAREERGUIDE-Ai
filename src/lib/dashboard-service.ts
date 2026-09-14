@@ -60,6 +60,7 @@ export interface CareerPath {
   universities?: string[];
   pros?: string[];
   cons?: string[];
+  related_roles?: string[];
   created_at: string;
   updated_at: string;
 }
@@ -662,8 +663,10 @@ class DashboardService {
       'cbe_subjects',
       'career_interests',
       'career_goals',
-      'strengths',
-      'challenges'
+      // This is saved when the student completes the onboarding assessment.
+      // `strengths` and `challenges` are not currently collected anywhere,
+      // so including them made a fully completed profile unable to reach 100%.
+      'assessment_results'
     ]
 
     const completedFields = fields.filter(field => {

@@ -1,71 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, GraduationCap, Briefcase } from "lucide-react";
+import { ChevronLeft, GraduationCap, Award, BookOpen, MessageSquare, Search, User } from "lucide-react";
 import { CounselorDirectory } from "@/components/CounselorDirectory";
-import { useAuth } from "@/contexts/AuthContext";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { ThemeToggle } from "@/components/ThemeToggle";
-import { LogOut } from "lucide-react";
+import { StudentAppHeader } from "@/components/StudentAppHeader";
 
 const Counselors = () => {
   const navigate = useNavigate();
-  const { profile, signOut } = useAuth();
-
-  const handleSignOut = async () => {
-    await signOut();
-    navigate("/");
-  };
-
-  const getInitials = (name: string | null) => {
-    if (!name) return "S";
-    return name
-      .split(" ")
-      .map((word) => word[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  };
-
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-card-border bg-background/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-3">
-              <button onClick={() => navigate("/student")}>
-                <img
-                  src="/logos/CareerGuide_Logo.webp"
-                  alt="CareerGuide AI"
-                  className="h-10 w-auto"
-                />
-              </button>
-            </div>
+    <div className="student-courses-page student-shell min-h-screen">
+      <StudentAppHeader />
 
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-3">
-                <Avatar>
-                  <AvatarImage src={profile?.avatar_url || ""} />
-                  <AvatarFallback>{getInitials(profile?.full_name)}</AvatarFallback>
-                </Avatar>
-                <div className="hidden md:block">
-                  <p className="text-sm font-medium text-foreground">
-                    {profile?.full_name || "Student"}
-                  </p>
-                  <Badge className="bg-primary text-primary-foreground">Student</Badge>
-                </div>
-              </div>
-              <ThemeToggle />
-              <Button variant="ghost" size="sm" onClick={handleSignOut}>
-                <LogOut className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <main className="student-courses-content max-w-5xl py-8 pb-28">
         <Button
           variant="ghost"
           size="sm"
@@ -96,6 +41,13 @@ const Counselors = () => {
 
         <CounselorDirectory />
       </main>
+      <nav className="student-courses-nav" aria-label="Student navigation">
+        <button type="button" onClick={() => navigate('/student')}><Award className="h-5 w-5" /><span>Home</span></button>
+        <button type="button" onClick={() => navigate('/student', { state: { activeTab: 'careers' } })}><Search className="h-5 w-5" /><span>Explore</span></button>
+        <button type="button" onClick={() => navigate('/student', { state: { activeTab: 'progress' } })}><BookOpen className="h-5 w-5" /><span>Plan</span></button>
+        <button type="button" onClick={() => navigate('/student/chat')}><MessageSquare className="h-5 w-5" /><span>Chat</span></button>
+        <button type="button" onClick={() => navigate('/student', { state: { activeTab: 'profile' } })}><User className="h-5 w-5" /><span>Profile</span></button>
+      </nav>
     </div>
   );
 };

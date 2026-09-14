@@ -18,24 +18,25 @@ interface CareerDetailModalProps {
   isOpen: boolean
   onClose: () => void
   career: CareerPath
+  showAssessAction?: boolean
 }
 
-const CareerDetailModal: React.FC<CareerDetailModalProps> = ({ isOpen, onClose, career }) => {
+const CareerDetailModal: React.FC<CareerDetailModalProps> = ({ isOpen, onClose, career, showAssessAction = true }) => {
   const navigate = useNavigate()
   if (!isOpen || !career) return null
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl w-[95vw] sm:w-full p-0 overflow-hidden bg-[#0a0a0c] border-white/10 rounded-xl shadow-2xl max-h-[90vh] flex flex-col">
-        <div className="p-4 sm:p-5 md:p-8 lg:p-10 space-y-4 sm:space-y-6 overflow-y-auto flex-1">
+      <DialogContent className="career-detail-modal max-w-2xl w-[95vw] sm:w-full p-0 overflow-hidden rounded-xl shadow-2xl max-h-[90vh] flex flex-col">
+        <div className="career-detail-scroll p-4 sm:p-5 md:p-8 lg:p-10 space-y-4 sm:space-y-6 overflow-y-auto flex-1">
           
           {/* Header Section */}
           <div className="space-y-3 sm:space-y-4">
             <div className="flex items-center justify-between">
-              <Badge variant="outline" className="text-[10px] uppercase tracking-widest text-primary border-primary/20 bg-primary/5">
+              <Badge variant="outline" className="career-category text-[10px] uppercase tracking-widest">
                 {career.category}
               </Badge>
-              <div className="flex items-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-slate-500 font-medium">
+              <div className="career-demand flex items-center gap-3 sm:gap-4 text-[10px] sm:text-xs font-medium">
                 <span className="flex items-center gap-1">
                   <TrendingUp className="h-3 w-3 text-emerald-400" />
                   <span className="hidden xs:inline">{career.demand_level} Demand</span>
@@ -45,28 +46,28 @@ const CareerDetailModal: React.FC<CareerDetailModalProps> = ({ isOpen, onClose, 
             </div>
             
             <div className="space-y-1 sm:space-y-2">
-              <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+              <h1 className="career-detail-title text-2xl sm:text-3xl font-bold tracking-tight">
                 {career.title}
               </h1>
-              <p className="text-base sm:text-lg text-slate-400 font-medium leading-relaxed">
+              <p className="career-detail-subtitle text-base sm:text-lg font-medium leading-relaxed">
                 {career.one_liner || "Professional career pathway within Kenya's evolving industry."}
               </p>
             </div>
           </div>
 
-          <div className="h-px bg-white/5" />
+          <div className="career-detail-rule h-px" />
 
           {/* Role Overview */}
           <section className="space-y-4">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500">Overview</h3>
-            <p className="text-slate-300 leading-relaxed">
+            <h3 className="career-detail-section-label text-sm font-bold uppercase tracking-widest">Overview</h3>
+            <p className="career-detail-copy leading-relaxed">
               {career.description}
             </p>
           </section>
 
           {/* Market Reality */}
           <section className="space-y-3 sm:space-y-4">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500">Market Reality</h3>
+            <h3 className="career-detail-section-label text-sm font-bold uppercase tracking-widest">Market reality</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div className="space-y-1">
                 <span className="text-xs text-slate-500 font-medium">Salary Range</span>
@@ -87,14 +88,14 @@ const CareerDetailModal: React.FC<CareerDetailModalProps> = ({ isOpen, onClose, 
 
           {/* Academic Path */}
           <section className="space-y-4">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500">Education & Path</h3>
+            <h3 className="career-detail-section-label text-sm font-bold uppercase tracking-widest">Education & path</h3>
             <div className="space-y-4">
-              <p className="text-slate-300">
+              <p className="career-detail-copy">
                 {career.education_requirements}
               </p>
               <div className="flex flex-wrap gap-2">
                 {career.skills_required.map((skill, i) => (
-                  <span key={i} className="text-xs bg-white/5 text-slate-400 px-2 py-1 rounded border border-white/5">
+                  <span key={i} className="career-skill-chip text-xs px-2 py-1 rounded">
                     {skill}
                   </span>
                 ))}
@@ -130,7 +131,7 @@ const CareerDetailModal: React.FC<CareerDetailModalProps> = ({ isOpen, onClose, 
 
           {/* Where to Study */}
           <section className="space-y-4 pt-4">
-             <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-500">
+             <div className="career-detail-section-label flex items-center gap-2 text-sm font-bold uppercase tracking-widest">
               <GraduationCap className="h-4 w-4" />
               Institutions in Kenya
             </div>
@@ -143,28 +144,38 @@ const CareerDetailModal: React.FC<CareerDetailModalProps> = ({ isOpen, onClose, 
               ))}
             </div>
           </section>
+
+          {/* Related Roles */}
+          {career.related_roles && career.related_roles.length > 0 && (
+            <section className="space-y-4 pt-4">
+              <h3 className="career-detail-section-label text-sm font-bold uppercase tracking-widest">This leads to roles like</h3>
+              <div className="flex flex-wrap gap-2">
+                {career.related_roles.map((role, i) => (
+                  <span key={i} className="text-xs bg-blue-500/10 text-blue-400 px-3 py-1.5 rounded-lg border border-blue-500/20">
+                    {role}
+                  </span>
+                ))}
+              </div>
+            </section>
+          )}
         </div>
 
-        {/* Minimalist Footer */}
-        <div className="p-4 sm:p-5 md:p-6 bg-white/[0.02] border-t border-white/5 flex flex-col gap-3 sm:gap-4">
-          <p className="text-[10px] sm:text-xs text-slate-500 font-medium text-center">
-            Compare this path with your personalized assessment results.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 w-full">
+        <div className="career-detail-footer p-4 sm:p-5 md:p-6">
+          <div className={`grid gap-3 w-full ${showAssessAction ? 'grid-cols-2' : 'grid-cols-1'}`}>
             <Button
-              variant="ghost"
               onClick={onClose}
-              className="w-full sm:w-auto text-slate-400 hover:text-white hover:bg-white/5 rounded-lg font-bold order-2 sm:order-1"
+              variant="outline"
+              className="career-close-button w-full rounded-lg font-bold"
             >
               Close
             </Button>
-            <Button
+            {showAssessAction && <Button
               onClick={() => { onClose(); navigate(`/quick-assessment?career=${encodeURIComponent(career.title)}`) }}
-              className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground px-8 rounded-lg font-bold shadow-lg shadow-primary/10 order-1 sm:order-2"
+              className="career-assess-button w-full rounded-lg font-bold"
             >
               Assess My Fit
               <ArrowRight className="h-4 w-4 ml-2" />
-            </Button>
+            </Button>}
           </div>
         </div>
       </DialogContent>

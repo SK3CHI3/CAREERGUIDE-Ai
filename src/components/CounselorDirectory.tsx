@@ -123,7 +123,7 @@ export const CounselorDirectory = ({ limit }: { limit?: number }) => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="counselor-directory space-y-8">
       <div className="grid grid-cols-1 gap-3 md:gap-6">
         <Card className="group relative bg-card border-card-border shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-300 overflow-hidden flex flex-col rounded-2xl">
           <div className="h-24 sm:h-28 bg-gradient-to-r from-blue-600/10 to-purple-600/10 relative overflow-hidden">

@@ -53,15 +53,16 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onToggleMode }) => {
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center">Welcome Back</CardTitle>
-        <CardDescription className="text-center">
-          Welcome back to CareerGuide AI
+    <Card className="auth-card w-full max-w-md mx-auto">
+      <CardHeader className="space-y-2 px-6 pb-5 pt-7 sm:px-8 sm:pt-8">
+        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-blue-700">Welcome back</p>
+        <CardTitle className="auth-display text-3xl font-semibold text-slate-950">Continue your journey</CardTitle>
+        <CardDescription className="text-left text-sm leading-6 text-slate-600">
+          Sign in to see your pathways, progress, and next best step.
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <CardContent className="px-6 pb-7 sm:px-8 sm:pb-8">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {error && (
             <Alert variant="destructive">
               <AlertDescription>{error}</AlertDescription>
@@ -76,6 +77,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onToggleMode }) => {
               placeholder="Enter your NEMIS UPI or email"
               {...register('identifier')}
               disabled={isLoading}
+              className="auth-input"
             />
             {errors.identifier && (
               <p className="text-sm text-destructive">{errors.identifier.message}</p>
@@ -88,9 +90,10 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onToggleMode }) => {
               <Input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
-                placeholder="Enter your password"
-                {...register('password')}
-                disabled={isLoading}
+              placeholder="Enter your password"
+              {...register('password')}
+              disabled={isLoading}
+              className="auth-input pr-12"
               />
               <Button
                 type="button"
@@ -112,18 +115,18 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onToggleMode }) => {
             )}
           </div>
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button type="submit" className="auth-primary w-full" disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Sign In
           </Button>
 
           <div className="text-center">
-            <div className="text-sm text-muted-foreground">
+            <div className="text-sm text-slate-600">
               Don't have an account?{' '}
               <Button
                 type="button"
                 variant="link"
-                className="p-0 h-auto font-semibold"
+                className="h-auto p-0 font-semibold text-blue-700"
                 onClick={onToggleMode}
               >
                 Sign up

@@ -122,14 +122,15 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode, defaultRol
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center">Create Account</CardTitle>
-        <CardDescription className="text-center">
-          Join CareerGuide AI to discover your future
+    <Card className="auth-card w-full max-w-md mx-auto">
+      <CardHeader className="space-y-2 px-6 pb-5 pt-7 sm:px-8 sm:pt-8">
+        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-blue-700">Create account</p>
+        <CardTitle className="auth-display text-3xl font-semibold text-slate-950">Join our community</CardTitle>
+        <CardDescription className="text-left text-sm leading-6 text-slate-600">
+          Start with a few details. We’ll help you make sense of what comes next.
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="px-6 pb-7 sm:px-8 sm:pb-8">
         {/* Progress indicator for mentor wizard */}
         {selectedRole === 'mentor' && (
           <div className="flex items-center justify-center gap-2 mb-6">
@@ -158,7 +159,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode, defaultRol
           </div>
         )}
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {error && (
             <Alert variant="destructive">
               <AlertDescription>{error}</AlertDescription>
@@ -176,72 +177,76 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode, defaultRol
             <>
               <div className="space-y-3">
                 <Label>Register as</Label>
-                <div className="grid grid-cols-2 gap-4">
-                  <div
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    aria-label="Register as a student"
                     onClick={() => {
                       setValue('role', 'student')
                       setCurrentStep(1)
                     }}
-                    className={`cursor-pointer rounded-xl border-2 p-4 transition-all duration-200 flex flex-col items-center gap-2 group ${
+                    className={`relative min-h-[132px] rounded-2xl border p-4 text-left transition-all duration-200 ${
                       selectedRole === 'student'
-                        ? 'border-primary bg-primary/5'
-                        : 'border-card-border hover:border-primary/40 text-muted-foreground'
+                        ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-600'
+                        : 'border-slate-200 bg-white hover:border-blue-300'
                     }`}
                   >
                     <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                      className={`flex h-10 w-10 items-center justify-center rounded-xl transition-colors ${
                         selectedRole === 'student'
-                          ? 'bg-primary text-primary-foreground'
-                          : 'bg-muted text-muted-foreground group-hover:bg-primary/20'
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-slate-100 text-slate-500'
                       }`}
                     >
                       <User size={20} />
                     </div>
-                    <div className="text-center">
-                      <p className={`font-semibold text-sm ${selectedRole === 'student' ? 'text-primary' : 'text-foreground'}`}>
+                    <div>
+                      <p className="font-semibold text-sm text-slate-950">
                         Student
                       </p>
-                      <p className="text-[10px] opacity-70">Seek career guidance</p>
+                      <p className="mt-1 text-xs leading-4 text-slate-500">Discover pathways, subjects, and course options.</p>
                     </div>
                     {selectedRole === 'student' && (
                       <div className="absolute top-2 right-2 flex items-center justify-center bg-primary text-primary-foreground rounded-full w-4 h-4">
                         <Check size={10} />
                       </div>
                     )}
-                  </div>
+                  </button>
 
-                  <div
+                  <button
+                    type="button"
+                    aria-label="Register as a mentor"
                     onClick={() => {
                       setValue('role', 'mentor')
                       setCurrentStep(1)
                     }}
-                    className={`cursor-pointer rounded-xl border-2 p-4 transition-all duration-200 flex flex-col items-center gap-2 group relative ${
+                    className={`relative min-h-[132px] rounded-2xl border p-4 text-left transition-all duration-200 ${
                       selectedRole === 'mentor'
-                        ? 'border-primary bg-primary/5'
-                        : 'border-card-border hover:border-primary/40 text-muted-foreground'
+                        ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-600'
+                        : 'border-slate-200 bg-white hover:border-blue-300'
                     }`}
                   >
                     <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                      className={`flex h-10 w-10 items-center justify-center rounded-xl transition-colors ${
                         selectedRole === 'mentor'
-                          ? 'bg-primary text-primary-foreground'
-                          : 'bg-muted text-muted-foreground group-hover:bg-primary/20'
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-slate-100 text-slate-500'
                       }`}
                     >
                       <GraduationCap size={20} />
                     </div>
-                    <div className="text-center">
-                      <p className={`font-semibold text-sm ${selectedRole === 'mentor' ? 'text-primary' : 'text-foreground'}`}>
+                    <div>
+                      <p className="font-semibold text-sm text-slate-950">
                         Mentor
                       </p>
-                      <p className="text-[10px] opacity-70">Help guide career decisions</p>
+                      <p className="mt-1 text-xs leading-4 text-slate-500">Guide learners with experience and care.</p>
                     </div>
                     {selectedRole === 'mentor' && (
                       <div className="absolute top-2 right-2 flex items-center justify-center bg-primary text-primary-foreground rounded-full w-4 h-4">
                         <Check size={10} />
                       </div>
                     )}
-                  </div>
+                  </button>
                 </div>
               </div>
 
@@ -253,6 +258,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode, defaultRol
                   placeholder="Enter your full name"
                   {...register('fullName')}
                   disabled={isLoading}
+                  className="auth-input"
                 />
                 {errors.fullName && <p className="text-sm text-destructive">{errors.fullName.message}</p>}
               </div>
@@ -266,6 +272,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode, defaultRol
                     placeholder="Enter your email"
                     {...register('email')}
                     disabled={isLoading}
+                    className="auth-input"
                   />
                   {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
                 </div>
@@ -281,7 +288,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode, defaultRol
                       placeholder="e.g. A1B2C3 (from your NEMIS record)"
                       {...register('upiOrPhone')}
                       disabled={isLoading}
-                      className="uppercase"
+                      className="auth-input uppercase"
                     />
                     <p className="text-xs text-muted-foreground">
                       Your 4-12 character Unique Personal Identifier from Kenya's NEMIS system.
@@ -296,6 +303,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode, defaultRol
                       placeholder="e.g. 0712345678"
                       {...register('upiOrPhone')}
                       disabled={isLoading}
+                      className="auth-input"
                     />
                   </>
                 )}
@@ -357,7 +365,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode, defaultRol
               )}
 
               {selectedRole === 'mentor' && (
-                <Button type="button" className="w-full" onClick={handleNext}>
+                <Button type="button" className="auth-primary w-full" onClick={handleNext}>
                   Next
                 </Button>
               )}
@@ -379,15 +387,15 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode, defaultRol
                     key={option.value}
                     type="button"
                     onClick={() => setValue('mentorStudentCount', option.value)}
-                    className={`p-4 rounded-xl border-2 text-left transition-all ${
+                    className={`rounded-2xl border p-4 text-left transition-all ${
                       watch('mentorStudentCount') === option.value
-                        ? 'border-primary bg-primary/5'
-                        : 'border-card-border hover:border-primary/40'
+                        ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-600'
+                        : 'border-slate-200 bg-white hover:border-blue-300'
                     }`}
                     disabled={isLoading}
                   >
-                    <p className="font-semibold text-sm">{option.label}</p>
-                    <p className="text-[10px] text-muted-foreground">{option.desc}</p>
+                    <p className="text-sm font-semibold text-slate-950">{option.label}</p>
+                    <p className="mt-1 text-xs text-slate-500">{option.desc}</p>
                   </button>
                 ))}
               </div>
@@ -396,10 +404,10 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode, defaultRol
               )}
 
               <div className="flex gap-3 pt-2">
-                <Button type="button" variant="outline" className="flex-1" onClick={handleBack}>
+                <Button type="button" variant="outline" className="flex-1 border-slate-200 text-slate-700" onClick={handleBack}>
                   Back
                 </Button>
-                <Button type="button" className="flex-1" onClick={handleNext}>
+                <Button type="button" className="auth-primary flex-1" onClick={handleNext}>
                   Next
                 </Button>
               </div>
@@ -421,25 +429,25 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode, defaultRol
                     key={option.value}
                     type="button"
                     onClick={() => setValue('mentorType', option.value)}
-                    className={`p-4 rounded-xl border-2 text-left transition-all ${
+                    className={`rounded-2xl border p-4 text-left transition-all ${
                       watch('mentorType') === option.value
-                        ? 'border-primary bg-primary/5'
-                        : 'border-card-border hover:border-primary/40'
+                        ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-600'
+                        : 'border-slate-200 bg-white hover:border-blue-300'
                     }`}
                     disabled={isLoading}
                   >
                     <span className="text-2xl">{option.icon}</span>
-                    <p className="font-semibold text-sm mt-2">{option.label}</p>
+                    <p className="mt-2 text-sm font-semibold text-slate-950">{option.label}</p>
                   </button>
                 ))}
               </div>
               {errors.mentorType && <p className="text-sm text-destructive">{errors.mentorType.message}</p>}
 
               <div className="flex gap-3 pt-2">
-                <Button type="button" variant="outline" className="flex-1" onClick={handleBack}>
+                <Button type="button" variant="outline" className="flex-1 border-slate-200 text-slate-700" onClick={handleBack}>
                   Back
                 </Button>
-                <Button type="button" className="flex-1" onClick={handleNext}>
+                <Button type="button" className="auth-primary flex-1" onClick={handleNext}>
                   Next
                 </Button>
               </div>
@@ -500,10 +508,10 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode, defaultRol
               </div>
 
               <div className="flex gap-3 pt-2">
-                <Button type="button" variant="outline" className="flex-1" onClick={handleBack}>
+                <Button type="button" variant="outline" className="flex-1 border-slate-200 text-slate-700" onClick={handleBack}>
                   Back
                 </Button>
-                <Button type="submit" className="flex-1" disabled={isLoading}>
+                <Button type="submit" className="auth-primary flex-1" disabled={isLoading}>
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Create Account
                 </Button>
@@ -513,19 +521,19 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode, defaultRol
 
           {/* Student submit button */}
           {selectedRole === 'student' && (
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="auth-primary w-full" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Create Account
             </Button>
           )}
 
           <div className="text-center">
-            <div className="text-sm text-muted-foreground">
+            <div className="text-sm text-slate-600">
               Already have an account?{' '}
               <Button
                 type="button"
                 variant="link"
-                className="p-0 h-auto font-semibold"
+                className="h-auto p-0 font-semibold text-blue-700"
                 onClick={onToggleMode}
               >
                 Sign in

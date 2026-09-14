@@ -9,7 +9,7 @@ export type { ChatMessage } from '../types/database'
 
 export interface UserContext {
   name?: string
-  curriculum?: 'cbc' | 'igcse' | string
+  curriculum?: 'cbc' | string
   schoolLevel?: UserProfile['school_level']
   currentGrade?: string
   subjects?: string[]
@@ -25,9 +25,6 @@ export interface UserContext {
     weakSubjects: string[]
     performanceTrend: 'improving' | 'declining' | 'stable'
   }
-  kcseGrade?: string
-  kcsePoints?: number
-  subjectGrades?: Record<string, string>
 }
 
 class AICareerService {
@@ -68,24 +65,17 @@ ${values ? `- Core Values: ${values}` : ''}
 ${constraints ? `- Real-world Constraints: ${constraints}` : ''}
 ` : '';
 
-    const curriculumSection = userContext.curriculum ? `
+    const curriculumSection = `
 CURRICULUM SPECIFICS:
-- Current Curriculum: ${userContext.curriculum === 'cbc' ? 'Competency-Based Curriculum (Kenya)' : 'British Curriculum (IGCSE / A-Levels)'}
-${userContext.curriculum === 'cbc' ? 
-  '--> MAPPING RULE: Since they are in CBC, strictly map their interests to one of the 3 Senior Secondary Pathways (STEM, Arts & Sports Science, Social Sciences). Reference practical CBC subjects like Pre-Technical Studies or Integrated Science.' : 
-  '--> MAPPING RULE: Since they are in the British Curriculum, strictly map their interests to specific IGCSE subject combinations and leading A-Level paths required for UK/global university entry.'
-}` : '';
+- Current Curriculum: Competency-Based Curriculum (Kenya)
+--> MAPPING RULE: Map their interests to one of the 4 CBC Senior Secondary Pathways (STEM, Arts & Sports Science, Social Sciences, Technical & Vocational). Reference practical CBC subjects like Pre-Technical Studies or Integrated Science.
+`;
 
     const academicSection = userContext.academicPerformance ? `
 ACADEMIC PERFORMANCE:
 - Overall: ${userContext.academicPerformance.overallAverage.toFixed(1)}%
 - Strong in: ${userContext.academicPerformance.strongSubjects.join(', ')}
 - Weak in: ${userContext.academicPerformance.weakSubjects.join(', ')}
-` : userContext.kcseGrade ? `
-ACADEMIC PERFORMANCE (KCSE):
-- Mean Grade: ${userContext.kcseGrade}
-- Points: ${userContext.kcsePoints}
-- Subject Breakdown: ${Object.entries(userContext.subjectGrades || {}).map(([s, g]) => `${s}: ${g}`).join(', ')}
 ` : '';
 
     return `You are CareerGuide AI, Kenya's most advanced career counselor. Your mission is to provide personalized, actionable guidance using "Realistic Triangulation Logic"—balancing a student's Personality (RIASEC), Academic Performance, Stated Interests, and Real-World Realities.
@@ -103,8 +93,8 @@ ${curriculumSection}
 ${academicSection}
 
 GUIDANCE LOGIC:
-1. Personality (RIASEC): Holland Codes are the foundation. Recommend roles aligned with their top 2-3 RIASEC types.
-2. Academic Performance: Align careers with their strong subjects. For "Form 4 Leavers", strictly prioritize their actual KCSE grades as the primary academic evidence. If a student wants a STEM career but is weak in Math, suggest technical pathways that leverage their other strengths or bridging options.
+1. Personality (RIASEC): Holland Codes are the foundation. Recommend career paths aligned with their top 2-3 RIASEC types.
+2. Academic Performance: Align careers with their strong subjects and CBC pathway. If a student wants a STEM career but is weak in Math, suggest technical pathways that leverage their other strengths or bridging options.
 3. Personal Values: Factor in what matters to them (e.g., Autonomy, Impact, Income). If they value stability, avoid highly volatile freelance/startup-heavy paths unless they have a safety net.
 4. Feasibility & Constraints: Respect constraints (Geography, Finance, Time). If they need remote work or scholarships, prioritize careers with high digital accessibility or available government/private funding in Kenya.
 5. Labor Market Reality: Factor in Kenyan market demand (Vision 2030, tech boom, manufacturing needs, automation risk). Prioritize emerging fields in the Creative Economy (Content Creation, Digital Art) and the Digital Superhighway over saturated traditional roles.
@@ -391,20 +381,23 @@ Academic Performance:
 
 Generate exactly 3 career recommendations for a Kenyan student.
 
+IMPORTANT NAMING RULE: Use the name of the university course or programme the student would study, NOT the job title. A student picks a course to enrol in, not a job role.
+CORRECT examples: "Computer Science", "Nursing", "Banking & Finance", "Journalism", "Civil Engineering", "Pharmacy", "Law", "Actuarial Science", "Agriculture"
+WRONG examples: "Software Engineer", "Nurse", "Bank Manager", "Journalist", "Civil Engineer", "Pharmacist", "Lawyer", "Actuary", "Farmer"
+
 Profile: ${userContext.schoolLevel || 'Secondary'} student, Grade ${userContext.currentGrade || '10'}, Subjects: ${userContext.subjects?.slice(0, 3).join(', ') || 'Math, English, Science'}, Interests: ${userContext.interests?.slice(0, 2).join(', ') || 'Technology, Business'}
-${userContext.kcseGrade ? `KCSE Performance: Mean Grade ${userContext.kcseGrade}, Points ${userContext.kcsePoints}` : ''}
 ${assessmentInfo}
 ${academicInfo}
 
 Instructions:
-1. Match careers to their core values and RIASEC personality type.
+1. Match career courses to their core values and RIASEC personality type.
 ${userContext.dreamJob ? `2. CRITICAL: The student has requested an evaluation for the career: "${userContext.dreamJob}". MAKE THIS THE VERY FIRST RECOMMENDATION and objectively evaluate if they are a fit or a misfit.` : `2. Verify grades against KUCCPS cluster requirements. If they don't meet the floor, set isTechnicalMisfit to true.`}
-3. Recommend careers with strong growth in Kenya (Vision 2030).
+3. Recommend courses with strong growth in Kenya (Vision 2030).
 4. Suggest specific Kenyan universities strongest in that field.
 5. Estimate Weighted Cluster Points (1-48).
 
 Return EXACTLY this JSON format (array of 3 objects):
-[{"title":"Career Name","matchPercentage":85,"estimatedClusterPoints":39.5,"kuccpsCluster":"Cluster 5","universities":["JKUAT","UoN"],"isTechnicalMisfit":false,"reasoning":"Brief note","actionabilityScore":90,"description":"Short description","salaryRange":"KSh range","education":"Required path","whyRecommended":"Explanation of fit"}]`
+[{"title":"Course Name","matchPercentage":85,"estimatedClusterPoints":39.5,"kuccpsCluster":"Cluster 5","universities":["JKUAT","UoN"],"isTechnicalMisfit":false,"reasoning":"Brief note","actionabilityScore":90,"description":"Short description","salaryRange":"KSh range","education":"Required path","whyRecommended":"Explanation of fit"}]`
 
       // Use non-streaming request for reliable JSON
       const response = await this.sendJsonRequest(prompt, userContext)

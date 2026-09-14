@@ -21,10 +21,6 @@ export interface GuestProfile {
   dreamJob?: string;
   location?: string;
   resultsVerified?: boolean;
-  kcseGrade?: string;
-  kcsePoints?: number;
-  clusterSubjects?: string[];
-  subjectGrades?: Record<string, string>;
 }
 
 export interface CareerRecommendation {
@@ -75,7 +71,7 @@ export class ReportGenerator {
     // Build profile rows
     const profileRows = [
       { label: 'Full Name', value: profile.name || 'Student Candidate' },
-      { label: 'Curriculum', value: profile.curriculum === 'cbc' ? 'Kenyan CBC' : profile.curriculum === 'igcse' ? 'British IGCSE / A-Level' : profile.curriculum === 'legacy' ? 'Kenyan 8-4-4 (Legacy)' : 'Not specified' },
+      { label: 'Curriculum', value: 'Kenya\'s Competency-Based Curriculum (CBC)' },
       { label: 'Current Level', value: profile.grade || 'Not specified' },
       profile.pathway ? { label: 'Pathway', value: profile.pathway.toUpperCase() } : null,
       { label: 'Strong Subjects', value: profile.subjects && profile.subjects.length > 0 ? profile.subjects.join(', ') : 'Not specified' },
@@ -87,9 +83,6 @@ export class ReportGenerator {
       { label: 'Practical Experience', value: profile.experience || 'Not specified' },
       { label: 'Action Readiness', value: profile.readiness || 'Not specified' },
     ].filter(Boolean) as { label: string; value: string }[];
-
-    // KCSE section (only if available)
-    const hasKcse = profile.kcseGrade || profile.kcsePoints;
 
     return `
       <div class="report-container">
@@ -122,44 +115,6 @@ export class ReportGenerator {
               </div>
             `).join('')}
           </div>
-
-          ${hasKcse ? `
-            <div class="page-title" style="margin-top: 30px;">Academic Performance</div>
-            <div class="profile-section">
-              ${profile.kcseGrade ? `
-                <div class="profile-row">
-                  <div class="profile-label">KCSE Mean Grade</div>
-                  <div class="profile-value">${profile.kcseGrade}</div>
-                </div>
-              ` : ''}
-              ${profile.kcsePoints ? `
-                <div class="profile-row">
-                  <div class="profile-label">KCSE Points</div>
-                  <div class="profile-value">${profile.kcsePoints} points</div>
-                </div>
-              ` : ''}
-              <div class="profile-row">
-                <div class="profile-label">Verification Status</div>
-                <div class="profile-value">${profile.resultsVerified ? 'Verified Official' : 'Self-Reported'}</div>
-              </div>
-            </div>
-          ` : ''}
-
-          ${profile.subjectGrades && Object.keys(profile.subjectGrades).length > 0 ? `
-            <div class="page-title" style="margin-top: 30px;">Subject Breakdown</div>
-            <div class="grades-table">
-              <div class="grades-header">
-                <span>Subject</span>
-                <span>Grade</span>
-              </div>
-              ${Object.entries(profile.subjectGrades).map(([subject, grade]) => `
-                <div class="grades-row">
-                  <span class="grade-subject">${subject}</span>
-                  <span class="grade-value">${grade}</span>
-                </div>
-              `).join('')}
-            </div>
-          ` : ''}
         </div>
 
         <!-- PAGE 2: DIAGNOSTIC SUMMARY -->
@@ -753,15 +708,16 @@ CAREERGUIDE AI - PROFESSIONAL DIAGNOSTIC
 Generated on: ${currentDate}
 
 STUDENT NAME: ${profile.name || 'Student'}
-CURRICULUM: ${profile.curriculum || 'Kenyan'}
-MEAN GRADE: ${profile.kcseGrade || 'N/A'}
+CURRICULUM: Kenya's Competency-Based Curriculum (CBC)
+CURRENT GRADE: ${profile.grade || 'Not specified'}
+PATHWAY: ${profile.pathway || 'Not specified'}
 
 DIAGNOSTIC INSIGHTS:
 ${this.extractAISummary(conversation).replace(/<\/?[^>]+(>|$)/g, "")}
 
 NEXT STEPS:
-1. Verify Cluster Points against KUCCPS 2025 thresholds.
-2. Direct application to recommended institutions.
+1. Explore KUCCPS cluster requirements for your pathway.
+2. Research recommended universities and programmes.
 3. Consult professional development roadmap on CareerGuide AI.
 
 Empowering Kenya's Students Through AI-Driven Success.
@@ -771,7 +727,6 @@ Empowering Kenya's Students Through AI-Driven Success.
   static getCBEPathInfo(grade?: string): string {
     if (!grade) return "Determining pathway...";
     const gradeNum = parseInt(grade.replace(/\D/g, ''));
-    if (grade.toLowerCase().includes('form') || grade.toLowerCase().includes('kcse')) return "Tertiary Readiness (KUCCPS)";
     if (gradeNum <= 9) return "Junior Secondary (Exploring Areas)";
     return "Senior Secondary (Pathway Specialization)";
   }

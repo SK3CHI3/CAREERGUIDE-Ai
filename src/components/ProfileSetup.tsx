@@ -19,7 +19,7 @@ import { RIASEC_ACTIVITIES, RIASEC_LABELS, CAREER_VALUES, CONTEXTUAL_CONSTRAINTS
 import { INTEREST_CATEGORIES } from '@/data/interest-categories'
 
 const profileSchema = z.object({
-  curriculum: z.enum(['cbc', 'igcse']),
+  curriculum: z.literal('cbc'),
   schoolLevel: z.enum(['primary', 'secondary', 'tertiary']),
   currentGrade: z.string().optional(),
   subjects: z.array(z.string()).min(3, 'Please select at least 3 subjects'),
@@ -127,7 +127,7 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ onComplete }) => {
   const [selectedValues, setSelectedValues] = useState<string[]>([])
   const [selectedInterestItems, setSelectedInterestItems] = useState<string[]>([])
   const [customInterest, setCustomInterest] = useState('')
-  const [currentStep, setCurrentStep] = useState(1)
+  const [currentStep, setCurrentStep] = useState(2)
   const [dynamicSubjects, setDynamicSubjects] = useState<CbeSubject[]>([])
   const [dynamicInterests, setDynamicInterests] = useState<CareerInterest[]>([])
   const [isLoadingData, setIsLoadingData] = useState(true)
@@ -147,7 +147,6 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ onComplete }) => {
     }
   })
 
-  const curriculumType = watch('curriculum')
   const schoolLevel = watch('schoolLevel')
 
   useEffect(() => {
@@ -266,10 +265,6 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ onComplete }) => {
   }
 
   const nextStep = () => {
-    if (currentStep === 1 && !curriculumType) {
-      setError('Please select your curriculum')
-      return
-    }
     if (currentStep === 2 && !schoolLevel) {
       setError('Please select your education level')
       return
@@ -300,72 +295,35 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ onComplete }) => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-4 sm:p-8 min-h-[600px] flex flex-col justify-center">
-      <div className="mb-12 text-center">
+    <div className="onboarding-shell min-h-screen bg-slate-50 px-4 py-8 sm:px-6 sm:py-12">
+      <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-2xl flex-col justify-center">
+        <div className="onboarding-panel">
+      <div className="mb-9 text-center">
         <div className="flex justify-center gap-2 mb-4">
           {[1, 2, 3, 4, 5, 6].map(s => (
             <div key={s} className={`h-1.5 w-8 sm:w-10 rounded-full transition-all ${currentStep >= s ? 'bg-primary shadow-[0_0_10px_rgba(var(--primary),0.5)]' : 'bg-muted'}`} />
           ))}
         </div>
-        <p className="text-sm font-bold text-primary uppercase tracking-widest">Phase {currentStep} of 6</p>
+        <p className="text-xs font-bold text-blue-700 uppercase tracking-[0.16em]">Your profile · Step {currentStep} of 6</p>
       </div>
 
       <div className="space-y-8">
         {error && <Alert variant="destructive" className="border-destructive/50 bg-destructive/5"><AlertDescription>{error}</AlertDescription></Alert>}
         {console.log('Current Step:', currentStep)}
         <div className="space-y-8">
-          {currentStep === 1 && (
-            <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="text-center space-y-4">
-                <h2 className="text-5xl font-extrabold tracking-tight bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent pb-2">Start Your Journey</h2>
-                <p className="text-xl text-foreground-muted">Which Curriculum are you currently taking?</p>
-              </div>
-              <div className="space-y-6">
-                <div className="grid gap-4">
-                  {[
-                    { v: 'cbc', l: 'Competency-Based Curriculum (CBC)', d: 'The Kenyan national curriculum (Primary, JS, SS)' },
-                    { v: 'igcse', l: 'British Curriculum (IGCSE / A-Levels)', d: 'Cambridge or Edexcel international system' }
-                  ].map(curr => (
-                    <button
-                      key={curr.v} type="button"
-                      onClick={() => {
-                        setValue('curriculum', curr.v as any);
-                        setValue('subjects', []); // Reset subjects when curriculum changes
-                        setSelectedSubjects([]);
-                      }}
-                      className={`p-6 sm:p-8 rounded-[2.5rem] border-2 text-left transition-all ${curriculumType === curr.v ? 'border-primary bg-primary/5 ring-2 ring-primary/20' : 'border-card-border hover:border-primary/50'}`}
-                    >
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <p className="text-xl sm:text-2xl font-bold">{curr.l}</p>
-                          <p className="text-base text-foreground-muted">{curr.d}</p>
-                        </div>
-                        {curriculumType === curr.v && <CheckCircle className="w-8 h-8 text-primary" />}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
           {currentStep === 2 && (
             <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="text-center space-y-4">
-                <h2 className="text-5xl font-extrabold tracking-tight bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent pb-2">Your Level</h2>
+                <h2 className="onboarding-title text-4xl font-semibold tracking-tight pb-2">Your Level</h2>
                 <p className="text-xl text-foreground-muted">What is your current education level?</p>
               </div>
               <div className="space-y-6">
                 <div className="grid gap-4">
-                  {(curriculumType === 'cbc' ? [
+                  {[
                     { v: 'primary', l: 'Primary School', d: 'Grade 1-6' },
                     { v: 'secondary', l: 'Junior Secondary', d: 'Grade 7-9' },
                     { v: 'tertiary', l: 'Senior Secondary / Tertiary', d: 'Grade 10-12+' }
-                  ] : [
-                    { v: 'primary', l: 'Key Stage 1-2', d: 'Years 1-6' },
-                    { v: 'secondary', l: 'Key Stage 3-4 (IGCSE)', d: 'Years 7-11' },
-                    { v: 'tertiary', l: 'A-Levels', d: 'Years 12-13' }
-                  ]).map(level => (
+                  ].map(level => (
                     <button
                       key={level.v} type="button"
                       onClick={() => setValue('schoolLevel', level.v as any)}
@@ -388,21 +346,15 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ onComplete }) => {
           {currentStep === 3 && (
             <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="text-center space-y-3">
-                <h2 className="text-4xl font-extrabold tracking-tight">Learning Areas</h2>
+                <h2 className="onboarding-title text-4xl font-semibold tracking-tight">Learning Areas</h2>
                 <p className="text-lg text-foreground-muted">Pick 3 or more subjects you find exciting.</p>
               </div>
               <div className="grid grid-cols-2 gap-3 max-h-[450px] overflow-y-auto p-2 custom-scrollbar pr-4">
                 {dynamicSubjects
                   .filter(s => {
-                    // Quick curriculum-based filter hack using naming conventions
-                    // A proper DB setup would rely on s.category === curriculumType
-                    if (curriculumType === 'cbc') {
-                      // Level-aware filtering: Only show subjects mapped to the user's current level
-                      if (!s.levels || s.levels.length === 0) return true;
-                      return s.levels.includes(schoolLevel);
-                    } else {
-                      return ['IGCSE', 'A-Level', 'British', 'General'].includes(s.category || 'General') || !s.subject_name.includes('Integrated');
-                    }
+                    // Level-aware filtering: Only show subjects mapped to the user's current level
+                    if (!s.levels || s.levels.length === 0) return true;
+                    return s.levels.includes(schoolLevel);
                   })
                   .map(s => (
                   <button
@@ -423,7 +375,7 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ onComplete }) => {
           {currentStep === 4 && (
             <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="text-center space-y-4">
-                <h2 className="text-5xl font-extrabold tracking-tight bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent pb-2">Future Aspirations</h2>
+                <h2 className="onboarding-title text-4xl font-semibold tracking-tight pb-2">Future Aspirations</h2>
                 <p className="text-xl text-foreground-muted italic">"Your future is as bright as your curiosity."</p>
                 <p className="text-lg font-medium">Which career path sparks your interest?</p>
               </div>
@@ -497,7 +449,7 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ onComplete }) => {
           {currentStep === 5 && (
             <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="text-center space-y-4">
-                <h2 className="text-5xl font-extrabold tracking-tight bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent pb-2">Your Interests</h2>
+                <h2 className="onboarding-title text-4xl font-semibold tracking-tight pb-2">Your Interests</h2>
                 <p className="text-xl text-foreground-muted">Tap a category to pick specific interests, or add your own.</p>
               </div>
 
@@ -590,7 +542,7 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ onComplete }) => {
           {currentStep === 6 && (
             <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="text-center space-y-3">
-                <h2 className="text-4xl font-extrabold tracking-tight">Your Values</h2>
+                <h2 className="onboarding-title text-4xl font-semibold tracking-tight">Your Values</h2>
                 <p className="text-lg text-foreground-muted">What matters most in your future job?</p>
               </div>
               <div className="grid gap-4">
@@ -621,17 +573,19 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ onComplete }) => {
               </Button>
             )}
             {currentStep < 6 ? (
-              <Button type="button" onClick={nextStep} className="flex-1 h-16 text-xl rounded-3xl bg-primary text-primary-foreground shadow-2xl shadow-primary/30 font-bold">
+              <Button type="button" onClick={nextStep} className="onboarding-primary flex-1 h-14 text-base rounded-xl font-bold">
                 Continue <ChevronRight className="ml-2 w-5 h-5" />
               </Button>
             ) : (
-              <Button type="button" onClick={handleFinalSubmit} disabled={isLoading} className="flex-1 h-16 text-xl rounded-3xl bg-gradient-to-r from-primary via-blue-600 to-indigo-600 text-white shadow-2xl shadow-primary/40 font-bold border-none hover:opacity-90">
+              <Button type="button" onClick={handleFinalSubmit} disabled={isLoading} className="onboarding-primary flex-1 h-14 text-base rounded-xl font-bold">
                 {isLoading ? <><Loader2 className="mr-3 w-6 h-6 animate-spin text-white" /> Crafting Your Future...</> : <><Sparkles className="mr-3 w-6 h-6" /> Complete My Profile</>}
               </Button>
             )}
           </div>
         </div>
+        </div>
       </div>
+    </div>
     </div>
   )
 }

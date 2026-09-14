@@ -6,9 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Sparkles, Download, ArrowRight, ArrowLeft, CheckCircle, Brain, Target, User, Heart, ShieldAlert, Rocket, Lock, GraduationCap } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Sparkles, Download, ArrowRight, ArrowLeft, CheckCircle, Brain, Target, User, Heart, ShieldAlert, Rocket, Lock } from "lucide-react";
 import BrandedLoader from "@/components/BrandedLoader";
 import ReportPaywall from "@/components/ReportPaywall";
 import { aiCareerService } from "@/lib/ai-service";
@@ -34,15 +32,10 @@ const QuickAssessment = () => {
     // Phase 1: Academics
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
-    const [curriculum, setCurriculum] = useState<'cbc' | 'igcse' | 'legacy' | null>(null);
+    const [curriculum] = useState<'cbc'>('cbc');
     const [grade, setGrade] = useState("");
     const [pathway, setPathway] = useState<'stem' | 'arts' | 'social' | 'techvoc' | null>(null);
     const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
-    const [subjectGrades, setSubjectGrades] = useState<Record<string, string>>({
-        'Mathematics': '',
-        'English': '',
-        'Kiswahili': ''
-    });
 
     // Phase 2: Interests
     const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
@@ -77,9 +70,7 @@ const QuickAssessment = () => {
                     // Simplified restoration for critical fields
                     if (parsed.name) setName(parsed.name);
                     if (parsed.email) setEmail(parsed.email);
-                    if (parsed.curriculum) setCurriculum(parsed.curriculum);
                     if (parsed.grade) setGrade(parsed.grade);
-                    if (parsed.subjectGrades) setSubjectGrades(parsed.subjectGrades);
                     if (parsed.step) setCurrentStep(parsed.step);
                 }
             } catch (e) {
@@ -92,26 +83,21 @@ const QuickAssessment = () => {
     useEffect(() => {
         if (currentStep > 1 && currentStep < 7) {
             localStorage.setItem('career_assessment_state', JSON.stringify({
-                name, email, curriculum, grade, subjectGrades, step: currentStep, timestamp: Date.now()
+                name, email, grade, step: currentStep, timestamp: Date.now()
             }));
         }
-    }, [currentStep, name, email, curriculum, grade, subjectGrades]);
+    }, [currentStep, name, email, grade]);
 
     const SUBJECT_DATA = {
         cbc_junior: ["Mathematics", "English", "Kiswahili", "Integrated Science", "Health Education", "Pre-Technical & Pre-Career Studies", "Social Studies", "Business Studies", "Agriculture & Nutrition", "Life Skills Education", "Creative Arts and Sports", "Religious Education (CRE/IRE/HRE)"],
         cbc_senior_stem: ["Mathematics", "English", "Kiswahili", "Physics", "Chemistry", "Biology", "Computer Science", "Further Mathematics", "Technical Drawing", "Agriculture & Nutrition"],
         cbc_senior_arts: ["English", "Kiswahili", "Mathematics", "Fine Art & Design", "Music", "Drama & Theatre", "Physical Education & Sports Science", "Media & Film Studies", "Fashion & Design"],
         cbc_senior_social: ["English", "Kiswahili", "Mathematics", "History & Citizenship", "Geography", "Business Studies & Economics", "Religious Education", "Law", "Sociology"],
-        cbc_senior_techvoc: ["English", "Kiswahili", "Mathematics", "Building & Construction", "Electrical & Electronics", "Mechanical Engineering", "Agriculture", "Home Science", "Hairdressing & Beauty", "Plumbing & Carpentry", "ICT / Computer Studies"],
-        igcse: ["English First Language", "Mathematics (Extended)", "Biology", "Chemistry", "Physics", "ICT", "Business Studies", "Economics", "History", "Geography", "Art & Design", "Sociology"],
-        alevel: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science", "Economics", "Business", "History", "Geography", "Psychology", "Law", "English Literature"],
-        legacy: ["Mathematics", "English", "Kiswahili", "Biology", "Physics", "Chemistry", "History & Government", "Geography", "Christian Religious Ed (CRE)", "Islamic Religious Ed (IRE)", "Hindu Religious Ed (HRE)", "Home Science", "Business Studies", "Agriculture", "Computer Studies", "Music", "Art & Design", "French", "German", "Arabic", "Aviation", "Building Construction", "Power Mechanics", "Woodwork", "Metalwork", "Drawing & Design", "Electricity"]
+        cbc_senior_techvoc: ["English", "Kiswahili", "Mathematics", "Building & Construction", "Electrical & Electronics", "Mechanical Engineering", "Agriculture", "Home Science", "Hairdressing & Beauty", "Plumbing & Carpentry", "ICT / Computer Studies"]
     };
 
     const GRADES = {
-        cbc: ["Grade 7", "Grade 8", "Grade 9", "Grade 10 (Senior)", "Grade 11 (Senior)", "Grade 12 (Senior)"],
-        igcse: ["Year 10 (IGCSE)", "Year 11 (IGCSE)", "Year 12 (A-Level)", "Year 13 (A-Level)"],
-        legacy: ["Form 1", "Form 2", "Form 3", "Form 4", "Form 4 Leaver", "University Year 1", "University Year 2", "University Year 3", "University Year 4"]
+        cbc: ["Grade 7", "Grade 9", "Grade 11"]
     };
 
     const valueOptions = ["Financial success and prosperity", "Making a meaningful impact on society", "Work-life balance and personal time", "Leadership and influence", "Creativity and innovation", "Job security and stability"];
@@ -121,24 +107,16 @@ const QuickAssessment = () => {
     const experienceOptions = ["School clubs, student leadership, or competitions", "Volunteering or community service", "Personal projects, creative work, or independent research", "Part-time job or internship", "None yet"];
     const readinessOptions = ["Ready to take action now", "Exploring my options carefully", "Need help understanding my path forward"];
     const getAvailableSubjects = () => {
-        if (!curriculum || !grade) return [];
-        
-        if (curriculum === 'cbc') {
-            if (grade.includes('Senior')) {
-                if (!pathway) return [];
-                return SUBJECT_DATA[`cbc_senior_${pathway}` as keyof typeof SUBJECT_DATA];
-            }
-            return SUBJECT_DATA.cbc_junior;
-        }
-        
-        if (curriculum === 'igcse') {
-            if (grade.includes('A-Level')) return SUBJECT_DATA.alevel;
-            return SUBJECT_DATA.igcse;
+        if (!grade) return [];
+
+        // Grade 11 students need to select a pathway
+        if (grade === 'Grade 11') {
+            if (!pathway) return [];
+            return SUBJECT_DATA[`cbc_senior_${pathway}` as keyof typeof SUBJECT_DATA];
         }
 
-        if (curriculum === 'legacy') return SUBJECT_DATA.legacy;
-        
-        return [];
+        // Grade 7 and 9 are Junior Secondary
+        return SUBJECT_DATA.cbc_junior;
     };
 
     const handleNext = () => {
@@ -151,51 +129,12 @@ const QuickAssessment = () => {
                 return;
             }
             if (subStep === 2) {
-                if (!curriculum) return setError("Please select your curriculum");
-                if (!grade) return setError("Please select your current grade/year");
-                if (curriculum === 'cbc' && grade.includes('Senior') && !pathway) return setError("Please select your Senior Secondary pathway");
-                
-                // If Form 4 Leaver, go to scorecard sub-step
-                if (grade === "Form 4 Leaver") {
-                    setSubStep(3); // 3 is now Manual Grade Entry
-                } else {
-                    setSubStep(4); // 4 is now Subjects
-                }
+                if (!grade) return setError("Please select your current grade");
+                if (grade === 'Grade 11' && !pathway) return setError("Please select your Senior Secondary pathway");
+                setSubStep(3);
                 return;
             }
             if (subStep === 3) {
-                // Manual Grade validation
-                if (grade === "Form 4 Leaver") {
-                    const selectedGrades = Object.entries(subjectGrades).filter(([_, g]) => g !== '');
-                    if (selectedGrades.length < 7) return setError("Please select grades for at least 7 subjects to calculate an accurate Mean Grade (Official KUCCPS Standard).");
-                    
-                    // Automatically derive strong subjects (B and above)
-                    const strongSubjects = selectedGrades
-                        .filter(([_, g]) => ['A', 'A-', 'B+', 'B'].includes(g))
-                        .map(([s, _]) => s);
-                    
-                    // If no B's, take top 3 subjects
-                    if (strongSubjects.length === 0) {
-                        const gradePoints: Record<string, number> = {
-                            'A': 12, 'A-': 11, 'B+': 10, 'B': 9, 'B-': 8, 'C+': 7, 'C': 6, 'C-': 5, 'D+': 4, 'D': 3, 'D-': 2, 'E': 1
-                        };
-                        const sortedSubjects = selectedGrades
-                            .sort((a, b) => (gradePoints[b[1]] || 0) - (gradePoints[a[1]] || 0))
-                            .slice(0, 3)
-                            .map(([s, _]) => s);
-                        setSelectedSubjects(sortedSubjects);
-                    } else {
-                        setSelectedSubjects(strongSubjects);
-                    }
-                    
-                    // Skip Phase 1.4 (Subjects selection) and go to Step 2 (RIASEC)
-                    setCurrentStep(2);
-                    return;
-                }
-                setSubStep(4);
-                return;
-            }
-            if (subStep === 4) {
                 if (selectedSubjects.length === 0) return setError("Please select at least one subject area");
                 setCurrentStep(2);
                 return;
@@ -221,18 +160,7 @@ const QuickAssessment = () => {
     const handleBack = () => {
         setError(null);
         if (currentStep === 1 && subStep > 1) {
-            // Special routing for skip sub-step 3 (upload) if not Form 4 Leaver
-            if (subStep === 4 && grade !== "Form 4 Leaver") {
-                setSubStep(2);
-            } else {
-                setSubStep(prev => prev - 1);
-            }
-            return;
-        }
-        // If coming back from Phase 2 to Form 4 Leaver, go to subStep 3
-        if (currentStep === 2 && grade === "Form 4 Leaver") {
-            setCurrentStep(1);
-            setSubStep(3);
+            setSubStep(prev => prev - 1);
             return;
         }
         setCurrentStep(prev => prev - 1);
@@ -247,40 +175,9 @@ const QuickAssessment = () => {
         try {
             const mbtiCode = `${mbtiEnergy === 'Introvert' ? 'I' : 'E'}N${mbtiDecisions === 'Thinker' ? 'T' : 'F'}${mbtiStructure === 'Judging' ? 'J' : 'P'}`;
 
-            const selectedGrades = Object.entries(subjectGrades).filter(([_, g]) => g !== '');
-            const hasLegacyGrades = grade === "Form 4 Leaver" && selectedGrades.length >= 7;
-
-            let kcseGrade = undefined;
-            let totalPointsVal = undefined;
-
-            if (hasLegacyGrades) {
-                const gradePoints: Record<string, number> = {
-                    'A': 12, 'A-': 11, 'B+': 10, 'B': 9, 'B-': 8, 'C+': 7, 'C': 6, 'C-': 5, 'D+': 4, 'D': 3, 'D-': 2, 'E': 1
-                };
-                const calculatedTotalPoints = selectedGrades.reduce((sum, [_, g]) => sum + (gradePoints[g] || 0), 0);
-                totalPointsVal = calculatedTotalPoints;
-                const meanPoints = calculatedTotalPoints / selectedGrades.length;
-
-                const getGradeFromPoints = (points: number) => {
-                    if (points >= 11.5) return 'A';
-                    if (points >= 10.5) return 'A-';
-                    if (points >= 9.5) return 'B+';
-                    if (points >= 8.5) return 'B';
-                    if (points >= 7.5) return 'B-';
-                    if (points >= 6.5) return 'C+';
-                    if (points >= 5.5) return 'C';
-                    if (points >= 4.5) return 'C-';
-                    if (points >= 3.5) return 'D+';
-                    if (points >= 2.5) return 'D';
-                    if (points >= 1.5) return 'D-';
-                    return 'E';
-                };
-                kcseGrade = getGradeFromPoints(meanPoints);
-            }
-
             const profile: GuestProfile = {
                 name,
-                curriculum: curriculum || undefined,
+                curriculum: 'cbc',
                 grade,
                 pathway: pathway || undefined,
                 subjects: selectedSubjects,
@@ -292,17 +189,14 @@ const QuickAssessment = () => {
                 experience,
                 readiness,
                 dreamJob: targetCareer || undefined,
-                careerGoals: "Seeking career alignment via Diagnostic Assessment.",
-                kcseGrade,
-                kcsePoints: hasLegacyGrades ? totalPointsVal : undefined,
-                subjectGrades: hasLegacyGrades ? Object.fromEntries(selectedGrades) : undefined
+                careerGoals: "Seeking career alignment via Diagnostic Assessment."
             };
             setGuestProfile(profile);
 
             // Generate customized recommendations
             const payload = {
                 name: profile.name,
-                curriculum: profile.curriculum === 'cbc' ? 'Kenyan CBC' : profile.curriculum === 'igcse' ? 'British IGCSE/A-Level' : 'Kenyan Legacy (8-4-4)',
+                curriculum: 'Kenyan CBC',
                 currentGrade: profile.grade,
                 pathway: profile.pathway,
                 subjects: profile.subjects,
@@ -311,8 +205,6 @@ const QuickAssessment = () => {
                 workStyle: profile.workStyle,
                 mbti: profile.mbti,
                 limitations: profile.barriers,
-                kcseGrade: profile.kcseGrade,
-                subjectGrades: profile.subjectGrades,
                 dreamJob: targetCareer || undefined
             };
 
@@ -403,13 +295,9 @@ const QuickAssessment = () => {
                     </div>
                     {currentStep === 1 && (
                         <div className="flex justify-center gap-1 mt-1 md:hidden">
-                            {[1, 2, 3, 4].map(s => {
-                                // Skip showing dot 3 if not Form 4 Leaver
-                                if (s === 3 && grade !== "Form 4 Leaver") return null;
-                                return (
-                                    <div key={s} className={`h-0.5 w-4 rounded-full transition-all ${subStep >= s ? 'bg-primary/60' : 'bg-muted'}`} />
-                                );
-                            })}
+                            {[1, 2, 3].map(s => (
+                                <div key={s} className={`h-0.5 w-4 rounded-full transition-all ${subStep >= s ? 'bg-primary/60' : 'bg-muted'}`} />
+                            ))}
                         </div>
                     )}
                 </div>
@@ -451,43 +339,25 @@ const QuickAssessment = () => {
                                         {subStep === 2 && (
                                             <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                                                 <div className="space-y-4">
-                                                    <Label className="text-base font-semibold">Curriculum</Label>
-                                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                                                        <button type="button" onClick={() => { setCurriculum('cbc'); setGrade(""); setSelectedSubjects([]); setPathway(null); }} className={`p-3 rounded-xl border-2 transition-all font-bold text-left px-5 ${curriculum === 'cbc' ? 'border-primary bg-primary/10 text-primary' : 'border-card-border hover:border-primary/50'}`}>Kenyan CBC (New)</button>
-                                                        <button type="button" onClick={() => { setCurriculum('igcse'); setGrade(""); setSelectedSubjects([]); setPathway(null); }} className={`p-3 rounded-xl border-2 transition-all font-bold text-left px-5 ${curriculum === 'igcse' ? 'border-primary bg-primary/10 text-primary' : 'border-card-border hover:border-primary/50'}`}>British IGCSE / A-Level</button>
-                                                        <button type="button" onClick={() => { setCurriculum('legacy'); setGrade(""); setSelectedSubjects([]); setPathway(null); }} className={`p-3 rounded-xl border-2 transition-all font-bold text-left px-5 ${curriculum === 'legacy' ? 'border-primary bg-primary/10 text-primary' : 'border-card-border hover:border-primary/50'}`}>8-4-4 Legacy / University</button>
+                                                    <Label className="text-base font-semibold">Current Grade / Level</Label>
+                                                    <div className="grid grid-cols-3 gap-2">
+                                                        {GRADES.cbc.map(g => (
+                                                            <button
+                                                                key={g}
+                                                                type="button"
+                                                                onClick={() => { setGrade(g); setSelectedSubjects([]); }}
+                                                                className={`p-2 text-sm rounded-lg border-2 transition-all font-medium flex items-center justify-center ${
+                                                                    grade === g
+                                                                        ? 'border-primary bg-primary/10 text-primary shadow-sm'
+                                                                        : 'border-card-border hover:border-primary/50'
+                                                                }`}>
+                                                                {g}
+                                                            </button>
+                                                        ))}
                                                     </div>
                                                 </div>
-                                                
-                                                {curriculum && (
-                                                    <div className="space-y-4">
-                                                        <Label className="text-base font-semibold">Current Grade / Level</Label>
-                                                        <div className="grid grid-cols-2 gap-2">
-                                                            {GRADES[curriculum].map(g => {
-                                                                const isForm4Leaver = g === "Form 4 Leaver";
-                                                                return (
-                                                                    <button 
-                                                                        key={g} 
-                                                                        type="button" 
-                                                                        onClick={() => { setGrade(g); setSelectedSubjects([]); }} 
-                                                                        className={`p-2 text-sm rounded-lg border-2 transition-all font-medium flex items-center justify-center gap-2 ${
-                                                                            grade === g 
-                                                                                ? 'border-primary bg-primary/10 text-primary shadow-sm' 
-                                                                                : isForm4Leaver 
-                                                                                    ? 'border-primary/40 bg-primary/5 hover:border-primary text-primary/80' 
-                                                                                    : 'border-card-border hover:border-primary/50'
-                                                                        } ${isForm4Leaver ? 'col-span-2 py-3' : ''}`}>
-                                                                        {isForm4Leaver && <Sparkles className="w-4 h-4 text-primary animate-pulse" />}
-                                                                        {g}
-                                                                        {isForm4Leaver && <span className="text-[10px] bg-primary text-white px-1.5 py-0.5 rounded-full ml-1">V25 ELIGIBLE</span>}
-                                                                    </button>
-                                                                );
-                                                            })}
-                                                        </div>
-                                                    </div>
-                                                )}
 
-                                                {curriculum === 'cbc' && grade.includes('Senior') && (
+                                                {grade === 'Grade 11' && (
                                                     <div className="space-y-3 animate-in fade-in slide-in-from-top-2">
                                                         <Label className="text-base font-bold text-primary">Senior Secondary Pathway</Label>
                                                         <div className="grid grid-cols-2 gap-2">
@@ -502,70 +372,8 @@ const QuickAssessment = () => {
                                             </div>
                                         )}
 
-                                        {/* Sub-step 1.3: Manual Academic Scorecard (Conditional) */}
-                                        {subStep === 3 && grade === "Form 4 Leaver" && (
-                                            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-                                                <div className="text-center space-y-2">
-                                                    <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-2 text-primary">
-                                                        <GraduationCap className="w-8 h-8" />
-                                                    </div>
-                                                    <Label className="text-xl font-bold block text-primary">Academic Scorecard</Label>
-                                                    <p className="text-sm text-muted-foreground px-4">Enter your KCSE grades to help the AI map your technical eligibility.</p>
-                                                </div>
-
-                                                <div className="bg-card/50 border border-card-border rounded-3xl p-6 shadow-sm">
-                                                    <ScrollArea className="h-[300px] pr-4">
-                                                        <div className="space-y-4">
-                                                            <div className="space-y-3">
-                                                                <Label className="text-[10px] uppercase tracking-wider font-bold text-primary">Core Subjects (Mandatory)</Label>
-                                                                {['Mathematics', 'English', 'Kiswahili'].map(subject => (
-                                                                    <div key={subject} className="flex items-center justify-between gap-4 p-2 rounded-xl bg-background/40">
-                                                                        <span className="text-sm font-semibold">{subject}</span>
-                                                                        <Select value={subjectGrades[subject]} onValueChange={(v) => setSubjectGrades(p => ({ ...p, [subject]: v }))}>
-                                                                            <SelectTrigger className="w-24 h-9 bg-background"><SelectValue placeholder="-" /></SelectTrigger>
-                                                                            <SelectContent>
-                                                                                {['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'E'].map(g => (
-                                                                                    <SelectItem key={g} value={g}>{g}</SelectItem>
-                                                                                ))}
-                                                                            </SelectContent>
-                                                                        </Select>
-                                                                    </div>
-                                                                ))}
-                                                            </div>
-
-                                                            <div className="space-y-3 pt-2">
-                                                                <Label className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Elective Subjects (Select At Least 4 More)</Label>
-                                                                {['Biology', 'Chemistry', 'Physics', 'History & Government', 'Geography', 'Christian Religious Ed (CRE)', 'Islamic Religious Ed (IRE)', 'Hindu Religious Ed (HRE)', 'Home Science', 'Business Studies', 'Agriculture', 'Computer Studies', 'Music', 'Art & Design', 'French', 'German', 'Arabic', 'Aviation', 'Building Construction', 'Power Mechanics', 'Woodwork', 'Metalwork', 'Drawing & Design', 'Electricity'].map(subject => (
-                                                                    <div key={subject} className="flex items-center justify-between gap-4 p-2 rounded-xl bg-background/40">
-                                                                        <span className="text-sm">{subject}</span>
-                                                                        <Select value={subjectGrades[subject] || ''} onValueChange={(v) => setSubjectGrades(p => ({ ...p, [subject]: v === 'none' ? '' : v }))}>
-                                                                            <SelectTrigger className="w-24 h-9 bg-background"><SelectValue placeholder="-" /></SelectTrigger>
-                                                                            <SelectContent>
-                                                                                <SelectItem value="none">None</SelectItem>
-                                                                                {['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'E'].map(g => (
-                                                                                    <SelectItem key={g} value={g}>{g}</SelectItem>
-                                                                                ))}
-                                                                            </SelectContent>
-                                                                        </Select>
-                                                                    </div>
-                                                                ))}
-                                                            </div>
-                                                        </div>
-                                                    </ScrollArea>
-                                                </div>
-
-                                                {Object.entries(subjectGrades).filter(([_, g]) => g !== '').length >= 7 && (
-                                                    <div className="text-center p-3 bg-green-500/10 border border-green-500/20 rounded-2xl animate-in fade-in slide-in-from-top-2">
-                                                        <p className="text-xs font-bold text-green-600 flex items-center justify-center gap-1">
-                                                            <CheckCircle className="w-3 h-3" /> 7/7 Subjects Reached. Official KUCCPS Standard Met.
-                                                        </p>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )}
-
-                                        {/* Sub-step 1.4: Subjects */}
-                                        {subStep === 4 && (
+                                        {/* Sub-step 1.3: Subjects */}
+                                        {subStep === 3 && (
                                             <div className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
                                                 <Label className="text-base font-semibold mb-2 block">Strongest Subjects</Label>
                                                 <div className="flex flex-wrap gap-2">

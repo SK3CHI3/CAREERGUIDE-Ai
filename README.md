@@ -1,6 +1,6 @@
 # CareerGuide AI — AI Career Guidance for Kenyan Students
 
-**CareerGuide AI** is a free AI-powered career guidance platform built for Kenyan students navigating the CBC and 8-4-4 education systems. Get personalized career recommendations, track academic performance, and chat with an AI career counselor — all tailored to Kenya's job market.
+**CareerGuide AI** is a free AI-powered career guidance platform built for Kenyan students navigating the Competency-Based Curriculum (CBC). Get personalized career recommendations, track academic performance, and chat with an AI career counselor — all tailored to Kenya's job market and university pathways.
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-careerguideai.co.ke-blue)](https://careerguideai.co.ke)
 [![Built with](https://img.shields.io/badge/Built%20with-React%20%2B%20Supabase-green)]()
@@ -8,7 +8,7 @@
 
 ## About
 
-CareerGuide AI combines RIASEC personality profiling, academic performance, and Kenya's labour market data to deliver personalized career guidance. Students get AI-powered career recommendations, a conversational AI career counselor, and access to verified professional counselors for 1-on-1 sessions. Mentors (parents, guardians, and educators) can track student progress and guide career decisions.
+CareerGuide AI combines RIASEC personality profiling, academic performance, and Kenya's labour market data to deliver personalized career guidance. Students get AI-powered career recommendations mapped to KUCCPS university clusters, a conversational AI career counselor, and access to verified professional counselors for 1-on-1 sessions. Mentors (parents, guardians, and educators) can track student progress and guide career decisions.
 
 ## Tech Stack
 
@@ -23,11 +23,12 @@ CareerGuide AI combines RIASEC personality profiling, academic performance, and 
 
 | Student Dashboard | AI Career Chat | Career Directory |
 |---|---|---|
-| Personalized career matches with RIASEC radar chart | Full-page AI counselor conversation | 500+ Kenya-specific career paths |
+| Personalized career matches with RIASEC radar chart | Full-page AI counselor conversation | 460+ Kenya-specific career paths |
 
 ## Documentation
 
 - [V3 Migration Guide](docs/V3_MIGRATION.md) — Architecture changes, database migrations, and what was removed
+- [V4 Career System Update](docs/V4_CAREER_SYSTEM.md) — Career paths cleanup, KUCCPS clusters, university mapping, and CBC-only refactor
 - [Developer Guide](docs/DEVELOPER.md) — Contributing and local development setup
 - [Security](docs/SECURITY.md) — Authentication, RLS policies, and data protection
 - [Deployment](docs/NETLIFY_DEPLOYMENT.md) — Production deployment and CI/CD

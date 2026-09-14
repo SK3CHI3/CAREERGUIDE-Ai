@@ -100,6 +100,37 @@ class GradeUploadService {
         }
     }
 
+    // Student self-upload: the signed-in student owns every imported row, so a UPI column is optional.
+    async importStudentGrades(file: File, userId: string): Promise<{ imported: number; skipped: number }> {
+        const rows = await this.parseFile(file)
+        const valid = rows.filter(row => row.subject_name && row.term && row.academic_year && Number.isFinite(row.grade_value) && row.grade_value >= 0 && row.grade_value <= 100)
+
+        if (valid.length === 0) {
+            throw new Error('No valid grade rows found. Include subject, term, year, and a score between 0 and 100.')
+        }
+
+        const payload = valid.map(row => ({
+            user_id: userId,
+            subject_name: row.subject_name,
+            term: row.term,
+            academic_year: row.academic_year,
+            grade_value: row.grade_value,
+            grade_letter: row.grade_letter || this.computeGradeLetter(row.grade_value),
+            max_marks: row.max_marks ?? 100,
+            exam_type: row.exam_type || 'End Term',
+            teacher_comment: row.teacher_comment || null,
+        }))
+
+        const { error } = await supabase
+            .from('student_grades')
+            .upsert(payload, { onConflict: 'user_id,subject_name,term,academic_year,exam_type' })
+
+        if (error) throw new Error(error.message)
+
+        await aiCacheService.invalidateAllCaches(userId, 'grades_uploaded')
+        return { imported: valid.length, skipped: rows.length - valid.length }
+    }
+
     private async parseCSV(file: File): Promise<ParsedGradeRow[]> {
         return new Promise((resolve, reject) => {
             const reader = new FileReader()

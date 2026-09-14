@@ -16,9 +16,9 @@ const StudentCounselingPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-surface/5">
+    <div className="counseling-page min-h-screen flex flex-col">
       {/* Shared Header */}
-      <header className="border-b border-card-border bg-background/80 backdrop-blur-md sticky top-0 z-50">
+      <header className="counseling-page-header sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
@@ -26,7 +26,7 @@ const StudentCounselingPage = () => {
                 variant="ghost" 
                 size="icon" 
                 onClick={() => navigate("/student")}
-                className="hover:bg-primary/10 hover:text-primary transition-colors"
+                className="counseling-back transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
               </Button>
@@ -35,10 +35,10 @@ const StudentCounselingPage = () => {
                 alt="CareerGuide AI"
                 className="h-8 w-auto hidden sm:block"
               />
-              <div className="h-4 w-px bg-card-border mx-2 hidden sm:block" />
+              <div className="h-4 w-px counseling-divider mx-2 hidden sm:block" />
               <div className="flex items-center gap-2">
-                <Bot className="w-5 h-5 text-primary" />
-                <h1 className="text-sm font-bold tracking-tight">AI Counseling</h1>
+                <Bot className="counseling-title-icon w-5 h-5" />
+                <h1 className="counseling-page-title text-sm font-bold tracking-tight">Student support</h1>
               </div>
             </div>
 
@@ -61,7 +61,7 @@ const StudentCounselingPage = () => {
       </header>
 
       {/* Main Focus Area */}
-      <main className="flex-1 flex flex-col max-w-5xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+      <main className="counseling-main flex-1 flex flex-col max-w-5xl w-full mx-auto p-4 sm:p-6 lg:p-8">
 
         {/* Full Chat Interface container */}
         <div className="flex-1 flex flex-col h-[calc(100vh-220px)] sm:h-auto">

@@ -9,8 +9,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle, Send, Bot, User, Sparkles, Loader2, Download, ArrowRight } from "lucide-react";
 import { aiCareerService, type ChatMessage } from "@/lib/ai-service";
 import { ReportGenerator, type GuestProfile } from "@/lib/report-generator";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // Component to render message content with proper markdown support
 const MessageContent = ({ content, role }: { content: string, role: 'user' | 'assistant' }) => {
@@ -48,12 +46,6 @@ const GuestAIChat = () => {
   const [guestProfile, setGuestProfile] = useState<GuestProfile>({});
   const [assessmentComplete, setAssessmentComplete] = useState(false);
   const [showReport, setShowReport] = useState(false);
-  const [showGradeForm, setShowGradeForm] = useState(false);
-  const [subjectGrades, setSubjectGrades] = useState<Record<string, string>>({
-    'Mathematics': '',
-    'English': '',
-    'Kiswahili': ''
-  });
   const [connectionTest, setConnectionTest] = useState<string | null>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -72,7 +64,7 @@ const GuestAIChat = () => {
       role: 'assistant',
       content: `Karibu to CareerPath AI! 🦄
       
-I'm your friendly career counselor, here to help you discover your perfect career path through Kenya's CBE (CBC) or 8-4-4 systems!
+I'm your friendly career counselor, here to help you discover your perfect career path through Kenya's Competency-Based Curriculum (CBC)!
 
 What you'll get:
 ✅ Targeted career matches based on your interests
@@ -103,19 +95,12 @@ What is your name? 😊`,
     }
 
     if (!newProfile.grade) {
-      if (text.includes('8-4-4') || text.includes('844') || text.includes('form 4') || text.includes('kcse')) {
-        newProfile.curriculum = 'legacy';
-        newProfile.grade = 'Form 4 / Leaver';
-      } else if (text.includes('cbc') || text.includes('cbe')) {
+      if (text.includes('cbc') || text.includes('cbe')) {
         newProfile.curriculum = 'cbc';
       }
     }
 
     setGuestProfile(newProfile);
-
-    if (newProfile.curriculum === 'legacy' && !newProfile.kcseGrade && !showGradeForm) {
-      setShowGradeForm(true);
-    }
   };
 
   const handleSendMessage = async (msg: string) => {
@@ -148,7 +133,7 @@ What is your name? 😊`,
       setConversation(updatedConversation);
       extractProfileInfo(msg, response);
 
-      if (updatedConversation.length >= 10 && !assessmentComplete && guestProfile.kcseGrade) {
+      if (updatedConversation.length >= 10 && !assessmentComplete) {
         setAssessmentComplete(true);
       }
     } catch (err) {
@@ -166,108 +151,17 @@ What is your name? 😊`,
     await handleSendMessage(currentMsg);
   };
 
-  const handleGradeSubmit = () => {
-    const selectedGrades = Object.entries(subjectGrades).filter(([_, grade]) => grade !== '');
-    
-    if (selectedGrades.length < 5) {
-      setError("Please select grades for at least 5 subjects to calculate an accurate Mean Grade.");
-      return;
-    }
-
-    const gradePoints: Record<string, number> = {
-      'A': 12, 'A-': 11, 'B+': 10, 'B': 9, 'B-': 8, 'C+': 7, 'C': 6, 'C-': 5, 'D+': 4, 'D': 3, 'D-': 2, 'E': 1
-    };
-
-    const totalPoints = selectedGrades.reduce((sum, [_, grade]) => sum + (gradePoints[grade] || 0), 0);
-    const meanPoints = totalPoints / selectedGrades.length;
-    
-    const getGradeFromPoints = (points: number) => {
-      if (points >= 11.5) return 'A';
-      if (points >= 10.5) return 'A-';
-      if (points >= 9.5) return 'B+';
-      if (points >= 8.5) return 'B';
-      if (points >= 7.5) return 'B-';
-      if (points >= 6.5) return 'C+';
-      if (points >= 5.5) return 'C';
-      if (points >= 4.5) return 'C-';
-      if (points >= 3.5) return 'D+';
-      if (points >= 2.5) return 'D';
-      if (points >= 1.5) return 'D-';
-      return 'E';
-    };
-
-    const meanGrade = getGradeFromPoints(meanPoints);
-    
-    setGuestProfile(prev => ({
-      ...prev,
-      kcseGrade: meanGrade,
-      kcsePoints: Math.round(meanPoints),
-      subjectGrades: Object.fromEntries(selectedGrades)
-    }));
-    
-    setShowGradeForm(false);
-    setError(null);
-
-    const gradeSummary = selectedGrades.map(([s, g]) => `${s}: ${g}`).join(', ');
-    handleSendMessage(`I've entered my grades. My Mean Grade is ${meanGrade}. Subjects: ${gradeSummary}`);
-  };
-
-  const renderGradeForm = () => {
-    const grades = ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'E'];
-    const otherSubjects = ['Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'CRE', 'Business Studies', 'Agriculture', 'Computer Studies'];
-
-    return (
-      <Card className="p-4 mt-2 border-primary/20 bg-primary/5 shadow-sm">
-        <h3 className="text-sm font-bold mb-3 flex items-center gap-2">🎓 KCSE Scorecard</h3>
-        <ScrollArea className="h-[250px] pr-4">
-          <div className="space-y-3">
-            <Label className="text-[10px] uppercase tracking-wider font-bold text-primary">Mandatory</Label>
-            {['Mathematics', 'English', 'Kiswahili'].map(subject => (
-              <div key={subject} className="flex items-center justify-between gap-2">
-                <span className="text-xs font-medium">{subject}</span>
-                <Select value={subjectGrades[subject]} onValueChange={(v) => setSubjectGrades(p => ({ ...p, [subject]: v }))}>
-                  <SelectTrigger className="w-[70px] h-7 text-xs"><SelectValue placeholder="-" /></SelectTrigger>
-                  <SelectContent>
-                    {grades.map(g => <SelectItem key={g} value={g}>{g}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-              </div>
-            ))}
-            <Label className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground pt-2 inline-block">Others</Label>
-            {otherSubjects.map(subject => (
-              <div key={subject} className="flex items-center justify-between gap-2">
-                <span className="text-xs">{subject}</span>
-                <Select value={subjectGrades[subject] || ''} onValueChange={(v) => setSubjectGrades(p => ({ ...p, [subject]: v }))}>
-                  <SelectTrigger className="w-[70px] h-7 text-xs"><SelectValue placeholder="-" /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="">None</SelectItem>
-                    {grades.map(g => <SelectItem key={g} value={g}>{g}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-              </div>
-            ))}
-          </div>
-        </ScrollArea>
-        <div className="mt-4 pt-3 border-t border-primary/10">
-          <Button size="sm" className="w-full h-8 text-xs font-bold" onClick={handleGradeSubmit}>Submit Academic Profile 🚀</Button>
-        </div>
-      </Card>
-    );
-  };
-
   const downloadReport = async () => {
     if (isLoading) return;
-    
+
     try {
       setIsLoading(true);
       // Generate structured recommendations based on the conversation context
       const recommendations = await aiCareerService.generateCareerRecommendations({
         name: guestProfile.name,
-        curriculum: guestProfile.curriculum === 'cbc' ? 'Kenyan CBC' : 'Kenyan Legacy (8-4-4)',
+        curriculum: 'Kenyan CBC',
         currentGrade: guestProfile.grade,
-        interests: guestProfile.interests,
-        kcseGrade: guestProfile.kcseGrade,
-        subjectGrades: guestProfile.subjectGrades
+        interests: guestProfile.interests
       });
 
       const reportName = `Diagnostic-Report-${guestProfile.name || 'Student'}`;
@@ -320,7 +214,6 @@ What is your name? 😊`,
                         : 'bg-white border rounded-bl-none text-foreground'
                     }`}>
                       <MessageContent content={msg.content} role={msg.role as 'user' | 'assistant'} />
-                      {msg.role === 'assistant' && index === conversation.length - 1 && showGradeForm && renderGradeForm()}
                     </div>
                   </div>
                 </div>

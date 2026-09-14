@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -22,11 +22,15 @@ import {
   Calendar,
   GraduationCap,
   Target,
-  BarChart3
+  BarChart3,
+  Upload,
+  FileSpreadsheet
 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
 import { dashboardService, CbeSubject } from '@/lib/dashboard-service'
+import { gradeUploadService } from '@/lib/grade-upload-service'
+import { aiCacheService } from '@/lib/ai-cache-service'
 
 const gradeSchema = z.object({
   subject_name: z.string().min(1, 'Subject is required'),
@@ -90,6 +94,9 @@ const GradesManager = ({ onGradesUpdated, readOnly = false }: GradesManagerProps
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
   const [editingGrade, setEditingGrade] = useState<StudentGrade | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [isImporting, setIsImporting] = useState(false)
+  const [importMessage, setImportMessage] = useState<string | null>(null)
 
   const form = useForm<GradeFormData>({
     resolver: zodResolver(gradeSchema),
@@ -222,6 +229,7 @@ const GradesManager = ({ onGradesUpdated, readOnly = false }: GradesManagerProps
 
       // Reload grades
       await loadGradesData()
+      await aiCacheService.invalidateAllCaches(user.id, 'grades_updated')
 
       // Notify parent component that grades were updated
       if (onGradesUpdated) {
@@ -267,9 +275,30 @@ const GradesManager = ({ onGradesUpdated, readOnly = false }: GradesManagerProps
 
       setSuccess('Grade deleted successfully!')
       await loadGradesData()
+      if (user) await aiCacheService.invalidateAllCaches(user.id, 'grades_updated')
     } catch (error: unknown) {
       console.error('Failed to delete grade:', error)
       setError(error instanceof Error ? error.message : 'Failed to delete grade')
+    }
+  }
+
+  const handleGradeFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file || !user) return
+
+    try {
+      setIsImporting(true)
+      setError(null)
+      setImportMessage(null)
+      const result = await gradeUploadService.importStudentGrades(file, user.id)
+      await loadGradesData()
+      setImportMessage(`${result.imported} grade${result.imported === 1 ? '' : 's'} imported${result.skipped ? `; ${result.skipped} skipped` : ''}. Your course and career recommendations will use them on refresh.`)
+      onGradesUpdated?.()
+    } catch (uploadError) {
+      setError(uploadError instanceof Error ? uploadError.message : 'Could not import those grades.')
+    } finally {
+      setIsImporting(false)
+      event.target.value = ''
     }
   }
 
@@ -331,10 +360,24 @@ const GradesManager = ({ onGradesUpdated, readOnly = false }: GradesManagerProps
   }
 
   return (
-    <div className="space-y-6">
+    <div className="grades-manager space-y-6">
+      {!readOnly && (
+        <section className="grades-import-panel">
+          <div>
+            <p>Import grades</p>
+            <h2>Upload your results</h2>
+            <span>Use a CSV or Excel file with subject, term, year, and score columns. Imported grades are used for future course recommendations.</span>
+          </div>
+          <input ref={fileInputRef} type="file" accept=".csv,.xlsx,.xls" className="sr-only" onChange={handleGradeFile} />
+          <Button type="button" onClick={() => fileInputRef.current?.click()} disabled={isImporting} className="grades-import-button">
+            {isImporting ? 'Importing…' : <><Upload className="h-4 w-4" /> Upload grade file</>}
+          </Button>
+          {importMessage && <p className="grades-import-message"><FileSpreadsheet className="h-4 w-4" /> {importMessage}</p>}
+        </section>
+      )}
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="p-6">
+      <div className="grades-summary-grid grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="grades-summary-card p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-foreground-muted">Total Grades</p>
@@ -344,7 +387,7 @@ const GradesManager = ({ onGradesUpdated, readOnly = false }: GradesManagerProps
           </div>
         </Card>
 
-        <Card className="p-6">
+        <Card className="grades-summary-card p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-foreground-muted">Current Average</p>
@@ -354,7 +397,7 @@ const GradesManager = ({ onGradesUpdated, readOnly = false }: GradesManagerProps
           </div>
         </Card>
 
-        <Card className="p-6">
+        <Card className="grades-summary-card p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-foreground-muted">Subjects Tracked</p>
@@ -378,8 +421,8 @@ const GradesManager = ({ onGradesUpdated, readOnly = false }: GradesManagerProps
       )}
 
       {/* Main Content */}
-      <Tabs defaultValue={readOnly ? "view" : "add"} className="space-y-6">
-        <TabsList>
+      <Tabs defaultValue={readOnly ? "view" : "add"} className="grades-tabs space-y-6">
+        <TabsList className="grades-tabs-list">
           {!readOnly && <TabsTrigger value="add">Add Grade</TabsTrigger>}
           <TabsTrigger value="view">View Grades</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
@@ -387,7 +430,7 @@ const GradesManager = ({ onGradesUpdated, readOnly = false }: GradesManagerProps
 
         {/* Add Grade Tab */}
         <TabsContent value="add" className="space-y-6">
-          <Card>
+          <Card className="grades-record-card">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Plus className="w-5 h-5" />
@@ -557,7 +600,7 @@ const GradesManager = ({ onGradesUpdated, readOnly = false }: GradesManagerProps
 
         {/* View Grades Tab */}
         <TabsContent value="view" className="space-y-6">
-          <Card>
+          <Card className="grades-record-card">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <BookOpen className="w-5 h-5" />

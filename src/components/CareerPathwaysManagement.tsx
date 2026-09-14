@@ -253,12 +253,22 @@ export const CareerPathwaysManagement = () => {
               </div>
               <div className="md:col-span-2">
                 <label className="text-xs font-bold text-foreground/80 mb-1 block uppercase tracking-wider">Kenyan Universities (Comma separated)</label>
-                <Input 
-                  value={Array.isArray(formData.universities) ? formData.universities.join(', ') : formData.universities || ''} 
-                  onChange={e => setFormData({...formData, universities: e.target.value.split(',').map(s => s.trim())})} 
-                  className="bg-background border-border" 
-                  placeholder="e.g. UoN, Strathmore, JKUAT" 
+                <Input
+                  value={Array.isArray(formData.universities) ? formData.universities.join(', ') : formData.universities || ''}
+                  onChange={e => setFormData({...formData, universities: e.target.value.split(',').map(s => s.trim())})}
+                  className="bg-background border-border"
+                  placeholder="e.g. UoN, Strathmore, JKUAT"
                 />
+              </div>
+              <div className="md:col-span-2">
+                <label className="text-xs font-bold text-foreground/80 mb-1 block uppercase tracking-wider">Related Job Roles (Comma separated)</label>
+                <Input
+                  value={Array.isArray(formData.related_roles) ? formData.related_roles.join(', ') : formData.related_roles || ''}
+                  onChange={e => setFormData({...formData, related_roles: e.target.value.split(',').map(s => s.trim())})}
+                  className="bg-background border-border"
+                  placeholder="e.g. Bank Manager, Financial Analyst, Investment Banker"
+                />
+                <p className="text-[10px] text-muted-foreground mt-1">Job titles/positions this course leads to</p>
               </div>
               <div>
                 <label className="text-xs font-bold text-foreground/80 mb-1 block uppercase tracking-wider">Pros (Comma separated)</label>
