@@ -6,6 +6,25 @@
 
 @layer base {
   :root {
+    --app-font: Georgia, 'Times New Roman', serif;
+  }
+
+  html,
+  body,
+  #root {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  html,
+  body {
+    overflow-x: hidden;
+    overflow-x: clip;
+    font-family: var(--app-font);
+  }
+
+  :root {
     /* Core Brand Colors */
     --primary: 221.2 83.2% 53.3%; /* Professional Blue */
     --primary-foreground: 210 40% 98%;
@@ -105,6 +124,13 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
   }
 
   /* Mobile typography scale for better readability on small screens */
