@@ -409,6 +409,24 @@
   .student-shell .student-career-list > button > span { flex: 0 0 auto; border-radius: 0.3rem; background: #dcfce7; padding: 0.25rem 0.35rem; color: #16803d; font-size: 0.58rem; font-weight: 800; }
   .student-shell .student-match-section, .student-shell .student-catalogue-section { margin-top: 1.15rem; }
   .student-shell .student-career-empty { border: 1px dashed #cfd8e6; border-radius: .85rem; padding: 1rem; color: #64748b; font-size: .82rem; text-align: center; }
+
+  .student-billing-status, .student-billing-error { display: flex; align-items: center; gap: .55rem; border: 1px solid #dbe4f0; border-radius: 1rem; background: #fff; padding: 1rem; color: #64748b; font-size: .85rem; }
+  .student-billing-error { border-color: #fecaca; background: #fff7f7; color: #b91c1c; }
+  .student-billing-card { display: flex; align-items: flex-start; gap: 1rem; border: 1px solid #dbe4f0; border-radius: 1.1rem; background: #fff; padding: 1.15rem; box-shadow: 0 6px 18px rgb(15 23 42 / .04); }
+  .student-billing-plan-icon { display: grid; width: 2.5rem; height: 2.5rem; flex: 0 0 auto; place-items: center; border-radius: .8rem; background: #eaf1ff; color: #2457d6; }
+  .student-billing-eyebrow, .student-billing-includes > p { color: #2457d6; font-size: .68rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+  .student-billing-card h2, .student-billing-callout h2 { margin-top: .15rem; color: #172033; font-family: Georgia, 'Times New Roman', serif; font-size: 1.15rem; font-weight: 700; }
+  .student-billing-card p:not(.student-billing-eyebrow), .student-billing-callout p { margin-top: .3rem; color: #64748b; font-size: .82rem; line-height: 1.45; }
+  .student-billing-active, .student-billing-inactive { display: inline-flex; align-items: center; gap: .35rem; border-radius: 999px; padding: .32rem .55rem; font-size: .68rem; font-weight: 750; white-space: nowrap; }
+  .student-billing-active { background: #dcfce7; color: #16773b; }
+  .student-billing-inactive { background: #fff4d6; color: #9a6100; }
+  .student-billing-callout { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1rem; border: 1px solid #cddcff; border-radius: 1.1rem; background: #f4f7ff; padding: 1.15rem; }
+  .student-billing-activate { flex: 0 0 auto; background: #2457d6; color: #fff; }
+  .student-billing-includes { margin-top: 1rem; border: 1px solid #e1e7ef; border-radius: 1.1rem; background: #fff; padding: 1.1rem; }
+  .student-billing-includes > div { display: grid; gap: .6rem; margin-top: .8rem; }
+  .student-billing-includes span { display: flex; align-items: center; gap: .45rem; color: #455469; font-size: .82rem; }
+  .student-billing-includes svg { color: #16803d; }
+  .student-billing-payment { margin-top: 1rem; }
   .student-shell .student-match-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 0.65rem; }
   .student-shell .student-match-heading p { color: #2457d6; font-size: 0.62rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
   .student-shell .student-match-heading h2 { margin-top: .18rem; color: #172033; font-family: Georgia, 'Times New Roman', serif; font-size: 1.05rem; font-weight: 700; }
@@ -716,7 +734,7 @@
 
   /* Dedicated short-course page */
   .student-courses-page { background: #f8fafc; color: #172033; }
-  .student-courses-topbar { display: flex; height: 4rem; align-items: center; justify-content: space-between; border-bottom: 1px solid #e5eaf0; background: #fff; padding: 0 1.25rem; }
+  .student-courses-topbar { display: flex; height: 3.5rem; align-items: center; justify-content: space-between; border-bottom: 1px solid #e5eaf0; background: #fff; padding: 0 1.25rem; }
   .student-courses-brand { display: inline-flex; align-items: center; gap: 0.55rem; color: #172033; }
   .student-courses-brand > span { display: inline-flex; height: 1.9rem; width: 1.9rem; align-items: center; justify-content: center; border-radius: 0.58rem; background: #2457d6; color: #fff; font-size: 0.65rem; font-weight: 900; }
   .student-courses-brand b { font-size: 0.88rem; font-weight: 800; }
@@ -741,6 +759,12 @@
   .student-grades-page .grades-import-panel span { display: block; margin-top: 0.2rem; color: #64748b; font-size: 0.76rem; }
   .student-grades-page .grades-import-button { background: #2457d6; color: #fff; }
   .student-grades-page .grades-import-message { grid-column: 1 / -1; display: flex; align-items: center; gap: 0.4rem; color: #087f5b; font-size: 0.75rem; font-weight: 600; }
+  .student-grades-page .grades-record-toolbar { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-bottom: 1rem; }
+  .student-grades-page .grades-record-toolbar label { display: flex; min-width: 0; flex: 1; align-items: center; gap: .5rem; border: 1px solid #dbe3ee; border-radius: .7rem; background: #f8fafc; padding: 0 .7rem; color: #7b8798; }
+  .student-grades-page .grades-record-toolbar input { height: 2.45rem; min-width: 0; border: 0; background: transparent; box-shadow: none; color: #172033; }
+  .student-grades-page .grades-record-toolbar input:focus-visible { --tw-ring-shadow: none; }
+  .student-grades-page .grades-record-toolbar span { color: #64748b; font-size: .75rem; font-weight: 650; white-space: nowrap; }
+  .student-grades-page .grades-search-empty { border: 1px dashed #cfd8e6; border-radius: .8rem; padding: 1rem; color: #64748b; font-size: .82rem; text-align: center; }
   .student-courses-page .counselor-directory .bg-card { background: #fff; border-color: #e1e7ef; color: #172033; }
   .student-courses-page .counselor-directory .bg-background { background: #fff; }
   .student-courses-page .counselor-directory .border-card { border-color: #fff; }
@@ -778,7 +802,7 @@
   }
 
   @media (max-width: 640px) {
-    .student-courses-topbar { height: 3.75rem; padding: 0 1rem; }
+    .student-courses-topbar { height: 3.5rem; padding: 0 1rem; }
     .student-courses-content { width: min(100% - 1.5rem, 54rem); padding-top: 1.5rem; }
     .student-grades-content { width: min(100% - 1.5rem, 66rem); padding-top: 1.5rem; }
     .student-grades-page .grades-import-panel { grid-template-columns: 1fr; }

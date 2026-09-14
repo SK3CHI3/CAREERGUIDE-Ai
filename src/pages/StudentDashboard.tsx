@@ -18,7 +18,6 @@ import {
   Target,
   TrendingUp,
   Settings,
-  LogOut,
   Bot,
   BarChart3,
   Calendar,
@@ -59,7 +58,6 @@ import { StudentAppHeader } from '@/components/StudentAppHeader'
 import { FieldDayRequestModal } from '@/components/FieldDayRequestModal'
 import { subscriptionService } from '@/lib/subscription-service'
 import PaymentWall from '@/components/PaymentWall'
-import TrialActivationModal from '@/components/TrialActivationModal'
 import { ReportGenerator } from '@/lib/report-generator'
 import { ProfileSetup } from '@/components/ProfileSetup'
 import GradesManager from '@/components/GradesManager'
@@ -108,7 +106,6 @@ const StudentDashboard = () => {
       setActiveTab(requestedTab)
     }
   }, [location.state])
-  const [isActivatingTrial, setIsActivatingTrial] = useState(false)
 
   const [careerData, setCareerData] = useState<CareerDataItem[]>([])
   const [careerCatalog, setCareerCatalog] = useState<CareerPath[]>([])
@@ -121,7 +118,6 @@ const StudentDashboard = () => {
   const [isCareerModalOpen, setIsCareerModalOpen] = useState(false)
   const [isSelectedCareerRecommended, setIsSelectedCareerRecommended] = useState(false)
   const [isFieldDayModalOpen, setIsFieldDayModalOpen] = useState(false)
-  const [isTrialModalOpen, setIsTrialModalOpen] = useState(false)
   const [subscriptionStatus, setSubscriptionStatus] = useState<any>(null)
   const [schoolInfo, setSchoolInfo] = useState<{ name: string; status: string } | null>(null)
   const [courseRecommendations, setCourseRecommendations] = useState<CourseRecommendation[]>([])
@@ -151,7 +147,7 @@ const StudentDashboard = () => {
   }, [user, profile])
 
   useEffect(() => {
-    dashboardService.getCareerPaths(undefined, 120).then(setCareerCatalog).catch(() => setCareerCatalog([]))
+    dashboardService.getCareerPaths().then(setCareerCatalog).catch(() => setCareerCatalog([]))
   }, [])
 
   // Reload careers when profile changes (after initial load)
@@ -222,20 +218,6 @@ const StudentDashboard = () => {
         setSubscriptionStatus(status);
     } catch (err) {
         console.error('Error checking access status:', err);
-    }
-  }
-
-  const handleActivateTrial = async () => {
-    if (!user) return;
-    try {
-      setIsActivatingTrial(true);
-      await subscriptionService.activateTrial(user.id);
-      await checkAccessStatus();
-      setShowTrialBanner(false);
-    } catch (err) {
-      console.error('Error activating trial:', err);
-    } finally {
-      setIsActivatingTrial(false);
     }
   }
 
@@ -706,6 +688,7 @@ const StudentDashboard = () => {
       return !recommendedNames.has(career.title.toLowerCase()) && categoryMatches(career) && (!search || searchable.includes(search))
     }).slice(0, 24)
   }, [careerCatalog, careerData, careerFilter, careerSearch])
+  const isCareerLibraryFiltering = Boolean(careerSearch.trim()) || careerFilter !== 'All'
 
   const handleRecommendedAction = () => {
     if (recommendedAction.action === 'career') return careerData[0] ? handleCareerDetailClick(careerData[0]) : setActiveTab('careers')
@@ -1143,7 +1126,7 @@ const StudentDashboard = () => {
               <label className="student-search"><Search className="h-4 w-4" /><input value={careerSearch} onChange={(event) => setCareerSearch(event.target.value)} placeholder="Search roles or industries..." aria-label="Search careers" /></label>
               <div className="student-filter-row" aria-label="Filter careers">{['All', 'STEM', 'Business', 'Health', 'Creative'].map((filter) => <button type="button" key={filter} className={careerFilter === filter ? 'is-selected' : ''} onClick={() => setCareerFilter(filter)}>{filter}</button>)}</div>
             </header>
-            {careerData.length > 0 && <section className="student-match-section">
+            {!isCareerLibraryFiltering && careerData.length > 0 && <section className="student-match-section">
               <div className="student-match-heading"><div><p>Matched for you</p><h2>Your top 3 career matches</h2></div><span>Based on your profile</span></div>
               <div className="student-career-list">
               {careerData.slice(0, 3).map((career, index) => (
@@ -1156,7 +1139,7 @@ const StudentDashboard = () => {
             </section>}
             {careerData.length === 0 && <Button className="student-primary-button" onClick={handleRefreshRecommendations}>Generate career matches</Button>}
             {additionalCareers.length > 0 && <section className="student-catalogue-section">
-              <div className="student-match-heading"><div><p>Career library</p><h2>Browse database careers</h2></div><span>{additionalCareers.length} results</span></div>
+              <div className="student-match-heading"><div><p>{isCareerLibraryFiltering ? 'Search results' : 'Career library'}</p><h2>{careerSearch.trim() ? `Results for “${careerSearch.trim()}”` : 'Other careers from our database'}</h2></div><span>{additionalCareers.length} results</span></div>
               <div className="student-career-list student-catalogue-list">
                 {additionalCareers.map((career) => (
                   <button type="button" key={career.id} onClick={() => handleCareerDetailClick({ name: career.title, value: 0, color: '#94a3b8', description: career.description, salaryRange: career.salary_range, growth: career.growth_percentage, education: career.education_requirements })}>
@@ -1519,7 +1502,7 @@ const StudentDashboard = () => {
             <header><Avatar className="h-16 w-16 border-2 border-blue-100"><AvatarImage src={profile?.avatar_url || ''} /><AvatarFallback className="bg-blue-50 text-lg text-blue-700">{getInitials(profile?.full_name)}</AvatarFallback></Avatar><h1>{profile?.full_name || 'Your profile'}</h1><span>Keep your details and academic profile current for better matches.</span></header>
             <section className="student-profile-list">
               <button type="button" onClick={() => navigate('/student/grades')}><GraduationCap className="h-5 w-5" /><div><b>Academic profile</b><p>View and update your grades.</p></div><ChevronRight className="h-4 w-4" /></button>
-              <button type="button" onClick={() => subscriptionStatus?.isTrialEligible && setIsTrialModalOpen(true)}><CreditCard className="h-5 w-5" /><div><b>Plan & billing</b><p>{subscriptionStatus?.isTrialEligible ? 'Activate your free term trial.' : subscriptionStatus?.type === 'trial' ? `Trial active · Ends ${new Date(subscriptionStatus.expiresAt).toLocaleDateString('en-KE', { month: 'short', day: 'numeric' })}` : 'Your access plan is active.'}</p></div><ChevronRight className="h-4 w-4" /></button>
+              <button type="button" onClick={() => navigate('/student/billing')}><CreditCard className="h-5 w-5" /><div><b>Plan & billing</b><p>{subscriptionStatus?.type === 'trial' ? `Trial active · Ends ${new Date(subscriptionStatus.expiresAt).toLocaleDateString('en-KE', { month: 'short', day: 'numeric' })}` : subscriptionStatus?.isTrialEligible ? 'Review your free term access.' : 'Review your access plan.'}</p></div><ChevronRight className="h-4 w-4" /></button>
             </section>
           </TabsContent>
         </Tabs>
@@ -1554,17 +1537,6 @@ const StudentDashboard = () => {
       <FieldDayRequestModal
         isOpen={isFieldDayModalOpen}
         onClose={() => setIsFieldDayModalOpen(false)}
-      />
-
-      <TrialActivationModal
-        isOpen={isTrialModalOpen}
-        onClose={() => setIsTrialModalOpen(false)}
-        onActivate={async () => {
-          await handleActivateTrial()
-          setIsTrialModalOpen(false)
-        }}
-        isActivating={isActivatingTrial}
-        expiresAt={subscriptionStatus?.expiresAt}
       />
 
       {/* Install Prompt Overlay */}

@@ -24,7 +24,8 @@ import {
   Target,
   BarChart3,
   Upload,
-  FileSpreadsheet
+  FileSpreadsheet,
+  Search
 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
@@ -97,6 +98,7 @@ const GradesManager = ({ onGradesUpdated, readOnly = false }: GradesManagerProps
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [isImporting, setIsImporting] = useState(false)
   const [importMessage, setImportMessage] = useState<string | null>(null)
+  const [gradeSearch, setGradeSearch] = useState('')
 
   const form = useForm<GradeFormData>({
     resolver: zodResolver(gradeSchema),
@@ -340,6 +342,12 @@ const GradesManager = ({ onGradesUpdated, readOnly = false }: GradesManagerProps
     }
     return currentYear.toString()
   }
+
+  const visibleGrades = grades.filter((grade) => {
+    const query = gradeSearch.trim().toLowerCase()
+    if (!query) return true
+    return `${grade.subject_name} ${grade.subject_code || ''} ${grade.term} ${grade.academic_year} ${grade.exam_type} ${grade.grade_letter || ''}`.toLowerCase().includes(query)
+  })
 
   if (isLoading) {
     return (
@@ -619,8 +627,13 @@ const GradesManager = ({ onGradesUpdated, readOnly = false }: GradesManagerProps
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {Object.entries(
-                    grades.reduce((acc, grade) => {
+                  <div className="grades-record-toolbar">
+                    <label><Search className="h-4 w-4" /><Input value={gradeSearch} onChange={(event) => setGradeSearch(event.target.value)} placeholder="Search subject, term, year, or grade…" aria-label="Search grades" /></label>
+                    <span>{visibleGrades.length} of {grades.length} grades</span>
+                  </div>
+                  {visibleGrades.length === 0 ? <p className="grades-search-empty">No grades match that search.</p> : (
+                  Object.entries(
+                    visibleGrades.reduce((acc, grade) => {
                       const key = `${grade.academic_year}-${grade.term}`
                       if (!acc[key]) acc[key] = []
                       acc[key].push(grade)
@@ -695,7 +708,7 @@ const GradesManager = ({ onGradesUpdated, readOnly = false }: GradesManagerProps
                         </TableBody>
                       </Table>
                     </div>
-                  ))}
+                  )))}
                 </div>
               )}
             </CardContent>

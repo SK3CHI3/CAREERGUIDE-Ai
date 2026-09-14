@@ -264,7 +264,7 @@ What subjects do you enjoy most in your current studies?`,
       {/* Header */}
       <header className="chat-page-header sticky top-0 z-10">
         <div className="chat-page-header-inner max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex justify-between items-center h-14">
             <div className="flex items-center space-x-3">
               <Button
                 variant="ghost"

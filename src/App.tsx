@@ -24,6 +24,7 @@ const StudentDashboard = lazy(() => import("./pages/StudentDashboard"));
 const StudentChatPage = lazy(() => import("./pages/StudentChatPage"));
 const StudentCoursesPage = lazy(() => import("./pages/StudentCoursesPage"));
 const StudentGradesPage = lazy(() => import("./pages/StudentGradesPage"));
+const StudentBillingPage = lazy(() => import("./pages/StudentBillingPage"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const TeacherDashboard = lazy(() => import("./pages/MentorDashboard"));
 const StudentCounselingPage = lazy(() => import("./pages/StudentCounselingPage"));
@@ -101,6 +102,14 @@ const App = () => (
                     <PaymentGate>
                       <StudentGradesPage />
                     </PaymentGate>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/student/billing"
+                element={
+                  <ProtectedRoute requiredRole="student">
+                    <StudentBillingPage />
                   </ProtectedRoute>
                 }
               />

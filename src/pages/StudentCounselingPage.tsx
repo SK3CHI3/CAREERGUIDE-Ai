@@ -3,24 +3,15 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Bot, Sparkles } from "lucide-react";
 import AIChat from "@/components/AIChat";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { useAuth } from "@/contexts/AuthContext";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const StudentCounselingPage = () => {
   const navigate = useNavigate();
-  const { profile } = useAuth();
-
-  const getInitials = (name: string | null) => {
-    if (!name) return 'S';
-    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-  };
-
   return (
     <div className="counseling-page min-h-screen flex flex-col">
       {/* Shared Header */}
       <header className="counseling-page-header sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex justify-between items-center h-14">
             <div className="flex items-center space-x-4">
               <Button 
                 variant="ghost" 
@@ -43,17 +34,6 @@ const StudentCounselingPage = () => {
             </div>
 
             <div className="flex items-center space-x-4">
-              <div className="hidden md:flex items-center space-x-3 mr-2">
-                <Avatar className="h-8 w-8 border border-primary/20">
-                  <AvatarImage src={profile?.avatar_url || ''} />
-                  <AvatarFallback className="text-[10px] font-bold">
-                    {getInitials(profile?.full_name)}
-                  </AvatarFallback>
-                </Avatar>
-                <span className="text-xs font-bold text-foreground-muted">
-                  {profile?.full_name?.split(' ')[0]}
-                </span>
-              </div>
               <ThemeToggle />
             </div>
           </div>
