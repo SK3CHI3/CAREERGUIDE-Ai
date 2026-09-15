@@ -1,7 +1,7 @@
 {
   "name": "vite_react_shadcn_ts",
   "private": true,
-  "version": "2.1.0",
+  "version": "2.1.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -71,7 +71,7 @@
     "react-markdown": "^10.1.0",
     "react-quill-new": "^3.7.0",
     "react-resizable-panels": "^2.1.9",
-    "react-router-dom": "^6.30.6",
+    "react-router-dom": "^7.18.3",
     "recharts": "^2.15.4",
     "sonner": "^1.7.4",
     "tailwind-merge": "^2.6.0",
