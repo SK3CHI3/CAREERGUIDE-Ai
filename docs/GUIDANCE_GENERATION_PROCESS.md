@@ -28,4 +28,4 @@ To minimize latency (which can be 5-10 seconds for deep analysis):
 
 ## 5. Security & Safety
 - **JWT Protection**: All AI-related requests are protected by Supabase Auth state.
-- **Environment Safety**: API keys are managed through Vite environment variables (`VITE_DEEPSEEK_API_KEY`) and are never exposed in client-side source code.
+- **Environment Safety**: The ModelScope token is stored as the server-only `MODELSCOPE_API_KEY` environment variable and is never exposed in the frontend bundle.

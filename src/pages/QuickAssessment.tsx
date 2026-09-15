@@ -6,11 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Sparkles, Download, ArrowRight, ArrowLeft, CheckCircle, Brain, Target, User, Heart, ShieldAlert, Rocket, Lock } from "lucide-react";
+import { Sparkles, Download, ArrowRight, ArrowLeft, CheckCircle, Brain, Target, User, Heart, ShieldAlert, Rocket } from "lucide-react";
 import BrandedLoader from "@/components/BrandedLoader";
 import ReportPaywall from "@/components/ReportPaywall";
 import { aiCareerService } from "@/lib/ai-service";
-import { ReportGenerator, type GuestProfile, type CareerRecommendation } from "@/lib/report-generator";
+import { ReportGenerator, type GuestProfile } from "@/lib/report-generator";
+import { createFallbackQuickAssessmentBrief, type QuickAssessmentBrief } from "@/lib/quick-assessment-report";
+import { dashboardService } from "@/lib/dashboard-service";
+import QuickAssessmentDirectionBrief from "@/components/QuickAssessmentDirectionBrief";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import BackgroundGradient from "@/components/BackgroundGradient";
@@ -27,7 +30,6 @@ const QuickAssessment = () => {
     const [subStep, setSubStep] = useState(1); // For Phase 1 sub-steps
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [showReport, setShowReport] = useState(false);
 
     // Phase 1: Academics
     const [name, setName] = useState("");
@@ -45,7 +47,7 @@ const QuickAssessment = () => {
     const [selectedValues, setSelectedValues] = useState<string[]>([]);
     const [workStyle, setWorkStyle] = useState("");
 
-    // Phase 4: MBTI
+    // Phase 4: working preferences (three practical questions, not a personality test)
     const [mbtiEnergy, setMbtiEnergy] = useState("");
     const [mbtiDecisions, setMbtiDecisions] = useState("");
     const [mbtiStructure, setMbtiStructure] = useState("");
@@ -56,8 +58,8 @@ const QuickAssessment = () => {
 
     // Phase 6: Readiness
     const [readiness, setReadiness] = useState("");
-    const [finalRecommendations, setFinalRecommendations] = useState<CareerRecommendation[]>([]);
     const [guestProfile, setGuestProfile] = useState<GuestProfile>({});
+    const [directionBrief, setDirectionBrief] = useState<QuickAssessmentBrief | null>(null);
 
     // LOAD PERSISTENCE
     useEffect(() => {
@@ -143,7 +145,7 @@ const QuickAssessment = () => {
         
         if (currentStep === 2 && selectedInterests.length === 0) return setError("Please select at least one interest");
         if (currentStep === 3) {
-            if (selectedValues.length === 0) return setError("Please select your core values");
+            if (selectedValues.length < 2) return setError("Please select two core values");
             if (!workStyle) return setError("Please select your preferred work style");
         }
         if (currentStep === 4) {
@@ -168,12 +170,17 @@ const QuickAssessment = () => {
 
     const [isPaid, setIsPaid] = useState(isCareerFitMode);
     const [reportHtml, setReportHtml] = useState<string | null>(null);
+    const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 
     const finishAssessment = async () => {
         setIsLoading(true);
         setError(null);
         try {
-            const mbtiCode = `${mbtiEnergy === 'Introvert' ? 'I' : 'E'}N${mbtiDecisions === 'Thinker' ? 'T' : 'F'}${mbtiStructure === 'Judging' ? 'J' : 'P'}`;
+            const preferences = {
+                focus: mbtiEnergy,
+                decisions: mbtiDecisions,
+                structure: mbtiStructure,
+            };
 
             const profile: GuestProfile = {
                 name,
@@ -184,7 +191,7 @@ const QuickAssessment = () => {
                 interests: selectedInterests,
                 values: selectedValues,
                 workStyle,
-                mbti: mbtiCode,
+                workPreferences: Object.values(preferences),
                 barriers: barrier,
                 experience,
                 readiness,
@@ -193,7 +200,28 @@ const QuickAssessment = () => {
             };
             setGuestProfile(profile);
 
-            // Generate customized recommendations
+            // The catalogue is the source of truth for the career names in this report.
+            // A temporary catalogue failure still produces an honest local fallback brief.
+            const catalogue = await dashboardService.getCareerPaths(undefined, 160).catch((catalogueError) => {
+                console.warn('Could not load career catalogue for quick assessment:', catalogueError);
+                return [];
+            });
+
+            const quickAssessment = {
+                grade: profile.grade || '',
+                pathway: profile.pathway,
+                subjects: selectedSubjects,
+                interests: selectedInterests,
+                values: selectedValues,
+                workStyle,
+                preferences,
+                barrier,
+                experience,
+                readiness,
+                targetCareer: targetCareer || undefined,
+                availableCareers: catalogue.map(({ id, title, category, description }) => ({ id, title, category, description })),
+            };
+
             const payload = {
                 name: profile.name,
                 curriculum: 'Kenyan CBC',
@@ -201,48 +229,24 @@ const QuickAssessment = () => {
                 pathway: profile.pathway,
                 subjects: profile.subjects,
                 interests: profile.interests,
-                values: profile.values,
-                workStyle: profile.workStyle,
-                mbti: profile.mbti,
-                limitations: profile.barriers,
-                dreamJob: targetCareer || undefined
+                constraints: [barrier],
+                dreamJob: targetCareer || undefined,
+                quickAssessment,
+                availableCareers: quickAssessment.availableCareers,
             };
 
-            const recommendations = await aiCareerService.generateCareerRecommendations(payload);
-            setFinalRecommendations(recommendations);
+            let brief: QuickAssessmentBrief;
+            try {
+                brief = await aiCareerService.generateQuickAssessmentBrief(payload);
+            } catch (aiError) {
+                console.warn('Quick assessment AI brief failed; using the structured local fallback:', aiError);
+                brief = createFallbackQuickAssessmentBrief(quickAssessment);
+            }
 
-            const summaryPrompt = `Generate a 3-paragraph executive summary detailing exactly why the recommended career paths fit the student.
-                Student Context:
-                - Name: ${name}
-                - System: ${payload.curriculum}
-                - Grade: ${grade}
-                ${pathway ? `- Pathway: ${pathway.toUpperCase()}` : ''}
-                - Interests: ${selectedInterests.join(', ')}
-                - Personality: MBTI (${mbtiCode})
-                - Values: ${selectedValues.join(', ')}
-                - Barrier: ${barrier}
-                ${targetCareer ? `- Target Career Fit Request: ${targetCareer}` : ''}
-
-                Emphasize how they can use their academic system (${payload.curriculum}) to overcome their barrier. Use professional, encouraging tone. DO NOT ask any questions. Use markdown formatting.`;
-
-            const summaryString = await aiCareerService.sendMessage(
-                summaryPrompt,
-                [],
-                { ...payload, assessmentResults: { personality_type: [mbtiCode] } }
-            );
-
-            const updatedProfile = {
-                ...profile,
-                aiSummary: summaryString
-            };
-            
-            setGuestProfile(updatedProfile);
-
-            // Pre-generate the report HTML for the preview
-            const html = ReportGenerator.generatePDFReport(updatedProfile, [], recommendations);
+            setDirectionBrief(brief);
+            const html = ReportGenerator.generateQuickAssessmentPDFReport(profile, brief);
             setReportHtml(html);
-
-            setShowReport(true);
+            localStorage.removeItem('career_assessment_state');
             setCurrentStep(7);
         } catch (err: unknown) {
             console.error(err);
@@ -260,18 +264,21 @@ const QuickAssessment = () => {
         }
         
         try {
+            setIsGeneratingPdf(true);
             console.log("Starting PDF download process...");
             await ReportGenerator.downloadPDF(reportHtml, `${guestProfile.name || 'CareerGuide'}-Diagnostic-Report.pdf`);
             console.log("PDF download triggered successfully.");
         } catch (err) {
             console.error("PDF download failed:", err);
             setError("Failed to generate PDF. Please try again or contact support.");
+        } finally {
+            setIsGeneratingPdf(false);
         }
     };
 
     const handlePaymentSuccess = () => {
         setIsPaid(true);
-        downloadReport(); // Automatically trigger download on success
+        void downloadReport(); // Automatically trigger download on success
     };
 
     return (
@@ -284,7 +291,7 @@ const QuickAssessment = () => {
             <main className="max-w-4xl mx-auto px-4 py-4 md:py-8 relative z-10 min-h-[100dvh] flex flex-col">
                 <div className="text-center mb-6 hidden md:block">
                     <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent pb-1">Professional Counselor Assessment</h1>
-                    <p className="text-base text-muted-foreground mt-2">Comprehensive 10-point analysis covering Values, MBTI Personality, Works Styles, and Real Challenges.</p>
+                    <p className="text-base text-muted-foreground mt-2">A practical direction brief built from your subjects, interests, values, work preferences, and real challenges.</p>
                 </div>
 
                 <div className="mb-6">
@@ -345,7 +352,7 @@ const QuickAssessment = () => {
                                                             <button
                                                                 key={g}
                                                                 type="button"
-                                                                onClick={() => { setGrade(g); setSelectedSubjects([]); }}
+                                                                onClick={() => { setGrade(g); setSelectedSubjects([]); if (g !== 'Grade 11') setPathway(null); }}
                                                                 className={`p-2 text-sm rounded-lg border-2 transition-all font-medium flex items-center justify-center ${
                                                                     grade === g
                                                                         ? 'border-primary bg-primary/10 text-primary shadow-sm'
@@ -544,36 +551,36 @@ const QuickAssessment = () => {
                                 </motion.div>
                             )}
 
-                            {/* STEP 4: MBTI PERSONALITY */}
+                            {/* STEP 4: WORKING PREFERENCES */}
                             {currentStep === 4 && (
                                 <motion.div key="step4" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
                                     <div className="text-center">
-                                        <h2 className="text-2xl md:text-3xl font-bold flex items-center justify-center gap-2"><Brain className="w-8 h-8 text-primary" /> Phase 4: Personality</h2>
-                                        <p className="text-muted-foreground mt-2">MBTI-inspired psychological framing.</p>
+                                        <h2 className="text-2xl md:text-3xl font-bold flex items-center justify-center gap-2"><Brain className="w-8 h-8 text-primary" /> Phase 4: Working Preferences</h2>
+                                        <p className="text-muted-foreground mt-2">These help us shape useful activities. They are not a personality test.</p>
                                     </div>
 
                                     <div className="space-y-6">
                                         <div>
                                             <Label className="text-base font-semibold block mb-2">1. Do you focus better...</Label>
                                             <div className="grid grid-cols-2 gap-2">
-                                                <button type="button" onClick={() => setMbtiEnergy('Extrovert')} className={`p-4 rounded-xl border-2 font-medium ${mbtiEnergy === 'Extrovert' ? 'border-primary tracking-wide bg-primary/10 text-primary' : 'border-card-border hover:border-primary/50 bg-background/50'}`}>In active groups (Extrovert)</button>
-                                                <button type="button" onClick={() => setMbtiEnergy('Introvert')} className={`p-4 rounded-xl border-2 font-medium ${mbtiEnergy === 'Introvert' ? 'border-primary tracking-wide bg-primary/10 text-primary' : 'border-card-border hover:border-primary/50 bg-background/50'}`}>Working alone (Introvert)</button>
+                                                <button type="button" onClick={() => setMbtiEnergy('Active groups')} className={`p-4 rounded-xl border-2 font-medium ${mbtiEnergy === 'Active groups' ? 'border-primary tracking-wide bg-primary/10 text-primary' : 'border-card-border hover:border-primary/50 bg-background/50'}`}>In active groups</button>
+                                                <button type="button" onClick={() => setMbtiEnergy('Independent work')} className={`p-4 rounded-xl border-2 font-medium ${mbtiEnergy === 'Independent work' ? 'border-primary tracking-wide bg-primary/10 text-primary' : 'border-card-border hover:border-primary/50 bg-background/50'}`}>Working alone</button>
                                             </div>
                                         </div>
 
                                         <div>
                                             <Label className="text-base font-semibold block mb-2">2. Do you make decisions using...</Label>
                                             <div className="grid grid-cols-2 gap-2">
-                                                <button type="button" onClick={() => setMbtiDecisions('Thinker')} className={`p-4 rounded-xl border-2 font-medium ${mbtiDecisions === 'Thinker' ? 'border-primary tracking-wide bg-primary/10 text-primary' : 'border-card-border hover:border-primary/50 bg-background/50'}`}>Strict Logic/Data (Thinker)</button>
-                                                <button type="button" onClick={() => setMbtiDecisions('Feeler')} className={`p-4 rounded-xl border-2 font-medium ${mbtiDecisions === 'Feeler' ? 'border-primary tracking-wide bg-primary/10 text-primary' : 'border-card-border hover:border-primary/50 bg-background/50'}`}>Feelings/People (Feeler)</button>
+                                                <button type="button" onClick={() => setMbtiDecisions('Logic and data')} className={`p-4 rounded-xl border-2 font-medium ${mbtiDecisions === 'Logic and data' ? 'border-primary tracking-wide bg-primary/10 text-primary' : 'border-card-border hover:border-primary/50 bg-background/50'}`}>Logic and data</button>
+                                                <button type="button" onClick={() => setMbtiDecisions('People and values')} className={`p-4 rounded-xl border-2 font-medium ${mbtiDecisions === 'People and values' ? 'border-primary tracking-wide bg-primary/10 text-primary' : 'border-card-border hover:border-primary/50 bg-background/50'}`}>People and values</button>
                                             </div>
                                         </div>
 
                                         <div>
                                             <Label className="text-base font-semibold block mb-2">3. Do you prefer...</Label>
                                             <div className="grid grid-cols-2 gap-2">
-                                                <button type="button" onClick={() => setMbtiStructure('Judging')} className={`p-4 rounded-xl border-2 font-medium ${mbtiStructure === 'Judging' ? 'border-primary tracking-wide bg-primary/10 text-primary' : 'border-card-border hover:border-primary/50 bg-background/50'}`}>A strict schedule (Judging)</button>
-                                                <button type="button" onClick={() => setMbtiStructure('Perceiving')} className={`p-4 rounded-xl border-2 font-medium ${mbtiStructure === 'Perceiving' ? 'border-primary tracking-wide bg-primary/10 text-primary' : 'border-card-border hover:border-primary/50 bg-background/50'}`}>Flexibility (Perceiving)</button>
+                                                <button type="button" onClick={() => setMbtiStructure('A clear schedule')} className={`p-4 rounded-xl border-2 font-medium ${mbtiStructure === 'A clear schedule' ? 'border-primary tracking-wide bg-primary/10 text-primary' : 'border-card-border hover:border-primary/50 bg-background/50'}`}>A clear schedule</button>
+                                                <button type="button" onClick={() => setMbtiStructure('Flexibility')} className={`p-4 rounded-xl border-2 font-medium ${mbtiStructure === 'Flexibility' ? 'border-primary tracking-wide bg-primary/10 text-primary' : 'border-card-border hover:border-primary/50 bg-background/50'}`}>Flexibility</button>
                                             </div>
                                         </div>
                                     </div>
@@ -654,38 +661,20 @@ const QuickAssessment = () => {
                             {/* STEP 7: RESULTS */}
                             {currentStep === 7 && (
                                 <motion.div key="step7" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 py-4 max-w-3xl mx-auto">
-                                    {/* Success Header */}
                                     <div className="text-center space-y-2">
                                         <div className="w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center mx-auto">
                                             <CheckCircle className="w-6 h-6 text-green-500" />
                                         </div>
-                                        <h2 className="text-xl md:text-2xl font-black tracking-tight">Diagnostic Analysis Complete</h2>
-                                        <p className="text-sm text-muted-foreground">Your personalized career roadmap is ready.</p>
+                                        <h2 className="text-xl md:text-2xl font-black tracking-tight">Your Direction Brief is ready</h2>
+                                        <p className="text-sm text-muted-foreground">Three real careers to test, with practical next steps for {grade || 'your current grade'}.</p>
                                     </div>
 
-                                    {/* Report Preview - Full width, centered, blurred */}
-                                    <div className="relative w-full rounded-2xl border-2 border-card-border overflow-hidden bg-white shadow-lg">
-                                        {/* Blurred Preview Content */}
-                                        <div
-                                            className={`p-6 md:p-8 transition-all duration-300 ${!isPaid ? 'blur-[2px] select-none pointer-events-none' : ''}`}
-                                            style={{ userSelect: isPaid ? 'text' : 'none' }}
-                                            dangerouslySetInnerHTML={{ __html: reportHtml || '' }}
-                                        />
+                                    {directionBrief ? (
+                                        <QuickAssessmentDirectionBrief profile={guestProfile} brief={directionBrief} locked={!isPaid} />
+                                    ) : (
+                                        <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-5 text-center text-sm text-destructive">Your result is not ready yet. Please try generating the brief again.</div>
+                                    )}
 
-                                        {/* Unlock Overlay (only when unpaid) */}
-                                        {!isPaid && (
-                                            <div className="absolute inset-0 z-20 flex items-center justify-center bg-gradient-to-t from-background/80 via-background/40 to-transparent">
-                                                <div className="text-center space-y-3 p-6">
-                                                    <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
-                                                        <Lock className="w-6 h-6 text-primary" />
-                                                    </div>
-                                                    <p className="text-sm font-semibold text-foreground">Full report available after payment</p>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {/* Action Section */}
                                     <div className="space-y-4">
                                         {!isPaid ? (
                                             <ReportPaywall
@@ -696,8 +685,8 @@ const QuickAssessment = () => {
                                             />
                                         ) : (
                                             <div className="space-y-3">
-                                                <Button onClick={downloadReport} className="w-full h-14 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg text-base">
-                                                    <Download className="mr-2 w-5 h-5" /> Download Full PDF Report
+                                                <Button onClick={downloadReport} disabled={isGeneratingPdf || !reportHtml} className="w-full h-14 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg text-base disabled:opacity-70">
+                                                    {isGeneratingPdf ? <><BrandedLoader size="xs" showText={false} className="mr-2 inline-flex" /> Preparing your PDF...</> : <><Download className="mr-2 w-5 h-5" /> Download Direction Brief PDF</>}
                                                 </Button>
                                                 <Button variant="outline" onClick={() => navigate('/student')} className="w-full h-12 border-2 border-primary text-primary hover:bg-primary/5 font-bold">
                                                     Consult with Career Counselor

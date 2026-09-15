@@ -1,4 +1,5 @@
 import { ChatMessage } from './ai-service';
+import type { QuickAssessmentBrief } from './quick-assessment-report';
 
 export interface GuestProfile {
   name?: string;
@@ -16,6 +17,7 @@ export interface GuestProfile {
   barriers?: string;
   experience?: string;
   readiness?: string;
+  workPreferences?: string[];
   strengths?: string[];
   challenges?: string[];
   dreamJob?: string;
@@ -204,6 +206,203 @@ export class ReportGenerator {
           </div>
         </div>
       </div>
+    `;
+  }
+
+  static generateQuickAssessmentPDFReport(profile: GuestProfile, brief: QuickAssessmentBrief): string {
+    const escape = (value: string | undefined) => this.escapeHtml(value || 'Not specified');
+    const currentDate = new Date().toLocaleDateString('en-KE', { year: 'numeric', month: 'long', day: 'numeric' });
+    const studentName = escape(profile.name || 'Student');
+    const subjectList = escape(profile.subjects?.slice(0, 4).join(', ') || 'Not selected');
+    const interestList = escape(profile.interests?.slice(0, 4).join(', ') || 'Not selected');
+
+    const careerCards = brief.careers.map((career, index) => `
+      <article class="brief-career-card">
+        <div class="brief-career-number">0${index + 1}</div>
+        <div class="brief-kicker">Career to explore</div>
+        <h2>${escape(career.career)}</h2>
+        <div class="brief-copy-block">
+          <h3>Why it appeared</h3>
+          <p>${escape(career.whyItAppeared)}</p>
+        </div>
+        <div class="brief-copy-block">
+          <h3>What still needs testing</h3>
+          <p>${escape(career.realityToTest)}</p>
+        </div>
+        <div class="brief-activity">
+          <strong>${escape(career.starterActivityTitle)}</strong>
+          <p>${escape(career.starterActivity)}</p>
+          <span><b>Notice:</b> ${escape(career.reflectionPrompt)}</span>
+        </div>
+      </article>
+    `).join('');
+
+    const planCards = brief.plan.map((step, index) => `
+      <article class="brief-plan-card">
+        <div class="brief-plan-number">0${index + 1}</div>
+        <div>
+          <div class="brief-kicker">${escape(step.timeframe)}</div>
+          <h2>${escape(step.title)}</h2>
+          <p>${escape(step.action)}</p>
+          <span>${escape(step.careerGuideAction)}</span>
+        </div>
+      </article>
+    `).join('');
+
+    const reflectionRows = brief.reflectionPrompts.map(prompt => `
+      <div class="brief-reflection-row">
+        <h3>${escape(prompt)}</h3>
+        <div></div><div></div><div></div>
+      </div>
+    `).join('');
+
+    return `
+      <div class="quick-brief">
+        <style>${this.getQuickAssessmentStyles()}</style>
+
+        <section class="quick-brief-page">
+          ${this.getQuickAssessmentHeader('Quick Assessment - Direction Brief')}
+          <div class="brief-title-block">
+            <div class="brief-kicker">CareerGuide AI Quick Assessment</div>
+            <h1>${studentName}'s Direction Brief</h1>
+            <p>A practical guide for the next stage - not a final verdict.</p>
+          </div>
+          <div class="brief-student-card">
+            <div class="brief-kicker">Student snapshot</div>
+            <h2>${escape(profile.grade)}${profile.pathway ? ` | ${escape(profile.pathway)} pathway` : ''}</h2>
+            <div class="brief-chip-row"><span>${subjectList}</span><span>${interestList}</span></div>
+          </div>
+          <div class="brief-section">
+            <div class="brief-kicker">What this brief used</div>
+            <h2>Use the pattern as a starting point.</h2>
+            <p>${escape(brief.studentSummary)}</p>
+          </div>
+          <div class="brief-callout green">
+            <div class="brief-kicker">Your grade context</div>
+            <p>${escape(brief.gradeContext)}</p>
+          </div>
+          <div class="brief-section compact">
+            <div class="brief-kicker">Your focus now</div>
+            <h2>${escape(brief.gradeFocus)}</h2>
+          </div>
+          ${this.getQuickAssessmentFooter(1)}
+        </section>
+
+        <section class="quick-brief-page">
+          ${this.getQuickAssessmentHeader('Three careers to explore')}
+          <div class="brief-title-block small">
+            <h1>Test the work before you choose.</h1>
+            <p>These are real careers from CareerGuide's library. Each is a possibility to investigate, not a promise or a final decision.</p>
+          </div>
+          ${careerCards}
+          ${this.getQuickAssessmentFooter(2)}
+        </section>
+
+        <section class="quick-brief-page">
+          ${this.getQuickAssessmentHeader('Your starting plan')}
+          <div class="brief-title-block small">
+            <h1>Turn curiosity into evidence.</h1>
+            <p>Keep the next step small enough to finish, then use what you learn to make a better decision.</p>
+          </div>
+          <div class="brief-plan-stack">${planCards}</div>
+          <div class="brief-callout">
+            <div class="brief-kicker">Bring this question to a conversation</div>
+            <h2>What should I notice while I test these directions?</h2>
+            <p>Ask a teacher, parent, mentor, or CareerGuide counsellor to respond to the work you actually produce.</p>
+          </div>
+          ${this.getQuickAssessmentFooter(3)}
+        </section>
+
+        <section class="quick-brief-page">
+          ${this.getQuickAssessmentHeader('Reflection and next steps')}
+          <div class="brief-title-block small">
+            <h1>Keep the evidence, not just the feeling.</h1>
+            <p>Use this page after trying one activity. Your notes will make the next CareerGuide conversation more useful.</p>
+          </div>
+          <div class="brief-reflections">${reflectionRows}</div>
+          <div class="brief-next-card">
+            <h2>Continue in CareerGuide AI</h2>
+            <p>Explore career paths  |  Try a short course  |  Compare subjects  |  Ask the AI adviser</p>
+          </div>
+          ${this.getQuickAssessmentFooter(4)}
+        </section>
+      </div>
+    `;
+  }
+
+  private static getQuickAssessmentHeader(section: string): string {
+    return `
+      <header class="brief-header">
+        <img src="${window.location.origin}/logos/CareerGuide_Logo.webp" class="brief-logo" alt="CareerGuide AI">
+        <span>${this.escapeHtml(section)}</span>
+      </header>
+    `;
+  }
+
+  private static getQuickAssessmentFooter(page: number): string {
+    return `
+      <footer class="brief-footer">
+        <strong>CareerGuide AI</strong><span>careerguideai.co.ke</span><span>${page} / 4</span>
+      </footer>
+    `;
+  }
+
+  private static escapeHtml(value: string): string {
+    return value.replace(/[&<>'"]/g, character => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#039;', '"': '&quot;'
+    }[character] || character));
+  }
+
+  private static getQuickAssessmentStyles(): string {
+    return `
+      * { box-sizing: border-box; }
+      .quick-brief { width: 794px; color: #14213d; background: #fff; font-family: Georgia, 'Times New Roman', serif; }
+      .quick-brief-page { width: 794px; min-height: 1123px; padding: 42px 52px 54px; position: relative; background: #fff; page-break-after: always; break-after: page; }
+      .quick-brief-page:last-child { page-break-after: auto; break-after: auto; }
+      .brief-header { height: 53px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #dce4ed; font-family: Arial, sans-serif; color: #64748b; font-size: 11px; }
+      .brief-logo { display: block; width: 155px; height: auto; max-height: 35px; object-fit: contain; object-position: left center; }
+      .brief-title-block { margin: 46px 0 32px; }
+      .brief-title-block.small { margin: 38px 0 25px; }
+      .brief-kicker { color: #1f5bc5; font-family: Arial, sans-serif; font-size: 10px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; }
+      .brief-title-block h1 { font-size: 31px; line-height: 1.12; margin: 10px 0; color: #14213d; }
+      .brief-title-block p, .brief-section p, .brief-callout p { margin: 0; color: #52627a; font-family: Arial, sans-serif; font-size: 14px; line-height: 1.55; }
+      .brief-student-card { padding: 25px; background: #eef4ff; border-radius: 16px; margin-bottom: 38px; }
+      .brief-student-card h2 { font-family: Arial, sans-serif; font-size: 18px; margin: 10px 0 16px; }
+      .brief-chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+      .brief-chip-row span { display: inline-block; max-width: 100%; padding: 6px 9px; border-radius: 12px; background: #fff; color: #1f5bc5; font: 700 10px/1.3 Arial, sans-serif; }
+      .brief-section { margin: 0 0 28px; }
+      .brief-section h2, .brief-callout h2 { font-size: 22px; line-height: 1.2; margin: 10px 0; }
+      .brief-section.compact { margin-top: 28px; }
+      .brief-callout { padding: 22px 25px; border-radius: 14px; background: #eef4ff; }
+      .brief-callout.green { background: #ecf8f0; }
+      .brief-callout.green .brief-kicker { color: #237a4b; }
+      .brief-career-card { position: relative; margin: 0 0 20px; padding: 21px 24px 22px 38px; border: 1px solid #dce4ed; border-radius: 15px; page-break-inside: avoid; break-inside: avoid; }
+      .brief-career-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: #1f5bc5; border-radius: 15px 0 0 15px; }
+      .brief-career-card:nth-of-type(2)::before { background: #237a4b; }
+      .brief-career-number { position: absolute; top: 18px; left: 14px; font: 700 10px Arial, sans-serif; color: #1f5bc5; }
+      .brief-career-card h2 { margin: 6px 0 14px; font-size: 20px; line-height: 1.12; }
+      .brief-copy-block { margin: 0 0 11px; }
+      .brief-copy-block h3 { margin: 0 0 3px; color: #64748b; font: 700 9px Arial, sans-serif; letter-spacing: .4px; text-transform: uppercase; }
+      .brief-copy-block p { margin: 0; color: #44546a; font: 12px/1.4 Arial, sans-serif; }
+      .brief-activity { margin-top: 14px; padding: 11px 14px; border-radius: 10px; background: #eef4ff; font-family: Arial, sans-serif; }
+      .brief-activity strong { color: #1f5bc5; font-size: 12px; }
+      .brief-activity p { margin: 4px 0 5px; font-size: 11px; line-height: 1.38; }
+      .brief-activity span { display: block; color: #64748b; font-size: 10px; line-height: 1.35; }
+      .brief-plan-stack { margin-top: 38px; }
+      .brief-plan-card { display: grid; grid-template-columns: 58px 1fr; gap: 16px; margin-bottom: 20px; padding: 20px; border: 1px solid #dce4ed; border-radius: 15px; page-break-inside: avoid; break-inside: avoid; }
+      .brief-plan-number { display: grid; width: 48px; height: 48px; place-items: center; background: #eef4ff; border-radius: 12px; color: #1f5bc5; font: 700 13px Arial, sans-serif; }
+      .brief-plan-card h2 { font-size: 20px; margin: 6px 0 7px; }
+      .brief-plan-card p { margin: 0 0 7px; color: #52627a; font: 12px/1.45 Arial, sans-serif; }
+      .brief-plan-card span { color: #1f5bc5; font: 700 10px Arial, sans-serif; }
+      .brief-reflections { margin-top: 36px; }
+      .brief-reflection-row { margin-bottom: 26px; }
+      .brief-reflection-row h3 { margin: 0 0 13px; color: #1f5bc5; font: 700 11px Arial, sans-serif; text-transform: uppercase; }
+      .brief-reflection-row div { height: 22px; border-bottom: 1px solid #dce4ed; }
+      .brief-next-card { margin-top: 35px; padding: 25px; border-radius: 15px; background: #14213d; color: #fff; }
+      .brief-next-card h2 { margin: 0 0 10px; font-size: 21px; }
+      .brief-next-card p { margin: 0; color: #dce7ff; font: 11px/1.45 Arial, sans-serif; }
+      .brief-footer { position: absolute; right: 52px; bottom: 25px; left: 52px; display: flex; justify-content: space-between; padding-top: 11px; border-top: 1px solid #dce4ed; color: #64748b; font: 10px Arial, sans-serif; }
+      .brief-footer strong { color: #52627a; }
     `;
   }
 
@@ -676,29 +875,51 @@ export class ReportGenerator {
     const safeFilename = (filename || 'CareerGuide-Diagnostic.pdf')
       .replace(/[^a-z0-9. -]/gi, '_');
 
-    const wrappedHtml = `<div style="width:800px;background:#ffffff;padding:0;margin:0;">${htmlContent}</div>`;
+    // Keep the A4 layout out of the visible app. Rendering a wide report inside the
+    // mobile result screen caused overflow and made the report layout device-dependent.
+    const renderRoot = document.createElement('div');
+    renderRoot.setAttribute('aria-hidden', 'true');
+    renderRoot.style.cssText = 'position:fixed;left:-10000px;top:0;width:794px;pointer-events:none;background:#fff;z-index:-1;';
+    renderRoot.innerHTML = htmlContent;
+    document.body.appendChild(renderRoot);
 
-    const options: any = {
+    try {
+      // Wait for the real logo and web fonts before the canvas is captured.
+      if ('fonts' in document) await document.fonts.ready;
+      const images = Array.from(renderRoot.querySelectorAll('img'));
+      await Promise.all(images.map(image => image.complete
+        ? Promise.resolve()
+        : new Promise<void>(resolve => {
+            image.addEventListener('load', () => resolve(), { once: true });
+            image.addEventListener('error', () => resolve(), { once: true });
+          })
+      ));
+
+      const options: any = {
       margin: [5, 5, 5, 5],
       filename: safeFilename,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: {
-        scale: 2,
+        // A fixed, modest scale avoids the oversized canvas failures common on phones.
+        scale: 1.5,
         useCORS: true,
         logging: false,
         letterRendering: true,
-        width: 800,
-        windowWidth: 800,
+        width: 794,
+        windowWidth: 794,
         backgroundColor: '#ffffff'
       },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-    };
+        pagebreak: { mode: ['css', 'legacy'], avoid: ['.brief-career-card', '.brief-plan-card'] }
+      };
 
-    await html2pdf()
-      .from(wrappedHtml)
-      .set(options)
-      .save();
+      await html2pdf()
+        .from(renderRoot)
+        .set(options)
+        .save();
+    } finally {
+      renderRoot.remove();
+    }
   }
 
   static generateTextReport(profile: GuestProfile, conversation: ChatMessage[]): string {

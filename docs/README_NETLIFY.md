@@ -17,7 +17,8 @@ Set these in Netlify Dashboard → Site Settings → Environment Variables:
 ```bash
 VITE_SUPABASE_URL=https://yrgtkuwejsaxhsfozxfh.supabase.co
 VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlyZ3RrdXdlanNheGhzZm96eGZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYzMzEyMzUsImV4cCI6MjA3MTkwNzIzNX0.bQEGRE4OU5_cBJd5DNtdZ-DSdhO9wIKGc2L1DaR9l-s
-VITE_DEEPSEEK_API_KEY=your_deepseek_api_key_here
+MODELSCOPE_API_KEY=your_modelscope_token_here
+MODELSCOPE_MODEL=Qwen-Ambassador/Qwen3.7-Plus
 ```
 
 ## 🛠️ Build Settings
@@ -88,7 +89,7 @@ npm run preview
 - Check `netlify.toml` redirect rules
 
 ### Environment Variables
-- Must start with `VITE_`
+- AI secrets must not start with `VITE_`; add `MODELSCOPE_API_KEY` in Netlify's server-side environment settings.
 - Redeploy after adding new variables
 
 ## 📞 Support

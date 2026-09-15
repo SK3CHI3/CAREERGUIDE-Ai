@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { ExternalLink, Clock, Users, Star, Loader2, BookOpen, Award, Globe, RefreshCw } from 'lucide-react'
 import { dashboardService } from '@/lib/dashboard-service'
+import { aiCareerService } from '@/lib/ai-service'
 import { useAuth } from '@/contexts/AuthContext'
 
 export interface CourseRecommendation {
@@ -142,60 +143,7 @@ Focus on:
 - Popular platforms like Coursera, edX, Khan Academy, YouTube, Udemy (free courses)
 - Skills that align with their career interests and strong subjects`
 
-      const response = await fetch('https://api.deepseek.com/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${import.meta.env.VITE_DEEPSEEK_API_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          model: 'deepseek-chat',
-          messages: [{ role: 'user', content: prompt }],
-          temperature: 0.7,
-          max_tokens: 1500,
-          stream: true
-        })
-      })
-
-      if (!response.ok) throw new Error('Failed to get course recommendations')
-
-      // Handle streaming response
-      const reader = response.body?.getReader()
-      if (!reader) {
-        throw new Error('Failed to get response reader')
-      }
-
-      const decoder = new TextDecoder()
-      let aiResponse = ''
-
-      try {
-        while (true) {
-          const { done, value } = await reader.read()
-          if (done) break
-
-          const chunk = decoder.decode(value)
-          const lines = chunk.split('\n')
-
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              const data = line.slice(6)
-              if (data === '[DONE]') continue
-
-              try {
-                const parsed = JSON.parse(data)
-                if (parsed.choices?.[0]?.delta?.content) {
-                  aiResponse += parsed.choices[0].delta.content
-                }
-              } catch (e) {
-                // Skip invalid JSON lines
-                continue
-              }
-            }
-          }
-        }
-      } finally {
-        reader.releaseLock()
-      }
+      const aiResponse = await aiCareerService.sendStructuredPrompt(prompt, 1500)
 
       try {
         // Use greedy match to capture the full outer array (handles nested arrays like skills)

@@ -1,9 +1,14 @@
 import { supabase } from './supabase'
 import type { AIConversation, ChatMessage, UserProfile } from '../types/database'
 import { KUCCPS_CLUSTERS, UNIVERSITY_DATA, CUTOFF_ESTIMATES } from './kuccps-reference'
+import {
+  normaliseQuickAssessmentBrief,
+  type QuickAssessmentBrief,
+  type QuickAssessmentInput,
+  type AssessmentCareerCatalogueItem,
+} from './quick-assessment-report'
 
-const DEEPSEEK_API_KEY = import.meta.env.VITE_DEEPSEEK_API_KEY
-const MODEL_NAME = 'deepseek-chat' // Non-thinking mode of DeepSeek-V3.1
+const AI_ENDPOINT = '/.netlify/functions/ai-chat'
 
 export type { ChatMessage } from '../types/database'
 
@@ -25,32 +30,11 @@ export interface UserContext {
     weakSubjects: string[]
     performanceTrend: 'improving' | 'declining' | 'stable'
   }
+  quickAssessment?: QuickAssessmentInput
+  availableCareers?: AssessmentCareerCatalogueItem[]
 }
 
 class AICareerService {
-  private apiKey: string
-  private modelName: string
-  private baseUrl: string
-
-  constructor() {
-    this.apiKey = DEEPSEEK_API_KEY
-    this.modelName = MODEL_NAME
-    this.baseUrl = 'https://api.deepseek.com'
-
-    if (import.meta.env.DEV) {
-      console.log('AI Service initialized:', {
-        hasApiKey: !!this.apiKey,
-        apiKeyLength: this.apiKey?.length,
-        modelName: this.modelName,
-        baseUrl: this.baseUrl
-      });
-    }
-
-    if (!this.apiKey) {
-      throw new Error('AI Service key is not configured. Please add VITE_DEEPSEEK_API_KEY to your environment variables.')
-    }
-  }
-
   private createSystemPrompt(userContext: UserContext): string {
     const assessment = userContext.assessmentResults;
     const riasec = assessment?.riasec_scores;
@@ -142,97 +126,7 @@ CRITICAL: Except when specifically asked for an Assessment Summary or JSON recom
         { role: 'user', content: message }
       ]
 
-      if (import.meta.env.DEV) {
-        console.log('Making AI API call to:', `${this.baseUrl}/chat/completions`);
-        console.log('API Key available:', !!this.apiKey);
-        console.log('Request payload:', {
-          model: this.modelName,
-          messageCount: messages.length,
-          temperature: 0.7,
-          streaming: true
-        });
-      }
-
-      const response = await fetch(`${this.baseUrl}/chat/completions`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          model: this.modelName,
-          messages: messages,
-          temperature: 0.7,
-          max_tokens: 800,
-          top_p: 0.9,
-          stream: true
-        })
-      })
-
-      if (!response.ok) {
-        const errorText = await response.text().catch(() => 'Unknown error')
-        console.error('AI Service Error:', {
-          status: response.status,
-          statusText: response.statusText,
-          error: errorText
-        });
-        
-        // Specific handling for 402 Payment Required
-        if (response.status === 402) {
-          throw new Error('The AI Counselor is currently experiencing high demand. Please try again in a few minutes or contact support if the issue persists.')
-        }
-        
-        throw new Error(`AI service error: ${response.status} - ${response.statusText}`)
-      }
-
-      // Handle streaming response
-      const reader = response.body?.getReader()
-      if (!reader) {
-        throw new Error('Failed to get response reader')
-      }
-
-      const decoder = new TextDecoder()
-      let fullResponse = ''
-      let buffer = ''
-
-      try {
-        while (true) {
-          const { done, value } = await reader.read()
-          if (done) break
-
-          buffer += decoder.decode(value, { stream: true })
-          const lines = buffer.split('\n')
-          
-          // Keep the last partial line in the buffer
-          buffer = lines.pop() || ''
-
-          for (const line of lines) {
-            const trimmedLine = line.trim()
-            if (!trimmedLine || trimmedLine === 'data: [DONE]') continue
-            
-            if (trimmedLine.startsWith('data: ')) {
-              try {
-                const data = trimmedLine.slice(6)
-                const parsed = JSON.parse(data)
-                if (parsed.choices?.[0]?.delta?.content) {
-                  fullResponse += parsed.choices[0].delta.content
-                }
-              } catch (e) {
-                console.warn('Silent skip: Partial or malformed SSE line', line)
-                continue
-              }
-            }
-          }
-        }
-      } finally {
-        reader.releaseLock()
-      }
-
-      if (!fullResponse.trim()) {
-        throw new Error('Empty response from AI service')
-      }
-
-      return fullResponse
+      return await this.requestCompletion(messages, 800, 0.7)
     } catch (error) {
       console.error('AI Service Error:', error)
 
@@ -257,6 +151,27 @@ CRITICAL: Except when specifically asked for an Assessment Summary or JSON recom
         throw new Error(`Failed to get AI response: ${error instanceof Error ? error.message : 'Unknown error'}`)
       }
     }
+  }
+
+  async sendStructuredPrompt(prompt: string, maxTokens = 1500): Promise<string> {
+    return this.requestCompletion([{ role: 'user', content: prompt }], maxTokens, 0.7)
+  }
+
+  private async requestCompletion(messages: { role: string; content: string }[], maxTokens: number, temperature: number): Promise<string> {
+    const response = await fetch(AI_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages, maxTokens, temperature }),
+    })
+
+    const payload = await response.json().catch(() => ({}))
+    if (!response.ok) {
+      throw new Error(payload.error || `AI service error: ${response.status}`)
+    }
+    if (typeof payload.content !== 'string' || !payload.content.trim()) {
+      throw new Error('Empty response from AI service')
+    }
+    return payload.content
   }
 
   async getQuickGuidance(message: string): Promise<string> {
@@ -336,28 +251,7 @@ FORMATTING:
       { role: 'user', content: prompt }
     ]
 
-    const response = await fetch(`${this.baseUrl}/chat/completions`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${this.apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        model: this.modelName,
-        messages,
-        temperature: 0.7,
-        max_tokens: 3000, // Career JSON needs room for 3 detailed objects
-        top_p: 0.9,
-        stream: false // NON-STREAMING for reliable JSON
-      })
-    })
-
-    if (!response.ok) {
-      throw new Error(`AI service error: ${response.status} - ${response.statusText}`)
-    }
-
-    const data = await response.json()
-    return data.choices?.[0]?.message?.content || ''
+    return this.requestCompletion(messages, 3000, 0.7)
   }
 
   async generateCareerRecommendations(userContext: UserContext): Promise<any[]> {
@@ -421,6 +315,83 @@ Return EXACTLY this JSON format (array of 3 objects):
       console.error('Failed to generate career recommendations:', error)
       throw error
     }
+  }
+
+  async generateQuickAssessmentBrief(userContext: UserContext): Promise<QuickAssessmentBrief> {
+    const input = userContext.quickAssessment
+    if (!input) throw new Error('Quick assessment data is required to create a direction brief.')
+
+    const careers = (userContext.availableCareers || input.availableCareers || [])
+      .slice(0, 160)
+      .map(item => `- ${item.title}${item.category ? ` (${item.category})` : ''}`)
+      .join('\n') || '- Software Developer\n- UX/UI Designer\n- Registered Nurse\n- Accountant\n- Architect\n- Environmental Scientist'
+
+    const gradeInstruction = input.grade === 'Grade 7'
+      ? 'The student is in Grade 7. Focus on broad exposure, subject curiosity, and safe short activities. Do not discuss admissions, university choices, or locking in a pathway.'
+      : input.grade === 'Grade 9'
+        ? 'The student is in Grade 9. Focus on testing ideas before Senior School pathway and subject selection. Do not present a career as chosen or guaranteed.'
+        : `The student is in Grade 11${input.pathway ? ` in the ${input.pathway} pathway` : ''}. Focus on comparing training routes, subject requirements, and first experiences. Do not promise admission, a salary, or employment.`
+
+    const prompt = `Return ONLY one valid JSON object. No markdown, no backticks, no text outside the object.
+
+You are creating a CareerGuide AI Quick Assessment Direction Brief for a Kenyan CBC student.
+
+${gradeInstruction}
+
+Student data - use every relevant field:
+- Grade: ${input.grade}
+- Pathway: ${input.pathway || 'Not selected'}
+- Strong subjects: ${input.subjects.join(', ') || 'Not selected'}
+- Interests: ${input.interests.join(', ') || 'Not selected'}
+- Values: ${input.values.join(', ') || 'Not selected'}
+- Preferred work style: ${input.workStyle || 'Not selected'}
+- Focus preference: ${input.preferences.focus || 'Not selected'}
+- Decision preference: ${input.preferences.decisions || 'Not selected'}
+- Structure preference: ${input.preferences.structure || 'Not selected'}
+- Current barrier: ${input.barrier || 'Not selected'}
+- Experience: ${input.experience || 'Not selected'}
+- Readiness: ${input.readiness || 'Not selected'}
+${input.targetCareer ? `- Career the student asked about: ${input.targetCareer}` : ''}
+
+ALLOWED CAREERS - choose exactly three titles from this catalogue and copy each title exactly:
+${careers}
+
+Non-negotiable guidance rules:
+1. The three suggestions must be named, real careers from the allowed catalogue. Never use broad labels such as "technology", "creative work", "business", or "problem-solving" as a career.
+2. Do not call any suggestion a fit, perfect match, destiny, or final choice. These are possibilities to test.
+3. Every why_it_appeared must cite at least two independent student signals (for example a selected subject plus an interest, or an interest plus a work preference). Do not infer a career only because the student likes one subject or one idea.
+4. Every reality_to_test must name an uncertainty about the day-to-day work. Do not invent grades, personality tests, salary figures, KUCCPS points, university requirements, or labour-market facts.
+5. Do not mention MBTI or RIASEC. The three preference answers are not a validated personality assessment.
+6. Make the language direct, warm, specific, and readable. No filler paragraphs.
+7. Each starter activity must be safe, practical, and achievable with ordinary school/home resources. It must help the student collect evidence, not merely research careers.
+8. Grade context and grade focus must be specific to the student's grade and stage.
+9. The plan must contain exactly three practical actions and connect each to an existing CareerGuide activity: Explore careers, Ask the AI counsellor, or Compare careers and subject pathways.
+
+Return exactly this shape:
+{
+  "student_summary": "2 concise sentences explaining what this brief used and why it is exploratory.",
+  "grade_context": "1-2 sentences tied to the student's grade.",
+  "grade_focus": "1 concise, grade-aware next focus.",
+  "careers": [
+    {
+      "career": "Exact title from the allowed catalogue",
+      "why_it_appeared": "Specific evidence from at least two student signals; end with an uncertainty-aware statement.",
+      "reality_to_test": "The aspect of daily work that still needs evidence.",
+      "starter_activity": {
+        "title": "Short activity title",
+        "instruction": "Concrete 30-90 minute or one-week task, depending on grade.",
+        "reflection_prompt": "One question that helps the student judge their experience."
+      }
+    }
+  ],
+  "plan": [
+    {"timeframe":"...","title":"...","action":"...","careerguide_action":"Explore careers"}
+  ]
+}`
+
+    const response = await this.sendJsonRequest(prompt, userContext)
+    const parsed = this.parseJsonObject(response)
+    return normaliseQuickAssessmentBrief(parsed, input)
   }
 
   async getTrendingCareers(): Promise<any[]> {
@@ -521,6 +492,22 @@ Return EXACTLY this JSON format (array of 3 objects):
     }
   }
 
+  private parseJsonObject(content: string): Record<string, unknown> {
+    const cleaned = content.replace(/```json/g, '').replace(/```/g, '').trim()
+    const direct = (() => {
+      try { return JSON.parse(cleaned) } catch { return null }
+    })()
+    if (direct && typeof direct === 'object' && !Array.isArray(direct)) return direct as Record<string, unknown>
+
+    const match = cleaned.match(/\{[\s\S]*\}/)
+    if (!match) throw new Error('AI returned an invalid direction brief.')
+    const parsed = JSON.parse(match[0])
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      throw new Error('AI returned an invalid direction brief.')
+    }
+    return parsed as Record<string, unknown>
+  }
+
   // Note: Conversations are now stored in localStorage only (not in database)
   // This prevents unnecessary database queries and 404 errors
   async saveConversation(userId: string, messages: ChatMessage[]): Promise<void> {
@@ -538,22 +525,8 @@ Return EXACTLY this JSON format (array of 3 objects):
   // Test method to verify API connectivity
   async testConnection(): Promise<boolean> {
     try {
-      const response = await fetch(`${this.baseUrl}/chat/completions`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          model: this.modelName,
-          messages: [{ role: 'user', content: 'Hello' }],
-          max_tokens: 10,
-          stream: false
-        })
-      });
-
-      console.log('Connection test response:', response.status, response.statusText);
-      return response.ok;
+      await this.requestCompletion([{ role: 'user', content: 'Reply with a single word: ready.' }], 32, 0);
+      return true;
     } catch (error) {
       console.error('Connection test failed:', error);
       return false;

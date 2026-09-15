@@ -23,7 +23,8 @@ Set these in Netlify Dashboard → Site Settings → Environment Variables:
 ```
 VITE_SUPABASE_URL=
 VITE_SUPABASE_ANON_KEY=
-VITE_DEEPSEEK_API_KEY=your_deepseek_api_key_here
+MODELSCOPE_API_KEY=your_modelscope_token_here
+MODELSCOPE_MODEL=Qwen-Ambassador/Qwen3.7-Plus
 ```
 
 ## Build Settings
