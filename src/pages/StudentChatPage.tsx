@@ -6,7 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   AlertCircle, ArrowLeft, Loader2, MessageSquare, PanelLeftClose,
-  PanelLeftOpen, Plus, Send, Sparkles, User, X,
+  PanelLeftOpen, Plus, Send, Sparkles, Trash2, User, X,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -158,6 +158,15 @@ const StudentChatPage = () => {
     setActiveThreadId(thread.id);
     setMessage(''); setError(null); closeHistoryOnMobile();
   };
+  const clearSavedHistory = () => {
+    if (!user?.id || !window.confirm('Clear all saved conversations from this device?')) return;
+    const freshThread = makeThread(userContext);
+    localStorage.removeItem(`student_ai_chat_threads_${user.id}`);
+    localStorage.removeItem(`ai_chat_${user.id}`);
+    setThreads([freshThread]);
+    setActiveThreadId(freshThread.id);
+    setError(null);
+  };
   const handleSend = async () => {
     const prompt = message.trim();
     if (!prompt || isLoading || !user || !activeThreadId) return;
@@ -197,7 +206,7 @@ const StudentChatPage = () => {
           <div className="flex items-center justify-between border-b border-slate-100 px-3 py-3"><div><p className="text-xs font-bold text-slate-800">Chat history</p><p className="mt-0.5 text-[11px] text-slate-500">Your conversations stay on this device.</p></div><Button variant="ghost" size="icon" onClick={() => setIsHistoryOpen(false)} className="h-7 w-7 lg:hidden"><X className="h-4 w-4" /></Button></div>
           <div className="p-3"><Button onClick={startNewChat} disabled={!isInitialized || isLoading} variant="outline" className="w-full justify-start border-slate-200 text-sm text-slate-700"><Plus className="mr-2 h-4 w-4 text-blue-700" />Start a new chat</Button></div>
           <ScrollArea className="min-h-0 flex-1 px-2 pb-3"><div className="space-y-1">{threads.map(thread => <button key={thread.id} onClick={() => { setActiveThreadId(thread.id); closeHistoryOnMobile(); }} className={`group flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left transition-colors ${thread.id === activeThreadId ? 'bg-blue-50 text-blue-900' : 'text-slate-700 hover:bg-slate-50'}`}><MessageSquare className={`h-4 w-4 shrink-0 ${thread.id === activeThreadId ? 'text-blue-700' : 'text-slate-400'}`} /><span className="min-w-0"><span className="block truncate text-xs font-semibold">{thread.title}</span><span className="mt-0.5 block text-[10px] text-slate-500">{new Date(thread.updatedAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}</span></span></button>)}</div></ScrollArea>
-          <div className="border-t border-slate-100 px-3 py-3 text-[11px] text-slate-500"><span className="font-semibold text-slate-700">Context in use:</span> profile, subjects and grades.</div>
+          <div className="border-t border-slate-100 px-3 py-3 text-[11px] text-slate-500"><span className="font-semibold text-slate-700">Context in use:</span> profile, subjects and grades.<Button variant="ghost" size="sm" onClick={clearSavedHistory} className="mt-2 h-7 w-full justify-start px-1 text-[11px] text-slate-600 hover:text-red-700"><Trash2 className="mr-1.5 h-3.5 w-3.5" />Clear saved history</Button></div>
         </aside>
 
         <main className="flex min-w-0 flex-1 flex-col bg-[#f8fafc]"><div className="min-h-0 flex-1 overflow-hidden"><ScrollArea className="h-full"><div className="chat-message-list mx-auto max-w-3xl space-y-5 px-3 py-5 sm:px-5 sm:py-7">
@@ -209,7 +218,7 @@ const StudentChatPage = () => {
           <div className="chat-composer-wrap shrink-0 border-t border-slate-200 bg-white p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:p-4"><div className="mx-auto max-w-3xl">
             {error && <Alert variant="destructive" className="mb-3 text-xs"><AlertCircle className="h-3 w-3" /><AlertDescription>{error}</AlertDescription></Alert>}
             {!hasUserMessage && !isLoading && <div className="mb-3 flex gap-2 overflow-x-auto pb-1 no-scrollbar">{SUGGESTED_QUESTIONS.map(question => <Button key={question} variant="outline" size="sm" onClick={() => setMessage(question)} className="chat-suggestion h-8 shrink-0 whitespace-nowrap rounded-full px-3 text-xs">{question}</Button>)}</div>}
-            <div className="chat-composer flex items-center gap-2 rounded-2xl p-2 transition-all"><input type="text" placeholder="Ask about your subjects, grades or next steps…" value={message} onChange={event => setMessage(event.target.value)} onKeyDown={event => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); void handleSend(); } }} disabled={isLoading || !isInitialized} className="chat-composer-input min-h-[42px] flex-1 border-0 bg-transparent px-2 text-sm focus:outline-none disabled:opacity-50 sm:text-base" /><Button onClick={() => void handleSend()} disabled={isLoading || !message.trim() || !isInitialized} size="icon" className="chat-send-button h-10 w-10 shrink-0 rounded-xl"><Send className="h-4 w-4" /></Button></div>
+            <div className="chat-composer flex items-center gap-2 rounded-2xl p-2 transition-all"><input type="text" aria-label="Ask the career adviser" placeholder="Ask about your subjects, grades or next steps…" value={message} onChange={event => setMessage(event.target.value)} onKeyDown={event => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); void handleSend(); } }} disabled={isLoading || !isInitialized} className="chat-composer-input min-h-[42px] flex-1 border-0 bg-transparent px-2 text-sm focus:outline-none disabled:opacity-50 sm:text-base" /><Button onClick={() => void handleSend()} disabled={isLoading || !message.trim() || !isInitialized} size="icon" aria-label="Send message" className="chat-send-button h-10 w-10 shrink-0 rounded-xl"><Send className="h-4 w-4" /></Button></div>
             <div className="mt-2 flex items-center justify-between px-1"><p className="chat-composer-note flex items-center text-[10px]"><Sparkles className="mr-1 h-3 w-3" />Uses your saved profile and grade data</p>{userContext.hasRecordedGrades ? <span className="text-[10px] font-medium text-emerald-700">Grades included</span> : <span className="text-[10px] text-slate-500">No grades uploaded yet</span>}</div>
           </div></div>
         </main>

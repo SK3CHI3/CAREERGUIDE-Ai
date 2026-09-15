@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    --app-font: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
+    --app-font: Georgia, 'Times New Roman', serif;
   }
 
   html,
@@ -125,9 +125,9 @@
     @apply bg-background text-foreground antialiased;
   }
 
-  /* Apply Libre Baskerville serif font to headings only */
+  /* Georgia is the selected CareerGuide display face. */
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif !important;
+    font-family: Georgia, 'Times New Roman', serif !important;
   }
 
   button,
@@ -187,6 +187,15 @@
   
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-primary/50;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }
 

@@ -13,6 +13,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import CareerDetailModal from "@/components/CareerDetailModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { Helmet } from "react-helmet-async";
+import NotFound from './NotFound';
 
 const Careers = () => {
   const [careers, setCareers] = useState<CareerPath[]>([]);
@@ -23,7 +24,8 @@ const Careers = () => {
   const [selectedCareer, setSelectedCareer] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [itemsToShow, setItemsToShow] = useState(12);
-   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [notFound, setNotFound] = useState(false);
   const { slug } = useParams();
   const navigate = useNavigate();
   const { profile } = useAuth();
@@ -42,6 +44,8 @@ const Careers = () => {
           if (matchedCareer) {
             setSelectedCareer(matchedCareer);
             setIsModalOpen(true);
+          } else {
+            setNotFound(true);
           }
         }
       } catch (err) {
@@ -86,6 +90,8 @@ const Careers = () => {
     }
   };
 
+  if (notFound) return <NotFound />;
+
   return (
     <div className="min-h-screen text-foreground relative overflow-x-hidden pt-20">
       <Helmet>
@@ -93,6 +99,7 @@ const Careers = () => {
         <meta name="description" content="Explore high-demand career paths in Kenya. Get AI-powered insights on salary ranges, growth rates, and skill requirements for modern CBE pathways." />
         <meta property="og:title" content="Kenya's Career Library | CareerGuide AI" />
         <meta property="og:description" content="Discover your perfect career path with AI-driven insights into Kenya's evolving job market." />
+        <link rel="canonical" href={`https://careerguideai.co.ke${slug ? `/careers/${slug}` : '/careers'}`} />
         
         {/* JSON-LD for AI & Search Discoverability */}
         <script type="application/ld+json">

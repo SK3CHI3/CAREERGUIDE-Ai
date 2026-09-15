@@ -35,6 +35,7 @@ export default function About() {
       <Helmet>
         <title>About Us | CareerGuide AI Mission</title>
         <meta name="description" content="Learn about our mission to synchronize Kenya's academic potential with global success through precision educational mapping and AI intelligence." />
+        <link rel="canonical" href="https://careerguideai.co.ke/about" />
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",

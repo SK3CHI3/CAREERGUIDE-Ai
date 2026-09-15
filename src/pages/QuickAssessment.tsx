@@ -70,8 +70,6 @@ const QuickAssessment = () => {
                 // Only restore if it's less than 2 hours old
                 if (Date.now() - parsed.timestamp < 7200000) {
                     // Simplified restoration for critical fields
-                    if (parsed.name) setName(parsed.name);
-                    if (parsed.email) setEmail(parsed.email);
                     if (parsed.grade) setGrade(parsed.grade);
                     if (parsed.step) setCurrentStep(parsed.step);
                 }
@@ -85,7 +83,7 @@ const QuickAssessment = () => {
     useEffect(() => {
         if (currentStep > 1 && currentStep < 7) {
             localStorage.setItem('career_assessment_state', JSON.stringify({
-                name, email, grade, step: currentStep, timestamp: Date.now()
+                grade, step: currentStep, timestamp: Date.now()
             }));
         }
     }, [currentStep, name, email, grade]);

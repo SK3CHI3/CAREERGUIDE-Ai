@@ -14,7 +14,7 @@ CareerGuide AI combines RIASEC personality profiling, academic performance, and 
 
 **Frontend:** React 19 · TypeScript · Vite 8 · Tailwind CSS 4 · shadcn/ui
 **Backend:** Supabase (PostgreSQL + Auth + RLS + Storage)
-**AI:** DeepSeek V3.1 (streaming chat + JSON recommendations)
+**AI:** Qwen via ModelScope (server-side chat + structured recommendations)
 **Charts:** Recharts (pie, radar, bar)
 **Payments:** IntaSend (M-Pesa)
 **Deploy:** Netlify

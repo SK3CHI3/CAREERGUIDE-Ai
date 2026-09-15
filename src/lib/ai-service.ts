@@ -54,7 +54,8 @@ ${constraints ? `- Real-world Constraints: ${constraints}` : ''}
     const curriculumSection = `
 CURRICULUM SPECIFICS:
 - Current Curriculum: Competency-Based Curriculum (Kenya)
---> MAPPING RULE: Map their interests to one of the 4 CBC Senior Secondary Pathways (STEM, Arts & Sports Science, Social Sciences, Technical & Vocational). Reference practical CBC subjects like Pre-Technical Studies or Integrated Science.
+- Use the student's recorded pathway and subjects as planning context, not as proof of a formal eligibility decision.
+- Do not present pathway, programme, KUCCPS cluster, university entry, salary, or labour-demand information as current official fact without a current verified source.
 `;
 
     const academicSection = userContext.hasRecordedGrades && userContext.academicPerformance ? `
@@ -103,11 +104,9 @@ FORMATTING RULES:
 - Use one clear follow-up question only when more student information is genuinely needed.
 - Avoid robotic technical jargon and never say "perfect career path".
 
-KENYAN CAREER & KUCCPS CONTEXT (2025 Cycle):
-- KUCCPS CLUSTERS: We map to 19 official clusters. Higher cutoffs (38-46) for MBChB, Law, Architecture, Nursing.
-- HARD REQUIREMENTS: Law requires KISW/ENG B plain. Medicine/Engineering require C+ in all 4 cluster subjects.
-- INSTITUTIONAL MAPPING: UoN (Medicine/Law/Journalism), JKUAT (Engineering/CompSci), Strathmore (Business/Accounting/Law), KU (Education/Arts).
-- VISION 2030: Prioritize Digital Superhighway, Creative Economy, Healthcare, and Engineering.
+CURRENT-FACTS SAFETY:
+- Requirements and course availability change. Treat the app's verified catalogue as the source for exploration and direct the student to current KUCCPS or institution sources before they make an application decision.
+- Never invent cluster points, cut-offs, salary figures, university availability, or admissions requirements.
 
 CRITICAL: Except when specifically asked for an Assessment Summary or JSON recommendations, ask only ONE question per response. Be curious, realistic, and empathetic. Wait for their answer before proceeding.`
   }
@@ -116,7 +115,8 @@ CRITICAL: Except when specifically asked for an Assessment Summary or JSON recom
     message: string,
     conversationHistory: ChatMessage[],
     userContext: UserContext,
-    retryCount = 0
+    retryCount = 0,
+    purpose: 'student-chat' | 'guest-preview' = 'student-chat'
   ): Promise<string> {
     const maxRetries = 2
     const retryDelay = 1000 * (retryCount + 1) // Exponential backoff
@@ -124,16 +124,15 @@ CRITICAL: Except when specifically asked for an Assessment Summary or JSON recom
     try {
       const systemPrompt = this.createSystemPrompt(userContext)
 
-      const messages = [
-        { role: 'system', content: systemPrompt },
-        ...conversationHistory.slice(-16).map(msg => ({
-          role: msg.role,
-          content: msg.content
-        })),
-        { role: 'user', content: message }
-      ]
+      const history = conversationHistory.slice(-16).map(msg => ({ role: msg.role, content: msg.content }))
+      // Public preview traffic is deliberately sent without a privileged system
+      // message. That keeps the anonymous endpoint useful but prevents it from
+      // becoming a general prompt-injection proxy.
+      const messages = purpose === 'guest-preview'
+        ? [{ role: 'user', content: `${systemPrompt}\n\nStudent question: ${message}` }]
+        : [{ role: 'system', content: systemPrompt }, ...history, { role: 'user', content: message }]
 
-      return await this.requestCompletion(messages, 800, 0.7)
+      return await this.requestCompletion(messages, 800, 0.7, purpose)
     } catch (error) {
       console.error('AI Service Error:', error)
 
@@ -144,7 +143,7 @@ CRITICAL: Except when specifically asked for an Assessment Summary or JSON recom
       )) {
         console.log(`Retrying AI request (attempt ${retryCount + 1}/${maxRetries})...`)
         await new Promise(resolve => setTimeout(resolve, retryDelay))
-        return this.sendMessage(message, conversationHistory, userContext, retryCount + 1)
+        return this.sendMessage(message, conversationHistory, userContext, retryCount + 1, purpose)
       }
 
       // Handle specific network errors with user-friendly messages
@@ -161,14 +160,15 @@ CRITICAL: Except when specifically asked for an Assessment Summary or JSON recom
   }
 
   async sendStructuredPrompt(prompt: string, maxTokens = 1500): Promise<string> {
-    return this.requestCompletion([{ role: 'user', content: prompt }], maxTokens, 0.7)
+    return this.requestCompletion([{ role: 'user', content: prompt }], maxTokens, 0.7, 'student-chat')
   }
 
-  private async requestCompletion(messages: { role: string; content: string }[], maxTokens: number, temperature: number): Promise<string> {
+  private async requestCompletion(messages: { role: string; content: string }[], maxTokens: number, temperature: number, purpose: 'student-chat' | 'quick-assessment' | 'guest-preview' = 'student-chat'): Promise<string> {
+    const { data: { session } } = await supabase.auth.getSession()
     const response = await fetch(AI_ENDPOINT, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages, maxTokens, temperature }),
+      headers: { 'Content-Type': 'application/json', ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}) },
+      body: JSON.stringify({ messages, maxTokens, temperature, purpose }),
     })
 
     const payload = await response.json().catch(() => ({}))
@@ -278,12 +278,11 @@ FORMATTING:
   // Streaming can introduce SSE parsing artifacts that corrupt JSON.
   private async sendJsonRequest(prompt: string, userContext: UserContext): Promise<string> {
     const systemPrompt = this.createSystemPrompt(userContext)
-    const messages = [
-      { role: 'system', content: systemPrompt },
-      { role: 'user', content: prompt }
-    ]
+    const messages = userContext.quickAssessment
+      ? [{ role: 'user', content: `${systemPrompt}\n\n${prompt}` }]
+      : [{ role: 'system', content: systemPrompt }, { role: 'user', content: prompt }]
 
-    return this.requestCompletion(messages, 3000, 0.7)
+    return this.requestCompletion(messages, 3000, 0.7, userContext.quickAssessment ? 'quick-assessment' : 'student-chat')
   }
 
   async generateCareerRecommendations(userContext: UserContext): Promise<any[]> {

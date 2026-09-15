@@ -56,7 +56,7 @@ V3 removes the school system entirely and restructures the platform around two c
 ### Caching Improvements
 - **Parallelized** `loadDashboardData` with `Promise.all` (stats + career recs + subscription)
 - **localStorage** 2-minute session cache for dashboard stats (key: `sd_cache_{userId}`)
-- **sessionStorage** cache for AI insights (key: `ai_insights_{userId}`) — skips DeepSeek API on re-mount
+- **sessionStorage** cache for AI insights (key: `ai_insights_{userId}`) — skips ModelScope API on re-mount
 - **Merged** `checkAccessStatus` into the main `Promise.all` load
 - **Non-blocking** course recommendations and AI insights (fire-and-forget background loads)
 

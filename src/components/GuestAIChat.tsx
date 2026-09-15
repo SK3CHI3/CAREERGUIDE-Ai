@@ -119,7 +119,9 @@ What is your name? 😊`,
       const response = await aiCareerService.sendMessage(
         msg, 
         conversation, 
-        guestProfile
+        guestProfile,
+        0,
+        'guest-preview'
       );
       
       const assistantMessage: ChatMessage = {

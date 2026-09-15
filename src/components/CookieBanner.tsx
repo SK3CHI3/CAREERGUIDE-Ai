@@ -47,6 +47,7 @@ const CookieBanner = () => {
                 </div>
                 <button 
                   onClick={() => setIsVisible(false)}
+                  aria-label="Close cookie notice"
                   className="text-foreground-muted hover:text-foreground transition-colors"
                 >
                   <X className="w-5 h-5" />

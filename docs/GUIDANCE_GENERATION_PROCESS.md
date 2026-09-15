@@ -1,6 +1,6 @@
 # AI Guidance Generation Process
 
-The generation process in CareerPath AI is a multi-step workflow designed for precision and actionability. It leverages the DeepSeek-V3 API with a sophisticated recursive prompting strategy.
+The generation process in CareerPath AI is a multi-step workflow designed for precision and actionability. It leverages the Qwen via ModelScope API with a sophisticated recursive prompting strategy.
 
 ## 1. Context Assembly
 Before calling the AI, the system gathers a "Full User Context" (`UserContext` interface):

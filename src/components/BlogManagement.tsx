@@ -8,6 +8,7 @@ import { Plus, Edit2, Trash2, Image as ImageIcon, CheckCircle2, XCircle, ArrowLe
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import { motion, AnimatePresence } from 'framer-motion';
+import DOMPurify from 'dompurify';
 
 interface BlogPost {
   id: string;
@@ -98,6 +99,8 @@ export function BlogManagement() {
 
     const postData = {
       ...editingPost,
+      // Store only the same conservative HTML profile used by the reader.
+      content: DOMPurify.sanitize(editingPost.content || '', { USE_PROFILES: { html: true } }),
       cover_image_url: coverImageUrl,
       published_at: editingPost.published && !editingPost.published_at ? new Date().toISOString() : editingPost.published_at,
     };
@@ -138,10 +141,12 @@ export function BlogManagement() {
       [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
       ['bold', 'italic', 'underline', 'strike', 'blockquote'],
       [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
-      ['link', 'image', 'video'],
+      ['link', 'image'],
       ['clean']
     ],
   };
+
+  const formats = ['header', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'list', 'bullet', 'indent', 'link', 'image'];
 
   if (editingPost !== null) {
     return (
@@ -205,6 +210,7 @@ export function BlogManagement() {
                         value={editingPost.content || ''} 
                         onChange={(content) => setEditingPost({ ...editingPost, content })}
                         modules={modules}
+                        formats={formats}
                         className="h-[500px] mb-12"
                       />
                     </div>

@@ -18,14 +18,15 @@ export function generateContextHash(userId: string, profile: any, grades: any[])
       .join('|')
   };
 
-  // Convert to a stable JSON string and Base64 it for a clean 'hash'
-  try {
-    const json = JSON.stringify(context);
-    return btoa(unescape(encodeURIComponent(json)));
-  } catch (e) {
-    console.warn('Hash generation failed, falling back to timestamp', e);
-    return Date.now().toString();
+  // This fingerprint is stored client-side, so never encode raw profile/grade
+  // values into it. A compact deterministic hash is enough for invalidation.
+  const input = JSON.stringify(context)
+  let hash = 2166136261
+  for (let index = 0; index < input.length; index += 1) {
+    hash ^= input.charCodeAt(index)
+    hash = Math.imul(hash, 16777619)
   }
+  return `v1-${(hash >>> 0).toString(36)}`
 }
 
 const CACHE_COOKIE_PREFIX = 'ai_cache_fingerprint_';
@@ -95,7 +96,8 @@ export interface SessionMetadata {
 
 export function setSessionMetadata(meta: SessionMetadata): void {
   // Store for 30 days
-  Cookies.set(SESSION_METADATA_KEY, JSON.stringify(meta), { expires: 30, SameSite: 'Strict' });
+  // Keep only display metadata; academic information belongs in the database.
+  Cookies.set(SESSION_METADATA_KEY, JSON.stringify({ name: meta.name, lastVisit: meta.lastVisit }), { expires: 30, sameSite: 'strict' });
 }
 
 export function getSessionMetadata(): SessionMetadata | null {
@@ -117,7 +119,7 @@ export function clearSessionMetadata(): void {
 const COOKIE_CONSENT_KEY = 'cg_cookie_consent';
 
 export function setCookieConsent(accepted: boolean): void {
-  Cookies.set(COOKIE_CONSENT_KEY, accepted ? 'true' : 'false', { expires: 365, SameSite: 'Strict' });
+  Cookies.set(COOKIE_CONSENT_KEY, accepted ? 'true' : 'false', { expires: 365, sameSite: 'strict' });
 }
 
 export function getCookieConsent(): boolean | null {
@@ -126,5 +128,4 @@ export function getCookieConsent(): boolean | null {
   if (val === 'false') return false;
   return null;
 }
-
 

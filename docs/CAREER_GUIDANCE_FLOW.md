@@ -11,7 +11,7 @@ The journey begins with comprehensive data collection through the **Discovery As
 ## 2. Processing Layer (The "Triangulation" Core)
 The system uses **Realistic Triangulation Logic** to synthesize disparate data points:
 - **Input**: User Profile + Assessment Results + Academic Performance + Kenyan Market Trends.
-- **Service**: `AICareerService` (`src/lib/ai-service.ts`) orchestrates the AI calls to DeepSeek-V3.
+- **Service**: `AICareerService` (`src/lib/ai-service.ts`) orchestrates the AI calls to Qwen via ModelScope.
 - **Caching**: `AICacheService` (`src/lib/ai-cache-service.ts`) ensures that complex recommendations are stored and served efficiently, reducing API latency and costs.
 
 ## 3. Presentation Layer
@@ -27,7 +27,7 @@ graph TD
     B --> C[Values & Constraints Setup]
     C --> D[AICareerService]
     D --> E[Realistic Triangulation logic]
-    E --> F[DeepSeek API]
+    E --> F[ModelScope API]
     F --> G[Career Recommendations & Mentor Insights]
     G --> H[Student Dashboard]
     G --> I[Mentor Dashboard / AI Insights Dialog]

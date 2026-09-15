@@ -6,7 +6,7 @@ This document serves as the "source of truth" for technical decisions and archit
 CareerGuide AI is a modern SaaS platform built with:
 - **Frontend**: React 19, Vite 8, Tailwind CSS 4, shadcn/ui.
 - **Backend/BaaS**: Supabase (Auth, PostgreSQL, Real-time).
-- **AI Core**: DeepSeek-V3.1 (via DeepSeek API).
+- **AI Core**: Qwen via ModelScope (via ModelScope API).
 
 ## 2. Core Technical Decisions
 

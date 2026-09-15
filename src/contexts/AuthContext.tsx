@@ -271,7 +271,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Unified Sign In (Email, UPI, or Phone)
   const signIn = async (identifier: string, password: string) => {
     try {
-      let email = identifier;
+      const email = identifier;
 
       // Check if identifier is NOT an email — try resolving from UPI or phone
       const isEmail = identifier.includes('@');
@@ -280,25 +280,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (isDev) console.log('🔍 AuthContext: Non-email identifier, resolving email...');
         const cleanIdentifier = identifier.replace(/[\s-]/g, '');
 
-        // Try resolving using the secure RPC function to bypass RLS restrictions for anon users
-        const isUPI = /^[A-Za-z0-9]{4,12}$/.test(cleanIdentifier) && !cleanIdentifier.startsWith('07') && !cleanIdentifier.startsWith('+');
-
-        const { data: resolvedEmail, error } = await (supabase.rpc as any)('get_user_email', { p_identifier: cleanIdentifier });
-
-        if (!error && resolvedEmail) {
-          email = resolvedEmail as string;
-          if (isDev) console.log('🎓 AuthContext: Resolved email:', email);
-        } else {
-          if (error && error.code !== 'PGRST116') {
-            console.error('Server error during identifier lookup:', error);
-            return { error: { message: `Server error during login: ${error.message} (Code: ${error.code})`, name: 'AuthError' } as any };
-          }
-          if (isUPI) {
-            return { error: { message: 'No account found with this UPI number. Please check your NEMIS UPI and try again.', name: 'AuthError' } as any };
-          } else {
-            return { error: { message: 'No account found with this identifier. Please use your email, UPI number, or phone.', name: 'AuthError' } as any };
-          }
+        // Resolve and authenticate server-side. The browser never receives the
+        // account email for a UPI/phone lookup.
+        const { data, error } = await supabase.functions.invoke('identifier-login', {
+          body: { identifier: cleanIdentifier, password },
+        })
+        if (error || !data?.session) {
+          return { error: { message: 'Invalid identifier or password.', name: 'AuthError' } as any }
         }
+        const { error: sessionError } = await supabase.auth.setSession(data.session)
+        if (sessionError) return { error: sessionError as AuthError }
+        setSession(data.session)
+        setUser(data.session.user)
+        return { error: null }
       }
 
       const { data, error } = await supabase.auth.signInWithPassword({

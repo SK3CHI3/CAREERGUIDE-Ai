@@ -2,6 +2,7 @@ import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
+import { VitePWA } from 'vite-plugin-pwa';
 import { handler as localAiChatHandler } from "./netlify/functions/ai-chat.js";
 
 // https://vitejs.dev/config/
@@ -12,11 +13,39 @@ export default defineConfig(({ mode }) => {
 
   return {
     server: {
-      host: "::",
+      host: "127.0.0.1",
       port: 8080,
     },
     plugins: [
       react(),
+      VitePWA({
+        registerType: 'prompt',
+        manifest: {
+          name: "CareerGuide AI - Kenya's Career Guidance",
+          short_name: 'CareerGuide',
+          description: "Career guidance for Kenyan students.",
+          start_url: '/',
+          scope: '/',
+          display: 'standalone',
+          theme_color: '#1d4ed8',
+          background_color: '#ffffff',
+          icons: [{ src: '/logos/CareerGuide_Logo.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' }],
+        },
+        workbox: {
+          navigateFallback: '/index.html',
+          globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff2}'],
+          // Private API/auth responses are intentionally not runtime-cached.
+          runtimeCaching: [{
+            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+            handler: 'StaleWhileRevalidate',
+            options: { cacheName: 'google-fonts-stylesheets', expiration: { maxEntries: 8, maxAgeSeconds: 60 * 60 * 24 * 30 } },
+          }, {
+            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: { cacheName: 'google-fonts-webfonts', expiration: { maxEntries: 8, maxAgeSeconds: 60 * 60 * 24 * 365 } },
+          }],
+        },
+      }),
       mode === 'development' && componentTagger(),
       {
         name: 'local-ai-chat-function',

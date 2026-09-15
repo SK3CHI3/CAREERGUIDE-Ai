@@ -47,7 +47,7 @@ CREATE POLICY "Users can view own data" ON table_name
 
 ### Rate Limiting
 - **Supabase Built-in**: Automatic rate limiting on auth endpoints
-- **AI Service Limits**: OpenRouter API rate limiting
+- **AI Service Limits**: ModelScope/Qwen runs server-side with separate limits for signed-in guidance and public assessment previews.
 
 ## 🛡️ Client-Side Security
 
@@ -57,7 +57,7 @@ CREATE POLICY "Users can view own data" ON table_name
 - **SQL Injection Prevention**: Parameterized queries via Supabase client
 
 ### Data Handling
-- **Sensitive Data**: No sensitive data stored in localStorage
+- **Sensitive Data**: Chat history and a short-lived in-progress assessment can remain on a user's device. They are never used as payment proof or as a source of truth.
 - **Token Security**: Secure token storage via Supabase client
 - **HTTPS Only**: All communications over HTTPS
 

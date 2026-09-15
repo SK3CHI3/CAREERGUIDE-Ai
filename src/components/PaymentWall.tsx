@@ -6,7 +6,6 @@ import { Badge } from '@/components/ui/badge'
 import { Loader2, CheckCircle, XCircle, CreditCard, Smartphone, Shield, Lock, MessageCircle, RefreshCw } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
-import { subscriptionService } from '@/lib/subscription-service'
 
 // Declare IntaSend types for TypeScript
 declare global {
@@ -32,11 +31,8 @@ const PaymentWall: React.FC<PaymentWallProps> = ({ onPaymentSuccess }) => {
   })
 
   useEffect(() => {
-    console.log('🔄 Loading IntaSend SDK from CDN...')
-    
     // Check if script is already loaded
     if (window.IntaSend) {
-      console.log('✅ IntaSend SDK already available')
       setIsIntaSendLoaded(true)
       initializeIntaSend()
       return
@@ -44,10 +40,8 @@ const PaymentWall: React.FC<PaymentWallProps> = ({ onPaymentSuccess }) => {
 
     // Check if script is already being loaded
     if (document.querySelector('script[src*="intasend-inlinejs-sdk"]')) {
-      console.log('⏳ IntaSend script already loading, waiting...')
       const checkIntaSend = () => {
         if (window.IntaSend) {
-          console.log('✅ IntaSend SDK loaded from existing script')
           setIsIntaSendLoaded(true)
           initializeIntaSend()
         } else {
@@ -63,12 +57,11 @@ const PaymentWall: React.FC<PaymentWallProps> = ({ onPaymentSuccess }) => {
     script.src = 'https://unpkg.com/intasend-inlinejs-sdk@4.0.7/build/intasend-inline.js'
     script.async = true
     script.onload = () => {
-      console.log('✅ IntaSend SDK loaded from CDN')
       setIsIntaSendLoaded(true)
       initializeIntaSend()
     }
     script.onerror = () => {
-      console.error('❌ Failed to load IntaSend SDK from CDN')
+      console.error('Payment SDK failed to load')
       setError('Failed to load payment system. Please check your internet connection and refresh the page.')
     }
     
@@ -77,22 +70,20 @@ const PaymentWall: React.FC<PaymentWallProps> = ({ onPaymentSuccess }) => {
     // Set a timeout fallback
     setTimeout(() => {
       if (!window.IntaSend) {
-        console.error('❌ IntaSend SDK failed to load within timeout')
+        console.error('Payment SDK loading timed out')
         setError('Failed to load payment system. Please refresh the page.')
       }
     }, 10000) // 10 second timeout
   }, [])
 
   const initializeIntaSend = () => {
-    console.log('🔧 Initializing IntaSend...')
     if (!window.IntaSend) {
-      console.error('❌ IntaSend not available on window object')
+      console.error('Payment SDK is unavailable')
       return
     }
 
     // Prevent multiple initializations
     if ((window as any).intaSendInitialized) {
-      console.log('⚠️ IntaSend already initialized, skipping...')
       return
     }
 
@@ -100,11 +91,6 @@ const PaymentWall: React.FC<PaymentWallProps> = ({ onPaymentSuccess }) => {
       const apiKey = import.meta.env.VITE_INTASEND_PUBLIC_KEY || 'ISPubKey_test_123456789'
       const isLive = import.meta.env.VITE_INTASEND_LIVE === 'true'
       
-      console.log('🔍 Environment check:')
-      console.log('  - VITE_INTASEND_PUBLIC_KEY:', import.meta.env.VITE_INTASEND_PUBLIC_KEY)
-      console.log('  - VITE_INTASEND_LIVE:', import.meta.env.VITE_INTASEND_LIVE)
-      console.log('🔑 IntaSend API Key:', apiKey ? `${apiKey.substring(0, 10)}...` : 'NOT SET')
-      console.log('🌍 Live mode:', isLive)
       
       // Initialize IntaSend for popup mode
       const intaSend = new window.IntaSend({
@@ -113,19 +99,16 @@ const PaymentWall: React.FC<PaymentWallProps> = ({ onPaymentSuccess }) => {
         redirectURL: window.location.origin + '/student' // Redirect after payment
       })
       .on("COMPLETE", (results: any) => {
-        console.log("✅ Payment completed:", results)
         handlePaymentSuccess(results)
       })
       .on("FAILED", (results: any) => {
-        console.log("❌ Payment failed:", results)
         handlePaymentFailure(results)
       })
       .on("IN-PROGRESS", (results: any) => {
-        console.log("⏳ Payment in progress:", results)
         setPaymentStatus('processing')
       })
       .on("ERROR", (error: any) => {
-        console.error("❌ IntaSend error:", error)
+        console.error('Payment provider error')
         handlePaymentFailure({ message: error.message || 'Payment system error' })
       })
       
@@ -135,9 +118,8 @@ const PaymentWall: React.FC<PaymentWallProps> = ({ onPaymentSuccess }) => {
       // Mark as initialized
       ;(window as any).intaSendInitialized = true
       
-      console.log('✅ IntaSend initialized successfully - ready for manual payment triggering')
     } catch (err) {
-      console.error('❌ Error initializing IntaSend:', err)
+      console.error('Payment SDK initialization failed', err)
       setError('Failed to initialize payment system.')
     }
   }
@@ -175,7 +157,7 @@ const PaymentWall: React.FC<PaymentWallProps> = ({ onPaymentSuccess }) => {
         setTimeout(() => pollForStatusCompletion(attempts + 1), 2000)
       }
     } catch (err) {
-      console.error('Error polling status:', err)
+      console.error('Payment status polling failed', err)
       setTimeout(() => pollForStatusCompletion(attempts + 1), 2000)
     }
   }
@@ -185,13 +167,11 @@ const PaymentWall: React.FC<PaymentWallProps> = ({ onPaymentSuccess }) => {
       setIsLoading(true)
       setPaymentStatus('verifying')
       
-      console.log('Payment marked success in IntaSend popup. Verifying background sync...')
-      
       // Start polling for the webhook completion
       await pollForStatusCompletion()
 
     } catch (err) {
-      console.error('Error handling payment success:', err)
+      console.error('Payment verification failed', err)
       setError('Payment successful but failed to update local profile. Please refresh the page.')
       setIsLoading(false)
     }
@@ -210,17 +190,10 @@ const PaymentWall: React.FC<PaymentWallProps> = ({ onPaymentSuccess }) => {
 
   const handlePaymentClick = () => {
     if (!intaSendInstance) {
-      console.error('❌ IntaSend instance not available')
+      console.error('Payment SDK is not ready')
       setError('Payment system not ready. Please refresh the page.')
       return
     }
-
-    console.log('🖱️ Payment button clicked - triggering IntaSend payment')
-    console.log('  - Amount: 1000')
-    console.log('  - Currency: KES')
-    console.log('  - Email:', profile?.email || user?.email || '')
-    console.log('  - Name:', profile?.full_name || '')
-    console.log('  - API Ref:', `PAY_${user?.id}_${Date.now()}`)
 
     try {
       // Trigger the payment using IntaSend's run method
@@ -234,7 +207,7 @@ const PaymentWall: React.FC<PaymentWallProps> = ({ onPaymentSuccess }) => {
         last_name: profile?.full_name?.split(' ').slice(1).join(' ') || 'Name'
       })
     } catch (err) {
-      console.error('❌ Error triggering payment:', err)
+      console.error('Could not open payment window', err)
       setError('Failed to open payment window. Please try again.')
     }
   }

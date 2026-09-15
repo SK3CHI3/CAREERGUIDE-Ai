@@ -85,11 +85,15 @@ const COLUMN_ALIASES: Record<string, string> = {
 
 const REQUIRED_COLUMNS = ['student_upi', 'subject_name', 'term', 'grade_value']
 const CURRENT_YEAR = new Date().getFullYear().toString()
+const MAX_UPLOAD_BYTES = 5 * 1024 * 1024
+const MAX_UPLOAD_ROWS = 2_000
 
 class GradeUploadService {
     // ─── File Parsing ─────────────────────────────────────────────────────
 
     async parseFile(file: File): Promise<ParsedGradeRow[]> {
+        if (file.size === 0) throw new Error('The selected file is empty.')
+        if (file.size > MAX_UPLOAD_BYTES) throw new Error('Grade files must be 5 MB or smaller.')
         const ext = file.name.split('.').pop()?.toLowerCase()
         if (ext === 'csv') {
             return this.parseCSV(file)
@@ -137,9 +141,10 @@ class GradeUploadService {
             reader.onload = (e) => {
                 try {
                     const text = e.target?.result as string
-                    const workbook = XLSX.read(text, { type: 'string' })
+                    const workbook = XLSX.read(text, { type: 'string', sheetRows: MAX_UPLOAD_ROWS + 1 })
                     const worksheet = workbook.Sheets[workbook.SheetNames[0]]
-                    const rawRows = XLSX.utils.sheet_to_json(worksheet, { defval: '' }) as Record<string, unknown>[]
+                    const rawRows = XLSX.utils.sheet_to_json(worksheet, { defval: '', range: 0 }) as Record<string, unknown>[]
+                    if (rawRows.length > MAX_UPLOAD_ROWS) throw new Error('Too many rows')
                     resolve(this.normalizeRows(rawRows))
                 } catch (err) {
                     reject(new Error('Failed to parse CSV file. Please check the format.'))
@@ -156,9 +161,11 @@ class GradeUploadService {
             reader.onload = (e) => {
                 try {
                     const data = e.target?.result as ArrayBuffer
-                    const workbook = XLSX.read(data, { type: 'array' })
+                    const workbook = XLSX.read(data, { type: 'array', sheetRows: MAX_UPLOAD_ROWS + 1 })
+                    if (workbook.SheetNames.length > 3) throw new Error('Too many worksheets')
                     const worksheet = workbook.Sheets[workbook.SheetNames[0]]
-                    const rawRows = XLSX.utils.sheet_to_json(worksheet, { defval: '' }) as Record<string, unknown>[]
+                    const rawRows = XLSX.utils.sheet_to_json(worksheet, { defval: '', range: 0 }) as Record<string, unknown>[]
+                    if (rawRows.length > MAX_UPLOAD_ROWS) throw new Error('Too many rows')
                     resolve(this.normalizeRows(rawRows))
                 } catch (err) {
                     reject(new Error('Failed to parse Excel file. Please check the format.'))

@@ -9,8 +9,26 @@ export default async (request: Request, context: any) => {
   const isHome = path === "/";
   const isBlog = path.startsWith("/blog/");
   const isCareers = path === "/careers" || path.startsWith("/careers/");
+  const staticPages: Record<string, { title: string; description: string }> = {
+    '/about': { title: 'About CareerGuide AI | Career Guidance for Kenya', description: 'Learn how CareerGuide AI helps Kenyan students explore education and career options with practical, evidence-aware guidance.' },
+    '/how-it-works': { title: 'How CareerGuide AI Works | Career Guidance for Kenyan Students', description: 'See how CareerGuide AI helps students explore careers, reflect on subjects and take practical next steps.' },
+    '/faq': { title: 'CareerGuide AI FAQ | Help for Kenyan Students and Schools', description: 'Answers about CareerGuide AI, student guidance, assessments, careers and school support.' },
+    '/blog': { title: 'Career Guidance Insights | CareerGuide AI Blog', description: 'Practical career and education guidance for Kenyan students, families and schools.' },
+    '/quick-assessment': { title: 'Quick Career Direction Assessment | CareerGuide AI', description: 'Explore practical career directions and next steps based on your current school stage, subjects and interests.' },
+    '/subject-guide': { title: 'Subject and Pathway Guide | CareerGuide AI', description: 'Explore how school subjects and pathways can keep future career options open.' },
+    '/counselors': { title: 'Career Counsellors | CareerGuide AI', description: 'Find career guidance support for your education and career planning journey.' },
+    '/privacy': { title: 'Privacy Policy | CareerGuide AI', description: 'Learn how CareerGuide AI handles student and account information.' },
+    '/terms': { title: 'Terms of Use | CareerGuide AI', description: 'CareerGuide AI terms of use.' },
+  };
+  const staticPage = staticPages[path];
+  const isPrivate = /^(?:\/auth|\/student(?:\/|$)|\/admin(?:\/|$)|\/mentor(?:\/|$)|\/dashboard(?:\/|$))/.test(path);
   
-  if (!isHome && !isBlog && !isCareers) {
+  if (isPrivate) {
+    const response = await context.next();
+    return new HTMLRewriter().on('head', { element(el: any) { el.append('<meta name="robots" content="noindex, nofollow, noarchive" />', { html: true }); } }).transform(response);
+  }
+
+  if (!isHome && !isBlog && !isCareers && !staticPage) {
     return context.next();
   }
 
@@ -49,6 +67,13 @@ export default async (request: Request, context: any) => {
           ]
         }
       };
+    } else if (staticPage) {
+      seoData = {
+        ...staticPage,
+        image: 'https://careerguideai.co.ke/logos/CareerGuide_Logo.png',
+        type: 'website',
+        jsonLd: { '@context': 'https://schema.org', '@type': 'WebPage', name: staticPage.title, url: `${url.origin}${path}` },
+      };
     } else if (isBlog) {
       const slug = path.split("/").pop();
       if (slug && slug !== "blog") {
@@ -86,6 +111,9 @@ export default async (request: Request, context: any) => {
               }
             }
           };
+        } else {
+          const response = await context.next();
+          return new Response(response.body, { status: 404, headers: response.headers });
         }
       }
     } else if (isCareers) {
@@ -136,18 +164,8 @@ export default async (request: Request, context: any) => {
             }
           };
         } else {
-          // Fallback to general careers metadata
-          seoData = {
-            title: "Explore Trending Careers in Kenya | CareerGuide AI",
-            description: "Discover high-demand career paths in Kenya's evolving job market. Get real-time insights on salaries, growth, and required skills for the CBE system.",
-            image: "https://careerguideai.co.ke/logos/CareerGuide_Logo.png",
-            type: "website",
-            jsonLd: {
-              "@context": "https://schema.org",
-              "@type": "SearchResultsPage",
-              "name": "Trending Careers in Kenya"
-            }
-          };
+          const response = await context.next();
+          return new Response(response.body, { status: 404, headers: response.headers });
         }
       } else {
         // General Careers Page
@@ -169,7 +187,16 @@ export default async (request: Request, context: any) => {
     if (seoData) {
       const response = await context.next();
       
+      const escapeHtml = (value: unknown) => String(value || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      const safeJsonLd = JSON.stringify(seoData.jsonLd).replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026');
       return new HTMLRewriter()
+        .on('meta[name="description"]', { element(el: any) { el.remove(); } })
+        .on('meta[property="og:title"]', { element(el: any) { el.remove(); } })
+        .on('meta[property="og:description"]', { element(el: any) { el.remove(); } })
+        .on('meta[property="og:image"]', { element(el: any) { el.remove(); } })
+        .on('meta[property="og:type"]', { element(el: any) { el.remove(); } })
+        .on('meta[name="twitter:card"]', { element(el: any) { el.remove(); } })
+        .on('link[rel="canonical"]', { element(el: any) { el.remove(); } })
         .on("title", {
           element(el: any) {
             el.setInnerContent(seoData.title);
@@ -177,21 +204,16 @@ export default async (request: Request, context: any) => {
         })
         .on("head", {
           element(el: any) {
-            // Remove existing meta tags that we are replacing to avoid duplicates
-            // HTMLRewriter doesn't easily support removing by selector while appending, 
-            // but appending at the end of head is usually safe as later tags override earlier ones for some properties.
-            // Better to append most critical ones.
-            
-            el.append(`<meta name="description" content="${seoData.description.replace(/"/g, '&quot;')}" />`, { html: true });
-            el.append(`<meta property="og:title" content="${seoData.title.replace(/"/g, '&quot;')}" />`, { html: true });
-            el.append(`<meta property="og:description" content="${seoData.description.replace(/"/g, '&quot;')}" />`, { html: true });
-            el.append(`<meta property="og:image" content="${seoData.image}" />`, { html: true });
-            el.append(`<meta property="og:type" content="${seoData.type}" />`, { html: true });
+            el.append(`<meta name="description" content="${escapeHtml(seoData.description)}" />`, { html: true });
+            el.append(`<meta property="og:title" content="${escapeHtml(seoData.title)}" />`, { html: true });
+            el.append(`<meta property="og:description" content="${escapeHtml(seoData.description)}" />`, { html: true });
+            el.append(`<meta property="og:image" content="${escapeHtml(seoData.image)}" />`, { html: true });
+            el.append(`<meta property="og:type" content="${escapeHtml(seoData.type)}" />`, { html: true });
             el.append(`<meta name="twitter:card" content="summary_large_image" />`, { html: true });
-            el.append(`<link rel="canonical" href="${url.origin}${url.pathname}" />`, { html: true });
+            el.append(`<link rel="canonical" href="${escapeHtml(`${url.origin}${url.pathname}`)}" />`, { html: true });
             
             // Add JSON-LD
-            el.append(`<script type="application/ld+json">${JSON.stringify(seoData.jsonLd)}</script>`, { html: true });
+            el.append(`<script type="application/ld+json">${safeJsonLd}</script>`, { html: true });
           }
         })
         .transform(response);
@@ -205,7 +227,5 @@ export default async (request: Request, context: any) => {
 };
 
 // Netlify Edge Function config
-export const config = {
-  path: ["/", "/blog/*", "/careers*"]
-};
+export const config = { path: "/*" };
 

@@ -1,8 +1,11 @@
-import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
+import React, { useState, useEffect, useImperativeHandle, forwardRef, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Loader2, CreditCard, ShieldCheck, Zap, Lock } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/lib/supabase';
+import { useNavigate } from 'react-router-dom';
 
 // Declare IntaSend types
 declare global {
@@ -27,6 +30,10 @@ const ReportPaywall = forwardRef<ReportPaywallHandle, ReportPaywallProps>(({ onP
   const [error, setError] = useState<string | null>(null);
   const [isSdkLoaded, setIsSdkLoaded] = useState(false);
   const [intaSendInstance, setIntaSendInstance] = useState<any>(null);
+  const [paymentReference, setPaymentReference] = useState<string | null>(null);
+  const paymentReferenceRef = useRef<string | null>(null);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const PAYMENT_AMOUNT = 50; // KSh 50
 
@@ -71,7 +78,7 @@ const ReportPaywall = forwardRef<ReportPaywallHandle, ReportPaywallProps>(({ onP
         live: isLive,
       })
       .on("COMPLETE", (results: any) => {
-        onPaymentSuccess();
+        if (paymentReferenceRef.current) void verifyPayment(paymentReferenceRef.current);
       })
       .on("FAILED", (results: any) => {
         setError(results.message || 'Payment failed. Please try again.');
@@ -89,7 +96,33 @@ const ReportPaywall = forwardRef<ReportPaywallHandle, ReportPaywallProps>(({ onP
     }
   };
 
+  const verifyPayment = async (reference: string, attempt = 0): Promise<void> => {
+    if (!user?.id) return;
+    if (attempt >= 15) {
+      setError('Your payment is still being verified. Please return shortly; access will unlock after secure confirmation.');
+      setIsLoading(false);
+      return;
+    }
+    const { data, error: paymentError } = await (supabase.from as any)('payments')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('api_ref', reference)
+      .eq('payment_type', 'quick_assessment')
+      .eq('status', 'completed')
+      .maybeSingle();
+    if (!paymentError && data) {
+      setIsLoading(false);
+      onPaymentSuccess();
+      return;
+    }
+    window.setTimeout(() => void verifyPayment(reference, attempt + 1), 2000);
+  };
+
   const handlePayment = () => {
+    if (!user?.id) {
+      navigate('/auth', { state: { returnTo: '/quick-assessment' } });
+      return;
+    }
     if (!intaSendInstance) {
       setError('Payment system is not ready. Please refresh.');
       return;
@@ -99,9 +132,9 @@ const ReportPaywall = forwardRef<ReportPaywallHandle, ReportPaywallProps>(({ onP
     setError(null);
 
     try {
-      // Create a unique reference for quick assessment payment tracking
-      const sanitizedName = studentName?.replace(/[^a-zA-Z0-9]/g, '').slice(0, 10) || 'GUEST';
-      const recoveryRef = `QA_${sanitizedName}_${Date.now().toString().slice(-6)}`;
+      const recoveryRef = `QA_${user.id}_${Date.now()}`;
+      setPaymentReference(recoveryRef);
+      paymentReferenceRef.current = recoveryRef;
 
       intaSendInstance.run({
         amount: PAYMENT_AMOUNT,
@@ -111,7 +144,6 @@ const ReportPaywall = forwardRef<ReportPaywallHandle, ReportPaywallProps>(({ onP
         first_name: studentName?.split(' ')[0] || 'Student',
         last_name: studentName?.split(' ').slice(1).join(' ') || 'Report',
       });
-      console.log('Payment initiated with Ref:', recoveryRef);
     } catch (err) {
       setError('Failed to open payment window.');
       setIsLoading(false);
@@ -157,9 +189,9 @@ const ReportPaywall = forwardRef<ReportPaywallHandle, ReportPaywallProps>(({ onP
             className="w-full h-15 md:h-16 text-lg md:text-xl font-black bg-primary hover:bg-primary/95 text-white rounded-2xl shadow-[0_10px_30px_-10px_rgba(59,130,246,0.6)] active:scale-[0.98] transition-all duration-300 transform"
           >
             {isLoading ? (
-              <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> PROCEEDING...</>
+              <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> {paymentReference ? 'VERIFYING…' : 'PROCEEDING…'}</>
             ) : (
-              <><CreditCard className="w-5 h-5 mr-2" /> UNLOCK NOW</>
+              <><CreditCard className="w-5 h-5 mr-2" /> {user ? 'UNLOCK NOW' : 'SIGN IN TO UNLOCK'}</>
             )}
           </Button>
 

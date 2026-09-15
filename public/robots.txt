@@ -7,6 +7,9 @@ Allow: /faq
 
 Disallow: /admin
 Disallow: /dashboard
+Disallow: /student
+Disallow: /mentor
+Disallow: /auth
 Disallow: /school
 Disallow: /teacher
 Disallow: /api

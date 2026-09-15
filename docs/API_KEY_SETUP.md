@@ -1,4 +1,4 @@
-# 🔑 DeepSeek API Key Setup Instructions
+# 🔑 ModelScope API Key Setup Instructions
 
 ## Overview
 This application uses ModelScope's OpenAI-compatible inference API with Qwen for AI-powered career guidance and recommendations.

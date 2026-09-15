@@ -56,6 +56,7 @@ export default function BlogIndex() {
         <meta name="description" content="Stay updated with the latest in Kenya's Competency-Based Education (CBE), career guidance trends, and AI-powered educational insights." />
         <meta property="og:title" content="CareerGuide AI Blog | Shaping the Future of Kenyan Careers" />
         <meta property="og:description" content="Deep dives into CBE, career strategy, and student success stories in the modern Kenyan workforce." />
+        <link rel="canonical" href="https://careerguideai.co.ke/blog" />
         
         {/* JSON-LD for Blog Listing */}
         <script type="application/ld+json">

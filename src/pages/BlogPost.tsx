@@ -6,6 +6,7 @@ import { Clock, Calendar, ArrowLeft } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { Helmet } from 'react-helmet-async';
+import DOMPurify from 'dompurify';
 import { BlogPost } from './BlogIndex';
 
 export default function BlogPostPage() {
@@ -60,6 +61,10 @@ export default function BlogPostPage() {
   }
 
   const readingTime = post.content ? Math.ceil(post.content.replace(/<[^>]*>?/gm, '').split(/\s+/).length / 200) : 1;
+  const safeContent = DOMPurify.sanitize(post.content || '', {
+    USE_PROFILES: { html: true },
+    ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto):|[^a-z]|[a-z+.-]+(?:[^a-z+.-:]|$))/i,
+  });
 
   return (
     <div className="min-h-screen bg-background font-sans selection:bg-primary/30 selection:text-white flex flex-col overflow-x-hidden relative">
@@ -71,6 +76,7 @@ export default function BlogPostPage() {
         <meta property="og:type" content="article" />
         {post.cover_image_url && <meta property="og:image" content={post.cover_image_url} />}
         <meta name="twitter:card" content="summary_large_image" />
+        <link rel="canonical" href={`https://careerguideai.co.ke/blog/${post.slug}`} />
         
         {/* JSON-LD Structured Data for AI & Google */}
         <script type="application/ld+json">
@@ -176,7 +182,7 @@ export default function BlogPostPage() {
               prose-strong:text-foreground prose-strong:font-bold
               prose-blockquote:border-l-primary prose-blockquote:text-muted-foreground prose-blockquote:font-medium prose-blockquote:italic
             "
-            dangerouslySetInnerHTML={{ __html: post.content }}
+            dangerouslySetInnerHTML={{ __html: safeContent }}
           />
         </div>
       </main>

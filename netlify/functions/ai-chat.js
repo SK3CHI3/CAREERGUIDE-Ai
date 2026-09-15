@@ -1,6 +1,7 @@
 const MODELSCOPE_URL = 'https://api-inference.modelscope.ai/v1/chat/completions';
 const DEFAULT_MODEL = 'Qwen-Ambassador/Qwen3.7-Plus';
-const MAX_REQUESTS = 15;
+const AUTHENTICATED_MAX_REQUESTS = 15;
+const GUEST_MAX_REQUESTS = 3;
 const WINDOW_MS = 10 * 60 * 1000;
 const requestWindows = new Map();
 
@@ -16,13 +17,31 @@ const json = (statusCode, body, headers = {}) => ({
 
 const getClientAddress = (event) => (event.headers['x-nf-client-connection-ip'] || event.headers['x-forwarded-for'] || 'unknown').split(',')[0].trim();
 
-const isRateLimited = (address) => {
+const isRateLimited = (address, limit) => {
   const now = Date.now();
   const recent = (requestWindows.get(address) || []).filter(timestamp => now - timestamp < WINDOW_MS);
-  if (recent.length >= MAX_REQUESTS) return true;
+  if (recent.length >= limit) return true;
   recent.push(now);
   requestWindows.set(address, recent);
   return false;
+};
+
+const getAuthenticatedUser = async (authorization) => {
+  const token = authorization?.replace(/^Bearer\s+/i, '').trim();
+  const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
+  const anonKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY;
+  if (!token || !supabaseUrl || !anonKey) return null;
+
+  try {
+    const response = await fetch(`${supabaseUrl}/auth/v1/user`, {
+      headers: { Authorization: `Bearer ${token}`, apikey: anonKey },
+    });
+    if (!response.ok) return null;
+    const user = await response.json();
+    return typeof user?.id === 'string' ? user : null;
+  } catch {
+    return null;
+  }
 };
 
 const isValidMessage = (message) => (
@@ -42,11 +61,6 @@ export const handler = async (event) => {
 
   if (event.httpMethod !== 'POST') return json(405, { error: 'Method not allowed.' });
 
-  const address = getClientAddress(event);
-  if (isRateLimited(address)) {
-    return json(429, { error: 'Too many AI requests. Please wait a few minutes and try again.' });
-  }
-
   let request;
   try {
     request = JSON.parse(event.body || '{}');
@@ -58,6 +72,27 @@ export const handler = async (event) => {
   const inputLength = messages.reduce((total, message) => total + message.content.length, 0);
   if (!messages.length || messages.length > 30 || inputLength > 30000) {
     return json(400, { error: 'Please send a valid, reasonably sized AI request.' });
+  }
+
+  const user = await getAuthenticatedUser(event.headers.authorization);
+  const isAuthenticated = Boolean(user);
+  const hasSystemMessage = messages.some(message => message.role === 'system');
+  const purpose = typeof request.purpose === 'string' ? request.purpose : 'general';
+
+  // A client can never supply an instruction hierarchy for an anonymous request.
+  // Anonymous use remains available for the public assessment, but at a deliberately
+  // small quota so it cannot be used as an open proxy to consume the model budget.
+  if (!isAuthenticated && hasSystemMessage) {
+    return json(401, { error: 'Please sign in to use profile-aware AI guidance.' });
+  }
+  if (!isAuthenticated && !['quick-assessment', 'guest-preview'].includes(purpose)) {
+    return json(401, { error: 'Please sign in to continue with AI guidance.' });
+  }
+
+  const address = getClientAddress(event);
+  const rateKey = isAuthenticated ? `user:${user.id}` : `guest:${address}`;
+  if (isRateLimited(rateKey, isAuthenticated ? AUTHENTICATED_MAX_REQUESTS : GUEST_MAX_REQUESTS)) {
+    return json(429, { error: 'Too many AI requests. Please wait a few minutes and try again.' });
   }
 
   const apiKey = process.env.MODELSCOPE_API_KEY;

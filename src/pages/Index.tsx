@@ -63,11 +63,6 @@ const Index = () => {
               "@type": "WebSite",
               "name": "CareerGuide AI",
               "url": "https://careerguideai.co.ke",
-              "potentialAction": {
-                "@type": "SearchAction",
-                "target": "https://careerguideai.co.ke/auth?q={search_term_string}",
-                "query-input": "required name=search_term_string"
-              }
             },
             {
               "@context": "https://schema.org",
