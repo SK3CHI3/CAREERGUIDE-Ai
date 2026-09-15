@@ -94,7 +94,14 @@ export const handler = async (event) => {
       });
     }
 
-    const content = payload?.choices?.[0]?.message?.content;
+    const rawContent = payload?.choices?.[0]?.message?.content;
+    const content = Array.isArray(rawContent)
+      ? rawContent.map((part) => {
+        if (typeof part === 'string') return part;
+        if (part && typeof part === 'object' && typeof part.text === 'string') return part.text;
+        return '';
+      }).join('')
+      : rawContent;
     if (typeof content !== 'string' || !content.trim()) {
       console.error('ModelScope returned no assistant content.');
       return json(502, { error: 'AI guidance returned an empty response. Please try again.' });

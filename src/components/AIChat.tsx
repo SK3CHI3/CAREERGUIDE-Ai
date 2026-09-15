@@ -9,9 +9,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Send, User, Sparkles, Loader2, AlertCircle, RefreshCw } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { aiCareerService, type ChatMessage, type UserContext } from "@/lib/ai-service";
-import { dashboardService } from "@/lib/dashboard-service";
-import { supabase } from "@/lib/supabase";
-import type { Database } from '@/types/supabase';
+import { loadStudentAIContext } from "@/lib/student-ai-context";
 
 // Component to render structured message content with proper markdown support
 const MessageContent = ({ content, role }: { content: string, role: 'user' | 'assistant' }) => {
@@ -105,31 +103,8 @@ const AIChat = ({ isStandalone = false }: AIChatProps) => {
 
   const initializeChat = async () => {
     try {
-      // Load user context from student profile
-      const { data: studentProfileRaw } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user?.id)
-        .single();
-      const studentProfile = studentProfileRaw as Database['public']['Tables']['profiles']['Row'] | null;
-
-      const academicPerformance = await dashboardService.calculateAcademicPerformance(user?.id || '');
-
-      const context: UserContext = {
-        name: profile?.full_name || undefined,
-        schoolLevel: studentProfile ? (studentProfile.school_level as 'primary' | 'secondary' | 'tertiary') || undefined : undefined,
-        currentGrade: studentProfile ? studentProfile.current_grade || undefined : undefined,
-        subjects: studentProfile ? (studentProfile.cbe_subjects || undefined) : undefined,
-        interests: studentProfile ? (studentProfile.career_interests || undefined) : undefined,
-        careerGoals: studentProfile ? studentProfile.career_goals || undefined : undefined,
-        assessmentResults: undefined,
-        academicPerformance: {
-          overallAverage: academicPerformance.overallAverage,
-          strongSubjects: academicPerformance.strongSubjects,
-          weakSubjects: academicPerformance.weakSubjects,
-          performanceTrend: academicPerformance.performanceTrend
-        }
-      };
+      if (!user?.id) return;
+      const context = await loadStudentAIContext(user.id, profile?.full_name);
 
       setUserContext(context);
 
@@ -420,23 +395,22 @@ What subjects do you enjoy most in your current studies?`,
             </Alert>
           )}
 
-          {/* Quick Actions Scroll */}
-          <div className="flex overflow-x-auto gap-2 mb-4 pb-2 no-scrollbar">
-            {SUGGESTED_QUESTIONS.map((q, i) => (
-              <Button
-                key={i}
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  setMessage(q);
-                  // Optional: handleSend immediately if helpful
-                }}
-                className="adviser-suggestion whitespace-nowrap rounded-full h-8 text-xs px-4 py-1 flex-shrink-0"
-              >
-                {q}
-              </Button>
-            ))}
-          </div>
+          {/* Prompts are an empty-conversation aid, not a distraction mid-chat. */}
+          {!conversation.some(item => item.role === 'user') && !isLoading && (
+            <div className="flex overflow-x-auto gap-2 mb-4 pb-2 no-scrollbar">
+              {SUGGESTED_QUESTIONS.map((q, i) => (
+                <Button
+                  key={i}
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setMessage(q)}
+                  className="adviser-suggestion whitespace-nowrap rounded-full h-8 text-xs px-4 py-1 flex-shrink-0"
+                >
+                  {q}
+                </Button>
+              ))}
+            </div>
+          )}
 
           <div className="adviser-composer flex gap-2 items-center rounded-2xl p-1 transition-all">
             <Input

@@ -30,6 +30,8 @@ export interface UserContext {
     weakSubjects: string[]
     performanceTrend: 'improving' | 'declining' | 'stable'
   }
+  gradeSnapshot?: { subject: string; average: number }[]
+  hasRecordedGrades?: boolean
   quickAssessment?: QuickAssessmentInput
   availableCareers?: AssessmentCareerCatalogueItem[]
 }
@@ -55,14 +57,19 @@ CURRICULUM SPECIFICS:
 --> MAPPING RULE: Map their interests to one of the 4 CBC Senior Secondary Pathways (STEM, Arts & Sports Science, Social Sciences, Technical & Vocational). Reference practical CBC subjects like Pre-Technical Studies or Integrated Science.
 `;
 
-    const academicSection = userContext.academicPerformance ? `
+    const academicSection = userContext.hasRecordedGrades && userContext.academicPerformance ? `
 ACADEMIC PERFORMANCE:
 - Overall: ${userContext.academicPerformance.overallAverage.toFixed(1)}%
 - Strong in: ${userContext.academicPerformance.strongSubjects.join(', ')}
 - Weak in: ${userContext.academicPerformance.weakSubjects.join(', ')}
-` : '';
+- Subject averages: ${userContext.gradeSnapshot?.map(item => `${item.subject} ${item.average}%`).join(', ') || 'No subject breakdown available'}
+- Recent direction: ${userContext.academicPerformance.performanceTrend}
+` : `
+ACADEMIC PERFORMANCE:
+- No grades have been uploaded. Do not invent marks, strengths, weaknesses, or eligibility. Explain what evidence is still needed when it matters.
+`;
 
-    return `You are CareerGuide AI, Kenya's most advanced career counselor. Your mission is to provide personalized, actionable guidance using "Realistic Triangulation Logic"—balancing a student's Personality (RIASEC), Academic Performance, Stated Interests, and Real-World Realities.
+    return `You are CareerGuide AI, a careful career adviser for Kenyan students. Use only the student context below and clearly distinguish a useful possibility from a confirmed academic fit. Your job is to turn their real profile into practical next steps, not to flatter them or make unsupported promises.
 
 CURRENT USER PROFILE:
 ${userContext.name ? `- Name: ${userContext.name}` : '- Name: Not provided'}
@@ -77,11 +84,11 @@ ${curriculumSection}
 ${academicSection}
 
 GUIDANCE LOGIC:
-1. Personality (RIASEC): Holland Codes are the foundation. Recommend career paths aligned with their top 2-3 RIASEC types.
-2. Academic Performance: Align careers with their strong subjects and CBC pathway. If a student wants a STEM career but is weak in Math, suggest technical pathways that leverage their other strengths or bridging options.
+1. Treat RIASEC, interests and stated goals as signals to explore—not proof that a career fits. Never claim a student is suited to a career from interests alone.
+2. Compare possible paths against their actual grades when they exist. If evidence is missing or a subject is below a typical requirement, say so plainly and suggest a realistic way to investigate, improve, or keep options open.
 3. Personal Values: Factor in what matters to them (e.g., Autonomy, Impact, Income). If they value stability, avoid highly volatile freelance/startup-heavy paths unless they have a safety net.
 4. Feasibility & Constraints: Respect constraints (Geography, Finance, Time). If they need remote work or scholarships, prioritize careers with high digital accessibility or available government/private funding in Kenya.
-5. Labor Market Reality: Factor in Kenyan market demand (Vision 2030, tech boom, manufacturing needs, automation risk). Prioritize emerging fields in the Creative Economy (Content Creation, Digital Art) and the Digital Superhighway over saturated traditional roles.
+5. Labor Market Reality: Do not present salary, university entry thresholds, course availability, or labour demand as verified facts unless the student asks and you can state that they should confirm the current official source.
 
 CONVERSATION STRUCTURE:
 1. Greeting & Context - Acknowledge their assessment results and core values.
@@ -90,11 +97,11 @@ CONVERSATION STRUCTURE:
 4. Professional Recommendations - Provide 3 precise career matches based on all data. Ensure at least one recommendation is an emerging or unconventional role if it fits their RIASEC/Values.
 
 FORMATTING RULES:
-- Use Markdown bolding (**text**) for key terms and summaries. The PDF engine requires this.
-- Clean, natural sentences with line breaks.
-- Use emojis for warmth.
-- Numbered options clearly.
-- Avoid robotic technical jargon.
+- Return display-ready Markdown only. Never return JSON, raw HTML, XML tags, a prompt transcript, or hidden reasoning.
+- Keep responses easy to scan: a short direct answer, then concise bullets or numbered steps where useful.
+- Use Markdown bolding (**text**) sparingly for decisions and actions. No emojis unless the student uses them first.
+- Use one clear follow-up question only when more student information is genuinely needed.
+- Avoid robotic technical jargon and never say "perfect career path".
 
 KENYAN CAREER & KUCCPS CONTEXT (2025 Cycle):
 - KUCCPS CLUSTERS: We map to 19 official clusters. Higher cutoffs (38-46) for MBChB, Law, Architecture, Nursing.
@@ -119,7 +126,7 @@ CRITICAL: Except when specifically asked for an Assessment Summary or JSON recom
 
       const messages = [
         { role: 'system', content: systemPrompt },
-        ...conversationHistory.map(msg => ({
+        ...conversationHistory.slice(-16).map(msg => ({
           role: msg.role,
           content: msg.content
         })),
@@ -171,7 +178,32 @@ CRITICAL: Except when specifically asked for an Assessment Summary or JSON recom
     if (typeof payload.content !== 'string' || !payload.content.trim()) {
       throw new Error('Empty response from AI service')
     }
-    return payload.content
+    return this.normaliseModelOutput(payload.content)
+  }
+
+  private normaliseModelOutput(content: string): string {
+    let output = content
+      .replace(/<think>[\s\S]*?<\/think>/gi, '')
+      .replace(/<analysis>[\s\S]*?<\/analysis>/gi, '')
+      .trim()
+
+    const fenced = output.match(/^```(?:markdown|md|text|json)?\s*\n?([\s\S]*?)\n?```$/i)
+    if (fenced) output = fenced[1].trim()
+
+    // Some compatible providers wrap the actual answer in a small JSON object.
+    // Unwrap only known display fields; structured JSON responses remain intact.
+    if (output.startsWith('{') && output.endsWith('}')) {
+      try {
+        const parsed = JSON.parse(output) as Record<string, unknown>
+        const wrapped = parsed.content ?? parsed.response ?? parsed.message
+        if (typeof wrapped === 'string') output = wrapped.trim()
+      } catch {
+        // Keep the model output unchanged. JSON-specific callers repair it later.
+      }
+    }
+
+    if (!output) throw new Error('Empty response from AI service')
+    return output
   }
 
   async getQuickGuidance(message: string): Promise<string> {
