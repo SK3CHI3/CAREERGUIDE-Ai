@@ -2,14 +2,13 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, Award, BookOpen, CheckCircle2, CreditCard, Loader2, MessageSquare, Search, Sparkles, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import PaymentWall from '@/components/PaymentWall'
 import { StudentAppHeader } from '@/components/StudentAppHeader'
 import { useAuth } from '@/contexts/AuthContext'
 import { subscriptionService, type SubscriptionStatus } from '@/lib/subscription-service'
 
 const StudentBillingPage = () => {
   const navigate = useNavigate()
-  const { profile, refreshProfile } = useAuth()
+  const { profile } = useAuth()
   const [status, setStatus] = useState<SubscriptionStatus | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -36,7 +35,7 @@ const StudentBillingPage = () => {
         <div className="student-courses-intro">
           <span><CreditCard className="h-4 w-4" /> Plan & billing</span>
           <h1>Your access plan</h1>
-          <p>Review your active access and complete a subscription here when you need one.</p>
+          <p>All features are now free. Review your access status below.</p>
         </div>
 
         {isLoading && <div className="student-billing-status"><Loader2 className="h-5 w-5 animate-spin text-primary" /><span>Loading your plan…</span></div>}
@@ -47,21 +46,15 @@ const StudentBillingPage = () => {
             <div className="student-billing-plan-icon"><Sparkles className="h-5 w-5" /></div>
             <div className="flex-1">
               <p className="student-billing-eyebrow">Current plan</p>
-              <h2>{status.isActive ? (isTrial ? 'Free student trial' : 'Student subscription') : 'No active plan'}</h2>
-              <p>{status.isActive && expiry ? `Your access is active until ${expiry}.` : status.isTrialEligible ? 'Your free term trial is ready to activate.' : 'Choose a subscription to restore full access.'}</p>
+              <h2>Free access</h2>
+              <p>All features are now available at no cost.</p>
             </div>
-            {status.isActive ? <span className="student-billing-active"><CheckCircle2 className="h-4 w-4" /> Active</span> : <span className="student-billing-inactive">Action needed</span>}
+            <span className="student-billing-active"><CheckCircle2 className="h-4 w-4" /> Active</span>
           </section>
-
-          {status.isTrialEligible && !status.isActive && <section className="student-billing-callout">
-            <div><h2>Free trial availability</h2><p>Your free term access will become active when the next academic term starts. You do not need to activate it manually.</p></div>
-          </section>}
-
-          {!status.isActive && !status.isTrialEligible && <section className="student-billing-payment"><PaymentWall onPaymentSuccess={refreshProfile} /></section>}
 
           <section className="student-billing-includes">
             <p>What your plan includes</p>
-            <div><span><CheckCircle2 className="h-4 w-4" /> Career matches from your profile</span><span><CheckCircle2 className="h-4 w-4" /> Database career exploration</span><span><CheckCircle2 className="h-4 w-4" /> Course and grade guidance</span></div>
+            <div><span><CheckCircle2 className="h-4 w-4" /> Career matches from your profile</span><span><CheckCircle2 className="h-4 w-4" /> Database career exploration</span><span><CheckCircle2 className="h-4 w-4" /> Course and grade guidance</span><span><CheckCircle2 className="h-4 w-4" /> Quick assessment reports</span></div>
           </section>
         </>}
       </section>

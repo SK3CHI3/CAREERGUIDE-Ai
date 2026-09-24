@@ -8,14 +8,11 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Sparkles, Download, ArrowRight, ArrowLeft, CheckCircle, Brain, Target, User, Heart, ShieldAlert, Rocket } from "lucide-react";
 import BrandedLoader from "@/components/BrandedLoader";
-import ReportPaywall from "@/components/ReportPaywall";
 import { aiCareerService } from "@/lib/ai-service";
 import { ReportGenerator, type GuestProfile } from "@/lib/report-generator";
 import { createFallbackQuickAssessmentBrief, type QuickAssessmentBrief } from "@/lib/quick-assessment-report";
 import { dashboardService } from "@/lib/dashboard-service";
 import QuickAssessmentDirectionBrief from "@/components/QuickAssessmentDirectionBrief";
-import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/lib/supabase";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import BackgroundGradient from "@/components/BackgroundGradient";
@@ -27,14 +24,11 @@ const QuickAssessment = () => {
     const targetCareer = searchParams.get('career');
     const isCareerFitMode = !!targetCareer;
 
-    const paywallRef = useRef<any>(null);
     const reportSectionRef = useRef<HTMLDivElement>(null);
-    const { user } = useAuth();
     const [currentStep, setCurrentStep] = useState(1);
     const [subStep, setSubStep] = useState(1); // For Phase 1 sub-steps
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [paymentConfirmed, setPaymentConfirmed] = useState(false);
 
     // Phase 1: Academics
     const [name, setName] = useState("");
@@ -171,24 +165,8 @@ const QuickAssessment = () => {
         setCurrentStep(prev => prev - 1);
     };
 
-    const [isPaid, setIsPaid] = useState(isCareerFitMode);
     const [reportHtml, setReportHtml] = useState<string | null>(null);
     const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
-
-    useEffect(() => {
-        if (!user?.id || isCareerFitMode) return;
-        const checkExistingPayment = async () => {
-            const { data } = await (supabase.from as any)('payments')
-                .select('id')
-                .eq('user_id', user.id)
-                .eq('payment_type', 'quick_assessment')
-                .eq('status', 'completed')
-                .limit(1)
-                .maybeSingle();
-            if (data) setIsPaid(true);
-        };
-        void checkExistingPayment();
-    }, [user?.id, isCareerFitMode]);
 
     const finishAssessment = async () => {
         setIsLoading(true);
@@ -292,20 +270,6 @@ const QuickAssessment = () => {
         } finally {
             setIsGeneratingPdf(false);
         }
-    };
-
-    const handlePaymentSuccess = () => {
-        setIsPaid(true);
-        setPaymentConfirmed(true);
-        setTimeout(() => {
-            reportSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 600);
-        setTimeout(() => {
-            void downloadReport();
-        }, 1800);
-        setTimeout(() => {
-            setPaymentConfirmed(false);
-        }, 3000);
     };
 
     return (
@@ -689,20 +653,6 @@ const QuickAssessment = () => {
                             {currentStep === 7 && (
                                 <div ref={reportSectionRef}>
                                 <motion.div key="step7" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 py-4 max-w-3xl mx-auto">
-                                    <AnimatePresence>
-                                        {paymentConfirmed && (
-                                            <motion.div
-                                                initial={{ opacity: 0, y: -10 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                exit={{ opacity: 0, y: -10 }}
-                                                className="flex items-center justify-center gap-2 p-4 rounded-xl bg-green-500/10 border border-green-500/20"
-                                            >
-                                                <CheckCircle className="w-5 h-5 text-green-500" />
-                                                <span className="font-semibold text-green-700 dark:text-green-400">Payment confirmed — your report is now unlocked!</span>
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
-
                                     <div className="text-center space-y-2">
                                         <div className="w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center mx-auto">
                                             <CheckCircle className="w-6 h-6 text-green-500" />
@@ -712,29 +662,18 @@ const QuickAssessment = () => {
                                     </div>
 
                                     {directionBrief ? (
-                                        <QuickAssessmentDirectionBrief profile={guestProfile} brief={directionBrief} locked={!isPaid} />
+                                        <QuickAssessmentDirectionBrief profile={guestProfile} brief={directionBrief} />
                                     ) : (
                                         <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-5 text-center text-sm text-destructive">Your result is not ready yet. Please try generating the brief again.</div>
                                     )}
 
-                                    <div className="space-y-4">
-                                        {!isPaid ? (
-                                            <ReportPaywall
-                                                ref={paywallRef}
-                                                onPaymentSuccess={handlePaymentSuccess}
-                                                studentName={name}
-                                                email={email}
-                                            />
-                                        ) : (
-                                            <div className="space-y-3">
-                                                <Button onClick={downloadReport} disabled={isGeneratingPdf || !reportHtml} className="w-full h-14 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg text-base disabled:opacity-70">
-                                                    {isGeneratingPdf ? <><BrandedLoader size="xs" showText={false} className="mr-2 inline-flex" /> Preparing your PDF...</> : <><Download className="mr-2 w-5 h-5" /> Download Direction Brief PDF</>}
-                                                </Button>
-                                                <Button variant="outline" onClick={() => navigate('/student')} className="w-full h-12 border-2 border-primary text-primary hover:bg-primary/5 font-bold">
-                                                    Consult with Career Counselor
-                                                </Button>
-                                            </div>
-                                        )}
+                                    <div className="space-y-3">
+                                        <Button onClick={downloadReport} disabled={isGeneratingPdf || !reportHtml} className="w-full h-14 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg text-base disabled:opacity-70">
+                                            {isGeneratingPdf ? <><BrandedLoader size="xs" showText={false} className="mr-2 inline-flex" /> Preparing your PDF...</> : <><Download className="mr-2 w-5 h-5" /> Download Direction Brief PDF</>}
+                                        </Button>
+                                        <Button variant="outline" onClick={() => navigate('/student')} className="w-full h-12 border-2 border-primary text-primary hover:bg-primary/5 font-bold">
+                                            Consult with Career Counselor
+                                        </Button>
                                     </div>
                                 </motion.div>
                                 </div>

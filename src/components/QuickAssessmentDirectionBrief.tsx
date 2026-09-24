@@ -5,7 +5,6 @@ import type { QuickAssessmentBrief } from '@/lib/quick-assessment-report';
 interface QuickAssessmentDirectionBriefProps {
   profile: GuestProfile;
   brief: QuickAssessmentBrief;
-  locked?: boolean;
 }
 
 const getActionHref = (action: string) => {
@@ -14,9 +13,9 @@ const getActionHref = (action: string) => {
   return '/careers';
 };
 
-const QuickAssessmentDirectionBrief = ({ profile, brief, locked = false }: QuickAssessmentDirectionBriefProps) => (
+const QuickAssessmentDirectionBrief = ({ profile, brief }: QuickAssessmentDirectionBriefProps) => (
   <section className="relative rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-    <div className={`space-y-7 p-4 sm:p-6 md:p-8 ${locked ? 'blur-[3px] select-none pointer-events-none' : ''}`}>
+    <div className="space-y-7 p-4 sm:p-6 md:p-8">
       <header className="flex items-start justify-between gap-4 border-b border-slate-200 pb-5">
         <div>
           <img src="/logos/CareerGuide_Logo.webp" alt="CareerGuide AI" className="h-7 w-auto object-contain object-left" />

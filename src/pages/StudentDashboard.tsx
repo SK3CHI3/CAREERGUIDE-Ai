@@ -57,7 +57,6 @@ import {
 import { StudentAppHeader } from '@/components/StudentAppHeader'
 import { FieldDayRequestModal } from '@/components/FieldDayRequestModal'
 import { subscriptionService } from '@/lib/subscription-service'
-import PaymentWall from '@/components/PaymentWall'
 import { ReportGenerator } from '@/lib/report-generator'
 import { ProfileSetup } from '@/components/ProfileSetup'
 import GradesManager from '@/components/GradesManager'
@@ -223,7 +222,6 @@ const StudentDashboard = () => {
 
   // Keep this as a value until after all hooks below have run. Returning here
   // made the hook order change when subscription state arrived asynchronously.
-  const isPaymentLocked = !isLoadingStats && subscriptionStatus && !subscriptionStatus.isActive && !subscriptionStatus.isTrialEligible
 
   // Load all dashboard data
   const loadDashboardData = async () => {
@@ -725,11 +723,6 @@ const StudentDashboard = () => {
 
   // At this point, user and profile are guaranteed by ProtectedRoute
   // Render the dashboard directly
-
-  if (isPaymentLocked) {
-    return <PaymentWall onPaymentSuccess={checkAccessStatus} />
-  }
-
 
   return (
     <div className="student-shell min-h-screen safe-area-bottom">

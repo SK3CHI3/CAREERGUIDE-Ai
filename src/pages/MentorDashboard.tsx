@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { classService, type ClassRecord } from '@/lib/class-service'
 import CreateClass from '@/components/mentor/CreateClass'
-import PaymentWall from '@/components/PaymentWall'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -70,10 +69,6 @@ const MentorDashboard: React.FC = () => {
     } catch (err) {
         toast({ title: 'Error', description: err instanceof Error ? err.message : 'Failed to delete class', variant: 'destructive' })
     }
-  }
-
-  if (!loading && subscriptionStatus && !subscriptionStatus.isActive && !subscriptionStatus.isTrialEligible) {
-    return <PaymentWall onPaymentSuccess={loadData} />
   }
 
   return (
