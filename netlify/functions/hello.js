@@ -1,7 +1,7 @@
 // Example Netlify Function
 // You can add serverless functions here if needed
 
-exports.handler = async (event, context) => {
+export const handler = async (event) => {
   return {
     statusCode: 200,
     body: JSON.stringify({
