@@ -256,6 +256,7 @@ const QuickAssessment = () => {
 
             setDirectionBrief(brief);
             const html = ReportGenerator.generateQuickAssessmentPDFReport(profile, brief);
+            console.log("Generated PDF HTML:", { length: html.length, hasCareers: html.includes('brief-career-card'), preview: html.substring(0, 200) });
             setReportHtml(html);
             localStorage.removeItem('career_assessment_state');
             setCurrentStep(7);
@@ -273,10 +274,19 @@ const QuickAssessment = () => {
             setError("Report content is not ready yet. Please wait a moment and try again.");
             return;
         }
-        
+
         try {
             setIsGeneratingPdf(true);
-            console.log("Starting PDF download process...");
+            console.log("Starting PDF download process...", { htmlLength: reportHtml.length, hasContent: reportHtml.includes('brief-career-card') });
+            
+            // Verify HTML has actual content before attempting download
+            if (!reportHtml.includes('brief-career-card') || reportHtml.length < 1000) {
+                console.error("Report HTML appears incomplete or malformed");
+                setError("Report content is incomplete. Please try generating the assessment again.");
+                setIsGeneratingPdf(false);
+                return;
+            }
+
             await ReportGenerator.downloadPDF(reportHtml, `${guestProfile.name || 'CareerGuide'}-Diagnostic-Report.pdf`);
             console.log("PDF download triggered successfully.");
         } catch (err) {

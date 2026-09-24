@@ -875,11 +875,12 @@ export class ReportGenerator {
     const safeFilename = (filename || 'CareerGuide-Diagnostic.pdf')
       .replace(/[^a-z0-9. -]/gi, '_');
 
-    // Keep the A4 layout out of the visible app. Rendering a wide report inside the
-    // mobile result screen caused overflow and made the report layout device-dependent.
+    console.log("Starting PDF generation...", { filename: safeFilename, htmlLength: htmlContent.length });
+
+    // Use visibility hidden instead of off-screen positioning for better html2canvas compatibility
     const renderRoot = document.createElement('div');
     renderRoot.setAttribute('aria-hidden', 'true');
-    renderRoot.style.cssText = 'position:fixed;left:-10000px;top:0;width:794px;pointer-events:none;background:#fff;z-index:-1;';
+    renderRoot.style.cssText = 'position:fixed;top:0;left:0;width:794px;visibility:hidden;opacity:0;pointer-events:none;background:#fff;z-index:-1;';
     renderRoot.innerHTML = htmlContent;
     document.body.appendChild(renderRoot);
 
@@ -895,6 +896,13 @@ export class ReportGenerator {
           })
       ));
 
+      console.log("Render root prepared:", {
+        hasContent: renderRoot.innerHTML.length > 0,
+        childCount: renderRoot.children.length,
+        offsetWidth: renderRoot.offsetWidth,
+        offsetHeight: renderRoot.offsetHeight
+      });
+
       const options: any = {
       margin: [5, 5, 5, 5],
       filename: safeFilename,
@@ -903,7 +911,7 @@ export class ReportGenerator {
         // A fixed, modest scale avoids the oversized canvas failures common on phones.
         scale: 1.5,
         useCORS: true,
-        logging: false,
+        logging: true,
         letterRendering: true,
         width: 794,
         windowWidth: 794,
@@ -917,6 +925,8 @@ export class ReportGenerator {
         .from(renderRoot)
         .set(options)
         .save();
+
+      console.log("PDF save completed");
     } finally {
       renderRoot.remove();
     }
