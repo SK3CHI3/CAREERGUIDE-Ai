@@ -1,42 +1,13 @@
 import { useState, useEffect, useRef } from "react";
-import ReactMarkdown from "react-markdown";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, Send, Bot, User, Sparkles, Loader2, Download, ArrowRight } from "lucide-react";
+import { AlertCircle, Bot, User, Sparkles, Loader2, Download, ArrowRight } from "lucide-react";
 import { aiCareerService, type ChatMessage } from "@/lib/ai-service";
 import { ReportGenerator, type GuestProfile } from "@/lib/report-generator";
-
-// Component to render message content with proper markdown support
-const MessageContent = ({ content, role }: { content: string, role: 'user' | 'assistant' }) => {
-  if (role === 'user') {
-    return <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">{content}</p>;
-  }
-
-  return (
-    <div className="prose prose-sm max-w-none prose-p:my-1 prose-headings:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0.5">
-      <ReactMarkdown
-        components={{
-          h1: ({children}) => <h1 className="text-lg font-bold mt-3 mb-2">{children}</h1>,
-          h2: ({children}) => <h2 className="text-base font-bold mt-3 mb-2">{children}</h2>,
-          h3: ({children}) => <h3 className="text-sm font-bold mt-2 mb-1">{children}</h3>,
-          p: ({children}) => <p className="text-sm leading-relaxed my-1.5">{children}</p>,
-          strong: ({children}) => <strong className="font-bold">{children}</strong>,
-          em: ({children}) => <em className="italic">{children}</em>,
-          ul: ({children}) => <ul className="list-disc pl-4 my-2 space-y-1">{children}</ul>,
-          ol: ({children}) => <ol className="list-decimal pl-4 my-2 space-y-1">{children}</ol>,
-          li: ({children}) => <li className="text-sm leading-relaxed">{children}</li>,
-          br: () => <br />,
-        }}
-      >
-        {content}
-      </ReactMarkdown>
-    </div>
-  );
-};
+import { MessageContent } from "@/components/chat/MessageContent";
+import { ChatInput, type ChatInputHandle } from "@/components/chat/ChatInput";
 
 const GuestAIChat = () => {
   const [message, setMessage] = useState("");
@@ -49,6 +20,7 @@ const GuestAIChat = () => {
   const [connectionTest, setConnectionTest] = useState<string | null>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatInputRef = useRef<ChatInputHandle>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -150,6 +122,8 @@ What is your name? 😊`,
     if (!message.trim() || isLoading) return;
     const currentMsg = message;
     setMessage("");
+    // Re-focus input after clearing
+    setTimeout(() => chatInputRef.current?.focus(), 0);
     await handleSendMessage(currentMsg);
   };
 
@@ -258,19 +232,19 @@ What is your name? 😊`,
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-            <div className="flex gap-3">
-              <Input
-                placeholder="Type your message here..."
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
-                disabled={isLoading}
-                className="flex-1"
-              />
-              <Button onClick={handleSend} disabled={isLoading || !message.trim()} className="bg-primary text-white">
-                <Send className="w-4 h-4" />
-              </Button>
-            </div>
+            <ChatInput
+              ref={chatInputRef}
+              message={message}
+              onChange={setMessage}
+              onSend={handleSend}
+              disabled={isLoading}
+              placeholder="Type your message here..."
+              className="p-0"
+              inputClassName="px-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              buttonClassName="bg-primary text-white"
+              aria-label="Chat message"
+              autoFocus
+            />
           </div>
         )}
       </Card>

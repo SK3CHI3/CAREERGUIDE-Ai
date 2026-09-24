@@ -352,7 +352,7 @@
     background: #e98108;
     padding: 0.25rem 0.45rem;
     color: #ffffff;
-    font-size: 0.58rem;
+    font-size: 0.75rem;
     font-weight: 800;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -396,9 +396,9 @@
   }
 
   .student-shell .student-snapshot-card { min-width: 0; padding: 0.75rem; }
-  .student-shell .student-snapshot-card p { color: #7b8492; font-size: 0.62rem; }
+  .student-shell .student-snapshot-card p { color: #7b8492; font-size: 0.75rem; }
   .student-shell .student-snapshot-card strong { display: block; margin-top: 0.35rem; color: #14213d; font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif; font-size: 1.35rem; font-weight: 700; }
-  .student-shell .student-snapshot-card span { display: block; margin-top: 0.2rem; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; }
+  .student-shell .student-snapshot-card span { display: block; margin-top: 0.2rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
   .student-shell .student-top-career-card { width: 100%; text-align: left; }
   .student-shell .student-top-career-card:hover { border-color: #b8cdfc; background: #f8faff; }
   .student-shell .student-snapshot-card .student-top-career-name { display: -webkit-box; overflow: hidden; font-size: 1.05rem; line-height: 1.18; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
@@ -447,7 +447,7 @@
   .student-shell .student-career-list p { display: -webkit-box; margin-top: 0.28rem; overflow: hidden; color: #6b7280; font-size: 0.68rem; line-height: 1.4; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
   .student-shell .student-career-list small { display: block; margin-top: 0.6rem; color: #8a94a3; font-size: 0.6rem; }
   .student-shell .student-career-list small b { color: #334155; }
-  .student-shell .student-career-list > button > span { flex: 0 0 auto; border-radius: 0.3rem; background: #dcfce7; padding: 0.25rem 0.35rem; color: #16803d; font-size: 0.58rem; font-weight: 800; }
+  .student-shell .student-career-list > button > span { flex: 0 0 auto; border-radius: 0.3rem; background: #dcfce7; padding: 0.25rem 0.35rem; color: #16803d; font-size: 0.75rem; font-weight: 800; }
   .student-shell .student-match-section, .student-shell .student-catalogue-section { margin-top: 1.15rem; }
   .student-shell .student-career-empty { border: 1px dashed #cfd8e6; border-radius: .85rem; padding: 1rem; color: #64748b; font-size: .82rem; text-align: center; }
 
@@ -469,7 +469,7 @@
   .student-billing-includes svg { color: #16803d; }
   .student-billing-payment { margin-top: 1rem; }
   .student-shell .student-match-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 0.65rem; }
-  .student-shell .student-match-heading p { color: #2457d6; font-size: 0.62rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+  .student-shell .student-match-heading p { color: #2457d6; font-size: 0.75rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
   .student-shell .student-match-heading h2 { margin-top: .18rem; color: #172033; font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif; font-size: 1.05rem; font-weight: 700; }
   .student-shell .student-match-heading > span { color: #7b8492; font-size: .64rem; white-space: nowrap; }
   .student-shell .student-catalogue-list > button > svg { flex: 0 0 auto; margin-top: .4rem; }
@@ -518,7 +518,7 @@
     backdrop-filter: blur(12px);
   }
 
-  .student-shell .student-bottom-nav button { display: flex; flex-direction: column; align-items: center; gap: 0.18rem; color: #7b8492; font-size: 0.58rem; font-weight: 500; }
+  .student-shell .student-bottom-nav button { display: flex; flex-direction: column; align-items: center; gap: 0.18rem; color: #7b8492; font-size: 0.75rem; font-weight: 500; }
   .student-shell .student-bottom-nav button.is-active { color: #2457d6; font-weight: 700; }
 
   @media (max-width: 640px) {
@@ -810,28 +810,24 @@
   }
 
   /* Home: weekly AI activities */
-  .student-shell .student-weekly-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 0.45rem; }
-  .student-shell .student-weekly-heading p { color: #2457d6; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
-  .student-shell .student-weekly-heading h2 { margin-top: 0.16rem; }
-  .student-shell .student-weekly-heading > span { border-radius: 999px; background: #f1f5f9; padding: 0.27rem 0.5rem; color: #718096; font-size: 0.6rem; white-space: nowrap; }
   .student-shell .student-weekly-activities button { display: grid; grid-template-columns: 1.15rem minmax(0, 1fr) 1rem; align-items: center; gap: 0.62rem; padding: 0.8rem 0; text-align: left; }
   .student-shell .student-weekly-activities button > span:nth-child(2) { min-width: 0; }
   .student-shell .student-weekly-activities button b { display: block; color: #27364c; font-size: 0.76rem; line-height: 1.25; }
-  .student-shell .student-weekly-activities button small { display: -webkit-box; margin-top: 0.18rem; overflow: hidden; color: #718096; font-size: 0.64rem; line-height: 1.35; -webkit-box-orient: vertical; -webkit-line-clamp: 1; }
+  .student-shell .student-weekly-activities button small { display: -webkit-box; margin-top: 0.18rem; overflow: hidden; color: #718096; font-size: 0.75rem; line-height: 1.35; -webkit-box-orient: vertical; -webkit-line-clamp: 1; }
   .student-shell .student-weekly-activities button > svg { color: #98a3b3; }
 
   /* Home: stable shortcuts rather than a second AI recommendation block */
   .student-shell .student-career-toolkit { padding: 1rem; }
   .student-shell .student-toolkit-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 0.55rem; }
-  .student-shell .student-toolkit-heading p { color: #2457d6; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+  .student-shell .student-toolkit-heading p { color: #2457d6; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
   .student-shell .student-toolkit-heading h2 { margin-top: 0.16rem; }
   .student-shell .student-toolkit-heading > span { border-radius: 999px; background: #f1f5f9; padding: 0.27rem 0.5rem; color: #718096; font-size: 0.6rem; white-space: nowrap; }
   .student-shell .student-toolkit-actions button { display: grid; width: 100%; grid-template-columns: 2rem minmax(0, 1fr) 1rem; align-items: center; gap: 0.68rem; padding: 0.75rem 0; color: #4b5563; text-align: left; }
   .student-shell .student-toolkit-actions button + button { border-top: 1px solid #eef2f7; }
   .student-shell .student-toolkit-actions b { display: block; color: #27364c; font-size: 0.76rem; line-height: 1.25; }
-  .student-shell .student-toolkit-actions small { display: block; margin-top: 0.16rem; overflow: hidden; color: #718096; font-size: 0.64rem; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
+  .student-shell .student-toolkit-actions small { display: block; margin-top: 0.16rem; overflow: hidden; color: #718096; font-size: 0.75rem; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
   .student-shell .student-toolkit-actions > button > svg { color: #98a3b3; }
-  .student-shell .student-toolkit-mark { color: #2457d6; font-size: 0.64rem; font-weight: 800; letter-spacing: 0.08em; }
+  .student-shell .student-toolkit-mark { color: #2457d6; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.08em; }
 
   /* Dedicated short-course page */
   .student-courses-page { background: #f8fafc; color: #172033; }
@@ -895,7 +891,7 @@
   .student-weekly-activity-list h3 { color: #172033; font-size: .9rem; font-weight: 750; }
   .student-weekly-activity-list p { color: #64748b; font-size: .82rem; line-height: 1.4; margin-top: .1rem; }
   .student-courses-nav { position: fixed; right: max(0.75rem, env(safe-area-inset-right)); bottom: max(0.75rem, env(safe-area-inset-bottom)); left: max(0.75rem, env(safe-area-inset-left)); z-index: 40; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border: 1px solid #e1e7ef; border-radius: 1rem; background: rgb(255 255 255 / 0.96); padding: 0.5rem 0; box-shadow: 0 10px 30px rgb(15 23 42 / 0.12); backdrop-filter: blur(12px); }
-  .student-courses-nav button { display: flex; flex-direction: column; align-items: center; gap: 0.18rem; color: #718096; font-size: 0.58rem; font-weight: 600; }
+  .student-courses-nav button { display: flex; flex-direction: column; align-items: center; gap: 0.18rem; color: #718096; font-size: 0.75rem; font-weight: 600; }
   .student-courses-nav button:first-child, .student-courses-nav button.is-active { color: #2457d6; }
 
   @media (min-width: 768px) {

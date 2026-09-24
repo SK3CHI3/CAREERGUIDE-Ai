@@ -1,43 +1,14 @@
 import { useState, useEffect, useRef } from "react";
-import ReactMarkdown from "react-markdown";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Send, User, Sparkles, Loader2, AlertCircle, RefreshCw } from "lucide-react";
+import { User, Sparkles, Loader2, AlertCircle, RefreshCw } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { aiCareerService, type ChatMessage, type UserContext } from "@/lib/ai-service";
 import { loadStudentAIContext } from "@/lib/student-ai-context";
-
-// Component to render structured message content with proper markdown support
-const MessageContent = ({ content, role }: { content: string, role: 'user' | 'assistant' }) => {
-  if (role === 'user') {
-    return <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">{content}</p>;
-  }
-
-  return (
-    <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-headings:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0.5">
-      <ReactMarkdown
-        components={{
-          h1: ({children}) => <h1 className="text-lg font-bold mt-3 mb-2">{children}</h1>,
-          h2: ({children}) => <h2 className="text-base font-bold mt-3 mb-2">{children}</h2>,
-          h3: ({children}) => <h3 className="text-sm font-bold mt-2 mb-1">{children}</h3>,
-          p: ({children}) => <p className="text-sm leading-relaxed my-1.5">{children}</p>,
-          strong: ({children}) => <strong className="font-bold">{children}</strong>,
-          em: ({children}) => <em className="italic">{children}</em>,
-          ul: ({children}) => <ul className="list-disc pl-4 my-2 space-y-1">{children}</ul>,
-          ol: ({children}) => <ol className="list-decimal pl-4 my-2 space-y-1">{children}</ol>,
-          li: ({children}) => <li className="text-sm leading-relaxed">{children}</li>,
-          br: () => <br />,
-        }}
-      >
-        {content}
-      </ReactMarkdown>
-    </div>
-  );
-};
+import { MessageContent } from "@/components/chat/MessageContent";
+import { ChatInput, type ChatInputHandle } from "@/components/chat/ChatInput";
 
 interface AIChatProps {
   isStandalone?: boolean;
@@ -68,6 +39,7 @@ const AIChat = ({ isStandalone = false }: AIChatProps) => {
   const [error, setError] = useState<string | null>(null);
   const [userContext, setUserContext] = useState<UserContext>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatInputRef = useRef<ChatInputHandle>(null);
   const [isInitialized, setIsInitialized] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -181,6 +153,9 @@ What subjects do you enjoy most in your current studies?`,
     setMessage("");
     setIsLoading(true);
     setError(null);
+
+    // Re-focus input after clearing
+    setTimeout(() => chatInputRef.current?.focus(), 0);
 
     try {
       const response = await aiCareerService.sendMessage(
@@ -412,28 +387,19 @@ What subjects do you enjoy most in your current studies?`,
             </div>
           )}
 
-          <div className="adviser-composer flex gap-2 items-center rounded-2xl p-1 transition-all">
-            <Input
-              placeholder="Ask about careers..."
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
-              disabled={isLoading}
-              className="adviser-composer-input border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 min-h-[44px] text-sm sm:text-base flex-1"
-            />
-            <Button
-              onClick={handleSend}
-              disabled={isLoading || !message.trim()}
-              size="icon"
-              className="adviser-send rounded-xl w-10 h-10 shrink-0"
-            >
-              {isLoading ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <Send className="w-4 h-4" />
-              )}
-            </Button>
-          </div>
+          <ChatInput
+            ref={chatInputRef}
+            message={message}
+            onChange={setMessage}
+            onSend={handleSend}
+            disabled={isLoading}
+            placeholder="Ask about careers..."
+            className="adviser-composer"
+            inputClassName="adviser-composer-input"
+            buttonClassName="adviser-send"
+            aria-label="Ask about careers"
+            autoFocus
+          />
 
           <div className="flex items-center justify-between mt-3 px-1">
             <p className="adviser-composer-note text-[10px] flex items-center">

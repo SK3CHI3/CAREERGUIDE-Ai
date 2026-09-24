@@ -6,9 +6,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts'
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, RadarChart, PolarGrid, PolarAngleAxis, Radar } from 'recharts'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { RIASEC_LABELS } from '@/data/riasec-assessment'
 import { kuccpsService } from '@/lib/kuccps-service'
 
 
@@ -19,20 +18,15 @@ import {
   TrendingUp,
   Settings,
   Bot,
-  BarChart3,
-  Calendar,
   MessageSquare,
   Award,
   ChevronRight,
-  Star,
   Loader2,
   GraduationCap,
   School,
   Briefcase,
   Brain,
   Zap,
-  Trophy,
-  Users,
   FileText,
   ArrowRight,
   Sparkles,
@@ -40,10 +34,7 @@ import {
   Activity,
   BookMarked,
   DollarSign,
-  Lock,
-  XCircle,
   Lightbulb,
-  CheckCircle,
   CreditCard,
   RefreshCw,
   UserCog,
@@ -58,18 +49,14 @@ import { StudentAppHeader } from '@/components/StudentAppHeader'
 import { FieldDayRequestModal } from '@/components/FieldDayRequestModal'
 import { subscriptionService } from '@/lib/subscription-service'
 import { ReportGenerator } from '@/lib/report-generator'
-import { ProfileSetup } from '@/components/ProfileSetup'
 import GradesManager from '@/components/GradesManager'
 import CourseRecommendations, { type CourseRecommendation } from '@/components/CourseRecommendations'
-
-import { CounselorDirectory } from '@/components/CounselorDirectory'
-import InstallPrompt from '@/components/InstallPrompt'
 import BrandedLoader from '@/components/BrandedLoader'
+import AIChat from '@/components/AIChat'
 
-import { supabase } from '@/lib/supabase'
 import { aiCareerService } from '@/lib/ai-service'
 import { aiCacheService } from '@/lib/ai-cache-service'
-import { dashboardService, UserStat, UserActivity, CareerRecommendation, CareerPath } from '@/lib/dashboard-service'
+import { dashboardService, UserStat, CareerPath } from '@/lib/dashboard-service'
 import { generateContextHash } from '@/lib/cache-utils'
 import { useActivityTracking } from '@/hooks/useActivityTracking'
 import CareerDetailModal from '@/components/CareerDetailModal'
@@ -846,9 +833,9 @@ const StudentDashboard = () => {
                       <CardHeader className="p-3 sm:p-4 pb-2 sm:pb-3">
                         <div className="flex items-start justify-between gap-1">
                           <div className="flex-1 min-w-0">
-                            <CardDescription className="text-[10px] sm:text-sm font-medium truncate">{statConfig.title}</CardDescription>
+                            <CardDescription className="text-xs sm:text-sm font-medium truncate">{statConfig.title}</CardDescription>
                             <CardTitle className="text-xl sm:text-3xl font-bold mt-0.5 sm:mt-1">{stat.stat_value}</CardTitle>
-                            <p className={`text-[10px] sm:text-xs flex items-center gap-0.5 sm:gap-1 mt-0.5 sm:mt-1 ${stat.stat_trend === 'up' ? 'text-emerald-500' :
+                            <p className={`text-xs sm:text-xs flex items-center gap-0.5 sm:gap-1 mt-0.5 sm:mt-1 ${stat.stat_trend === 'up' ? 'text-emerald-500' :
                               stat.stat_trend === 'down' ? 'text-red-500' : 'text-muted-foreground'
                               }`}>
                               <TrendingUp className={`w-2.5 h-2.5 sm:w-3 sm:h-3 ${stat.stat_trend === 'down' ? 'rotate-180' : ''}`} />
@@ -901,7 +888,7 @@ const StudentDashboard = () => {
                       <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-500" />
                       <CardTitle className="text-base sm:text-lg">AI Career Recommendations</CardTitle>
                     </div>
-                    <CardDescription className="text-[10px] sm:text-xs">Based on your personality, grades, and Kenyan market</CardDescription>
+                    <CardDescription className="text-xs sm:text-xs">Based on your personality, grades, and Kenyan market</CardDescription>
                   </div>
                   <Button
                     variant="ghost"
@@ -1040,7 +1027,7 @@ const StudentDashboard = () => {
                             content={({ active, payload }) => {
                               if (active && payload && payload.length) {
                                 return (
-                                  <div className="bg-background/95 backdrop-blur-md border border-card-border p-1.5 rounded-lg shadow-xl text-[9px]">
+                                  <div className="bg-background/95 backdrop-blur-md border border-card-border p-1.5 rounded-lg shadow-xl text-xs">
                                     <p className="font-bold text-foreground">{payload[0].payload.subject}</p>
                                     <p className="text-primary font-medium">Score: {payload[0].value}/5</p>
                                   </div>
@@ -1061,7 +1048,7 @@ const StudentDashboard = () => {
                       </ResponsiveContainer>
                     </div>
 
-                    <p className="text-[10px] text-center text-muted-foreground font-medium px-4">
+                    <p className="text-xs text-center text-muted-foreground font-medium px-4">
                       Explore your strengths across all six professional domains to build a target career roadmap.
                     </p>
                   </CardContent>
@@ -1080,7 +1067,7 @@ const StudentDashboard = () => {
                       </div>
                       <div>
                         <CardTitle className="text-sm sm:text-base">Universities Matched to You</CardTitle>
-                        <CardDescription className="text-[10px] sm:text-xs">Based on your selected subjects</CardDescription>
+                        <CardDescription className="text-xs sm:text-xs">Based on your selected subjects</CardDescription>
                       </div>
                     </div>
                     <Button
@@ -1105,7 +1092,7 @@ const StudentDashboard = () => {
                       </Badge>
                     ))}
                   </div>
-                  <p className="text-[10px] sm:text-xs text-muted-foreground mt-3">
+                  <p className="text-xs sm:text-xs text-muted-foreground mt-3">
                     These universities offer programmes that align with your CBC subject combination.
                   </p>
                 </CardContent>
@@ -1191,7 +1178,7 @@ const StudentDashboard = () => {
                           <CardTitle className="text-base sm:text-xl font-bold mb-0.5 sm:mb-1 text-foreground truncate">{career.name}</CardTitle>
                           <div className="flex flex-col gap-1 sm:gap-2">
                             <div className="flex items-center gap-1.5 sm:gap-2">
-                              <Badge variant="secondary" className="text-[9px] sm:text-[10px] h-4 sm:h-5 flex-shrink-0">
+                              <Badge variant="secondary" className="text-xs sm:text-xs h-4 sm:h-5 flex-shrink-0">
                                 {career.value}%
                               </Badge>
                               <Progress
@@ -1201,7 +1188,7 @@ const StudentDashboard = () => {
                               />
                             </div>
                             <div className="flex items-center gap-1.5 sm:gap-2">
-                              <Badge variant="outline" className="text-[9px] sm:text-[10px] h-4 sm:h-5 border-primary/20 text-primary bg-primary/5 flex-shrink-0">
+                              <Badge variant="outline" className="text-xs sm:text-xs h-4 sm:h-5 border-primary/20 text-primary bg-primary/5 flex-shrink-0">
                                 {(career.actionabilityScore || 85)}%
                               </Badge>
                               <Progress
@@ -1225,14 +1212,14 @@ const StudentDashboard = () => {
                       <div className="p-2 sm:p-3 rounded-lg bg-primary/5 border border-primary/10">
                         <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1">
                           <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
-                          <span className="text-[10px] sm:text-xs font-semibold text-primary">Salary</span>
+                          <span className="text-xs sm:text-xs font-semibold text-primary">Salary</span>
                         </div>
                         <p className="text-xs sm:text-sm font-bold text-foreground truncate">{career.salaryRange || 'KSh 60K - 200K'}</p>
                       </div>
                       <div className="p-2 sm:p-3 rounded-lg bg-primary/5 border border-primary/10">
                         <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1">
                           <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
-                          <span className="text-[10px] sm:text-xs font-semibold text-primary">Growth</span>
+                          <span className="text-xs sm:text-xs font-semibold text-primary">Growth</span>
                         </div>
                         <p className="text-xs sm:text-sm font-bold text-foreground truncate">{career.growth || 'High Growth'}</p>
                       </div>
@@ -1241,7 +1228,7 @@ const StudentDashboard = () => {
                     <div className="p-2 sm:p-3 rounded-lg bg-primary/5 border border-primary/10">
                       <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1">
                         <GraduationCap className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
-                        <span className="text-[10px] sm:text-xs font-semibold text-primary">Education</span>
+                        <span className="text-xs sm:text-xs font-semibold text-primary">Education</span>
                       </div>
                       <p className="text-xs sm:text-sm text-foreground font-medium truncate">{career.education || "Bachelor's Degree Required"}</p>
                     </div>
@@ -1264,59 +1251,9 @@ const StudentDashboard = () => {
             </div>
           </TabsContent>
 
-          {/* AI Chat Tab Refined */}
+          {/* AI Chat Tab - Embedded Chat */}
           <TabsContent value="chat" className="student-chat-view space-y-5">
-            <header><p>Career adviser</p><h1>Let’s plan your next move.</h1><span>Ask about courses, subjects, career paths, or opportunities in Kenya.</span></header>
-            <div className="student-chat-message is-assistant"><Bot className="h-4 w-4" /><p>Hi! I’m your career adviser. What would you like to explore today?</p></div>
-            <div className="student-chat-prompts"><button onClick={() => navigate('/student/chat')}>What careers fit my subjects?</button><button onClick={() => navigate('/student/chat')}>Help me choose a course</button><button onClick={() => navigate('/student/chat')}>Show my next steps</button></div>
-            <Button className="student-primary-button w-full" onClick={() => navigate('/student/chat')}>Open career adviser <ArrowRight className="ml-2 h-4 w-4" /></Button>
-            <div className="student-legacy-chat">
-            <Card className="border-card-border bg-gradient-to-br from-card to-card/50 overflow-hidden relative group">
-              <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <CardHeader className="relative z-10 text-center py-8 sm:py-16 lg:py-20">
-                <div className="w-14 h-14 sm:w-20 sm:h-20 bg-primary/10 rounded-2xl sm:rounded-3xl flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-glow">
-                  <Bot className="w-7 h-7 sm:w-10 sm:h-10 text-primary" />
-                </div>
-                <CardTitle className="text-xl sm:text-3xl lg:text-5xl font-semibold tracking-tight">
-                  Your Personal AI Counselor
-                </CardTitle>
-                <CardDescription className="text-sm sm:text-lg lg:text-xl text-foreground-muted max-w-2xl mx-auto mt-3 sm:mt-4 font-medium">
-                  Get 1-on-1 career guidance. Ask about subjects, university paths, and job markets in East Africa.
-                </CardDescription>
-                <div className="mt-6 sm:mt-10">
-                  <Button 
-                    size="lg"
-                    className="h-12 sm:h-14 lg:h-16 px-8 sm:px-10 lg:px-16 text-base sm:text-lg lg:text-xl bg-gradient-primary hover:scale-105 transition-all shadow-glow font-bold rounded-xl sm:rounded-2xl"
-                    onClick={() => navigate('/student/chat')}
-                  >
-                    Open AI Chat
-                    <Sparkles className="ml-2 sm:ml-3 w-4 h-4 sm:w-5 sm:h-5" />
-                  </Button>
-                </div>
-              </CardHeader>
-            </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="chat-exp" className="h-[700px]">
-            <div className="h-full flex items-center justify-center">
-              <Card className="max-w-md w-full bg-gradient-surface border-card-border text-center p-8">
-                <div className="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary/20">
-                  <Sparkles className="w-8 h-8 text-primary-foreground" />
-                </div>
-                <h3 className="text-xl font-bold mb-2">AI Career Counselor</h3>
-                <p className="text-foreground-muted text-sm mb-6">
-                  Get personalized career guidance based on your interests, subjects, and goals. Our AI counselor is ready to help you discover your path.
-                </p>
-                <Button
-                  onClick={() => navigate('/student/chat')}
-                  className="w-full bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow h-12 text-base font-bold"
-                >
-                  <MessageSquare className="w-5 h-5 mr-2" />
-                  Open AI Chat
-                </Button>
-              </Card>
-            </div>
+            <AIChat isStandalone={false} />
           </TabsContent>
 
           {/* Progress Tab */}
@@ -1337,7 +1274,7 @@ const StudentDashboard = () => {
                     <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
                     Free Courses
                   </CardTitle>
-                  <CardDescription className="text-[10px] sm:text-xs">AI-curated based on your interests</CardDescription>
+                  <CardDescription className="text-xs sm:text-xs">AI-curated based on your interests</CardDescription>
                 </CardHeader>
                 <CardContent className="flex-1 overflow-hidden pt-0 pb-3 sm:pb-6 px-3 sm:px-5">
                   <div className="overflow-y-auto max-h-[300px] sm:max-h-[400px] lg:max-h-[500px] pr-2">
@@ -1361,7 +1298,7 @@ const StudentDashboard = () => {
                     <Target className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
                     Journey Actions
                   </CardTitle>
-                  <CardDescription className="text-[10px] sm:text-xs">Take action to advance your career path</CardDescription>
+                  <CardDescription className="text-xs sm:text-xs">Take action to advance your career path</CardDescription>
                 </CardHeader>
                 <CardContent className="flex-1 overflow-y-auto space-y-3 sm:space-y-4 custom-scrollbar px-3 sm:px-5 pb-3 sm:pb-5">
                   <div className="bg-primary/5 border border-primary/10 rounded-xl p-4 mb-4">
@@ -1502,11 +1439,11 @@ const StudentDashboard = () => {
         </Tabs>
 
         <nav className="student-bottom-nav" aria-label="Student navigation">
-          <button type="button" className={activeTab === 'overview' ? 'is-active' : ''} onClick={() => setActiveTab('overview')}><Award className="h-5 w-5" /><span>Home</span></button>
-          <button type="button" className={activeTab === 'careers' ? 'is-active' : ''} onClick={() => setActiveTab('careers')}><Search className="h-5 w-5" /><span>Explore</span></button>
-          <button type="button" className={activeTab === 'progress' ? 'is-active' : ''} onClick={() => setActiveTab('progress')}><BookOpen className="h-5 w-5" /><span>Plan</span></button>
-          <button type="button" className={activeTab === 'chat' ? 'is-active' : ''} onClick={() => setActiveTab('chat')}><MessageSquare className="h-5 w-5" /><span>Chat</span></button>
-          <button type="button" className={activeTab === 'profile' ? 'is-active' : ''} onClick={() => setActiveTab('profile')}><User className="h-5 w-5" /><span>Profile</span></button>
+          <button type="button" className={activeTab === 'overview' ? 'is-active' : ''} onClick={() => setActiveTab('overview')} aria-current={activeTab === 'overview' ? 'page' : undefined}><Award className="h-5 w-5" /><span>Home</span></button>
+          <button type="button" className={activeTab === 'careers' ? 'is-active' : ''} onClick={() => setActiveTab('careers')} aria-current={activeTab === 'careers' ? 'page' : undefined}><Search className="h-5 w-5" /><span>Explore</span></button>
+          <button type="button" className={activeTab === 'progress' ? 'is-active' : ''} onClick={() => setActiveTab('progress')} aria-current={activeTab === 'progress' ? 'page' : undefined}><BookOpen className="h-5 w-5" /><span>Plan</span></button>
+          <button type="button" className={activeTab === 'chat' ? 'is-active' : ''} onClick={() => setActiveTab('chat')} aria-current={activeTab === 'chat' ? 'page' : undefined}><MessageSquare className="h-5 w-5" /><span>Chat</span></button>
+          <button type="button" className={activeTab === 'profile' ? 'is-active' : ''} onClick={() => setActiveTab('profile')} aria-current={activeTab === 'profile' ? 'page' : undefined}><User className="h-5 w-5" /><span>Profile</span></button>
         </nav>
       </main>
 

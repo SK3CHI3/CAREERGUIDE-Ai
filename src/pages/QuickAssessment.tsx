@@ -60,7 +60,7 @@ const QuickAssessment = () => {
     const [guestProfile, setGuestProfile] = useState<GuestProfile>({});
     const [directionBrief, setDirectionBrief] = useState<QuickAssessmentBrief | null>(null);
 
-    // LOAD PERSISTENCE
+    // LOAD PERSISTENCE - Restore all form fields if user refreshed mid-assessment
     useEffect(() => {
         const saved = localStorage.getItem('career_assessment_state');
         if (saved) {
@@ -68,9 +68,22 @@ const QuickAssessment = () => {
                 const parsed = JSON.parse(saved);
                 // Only restore if it's less than 2 hours old
                 if (Date.now() - parsed.timestamp < 7200000) {
-                    // Simplified restoration for critical fields
+                    if (parsed.name) setName(parsed.name);
+                    if (parsed.email) setEmail(parsed.email);
                     if (parsed.grade) setGrade(parsed.grade);
-                    if (parsed.step) setCurrentStep(parsed.step);
+                    if (parsed.pathway) setPathway(parsed.pathway);
+                    if (parsed.selectedSubjects?.length) setSelectedSubjects(parsed.selectedSubjects);
+                    if (parsed.selectedInterests?.length) setSelectedInterests(parsed.selectedInterests);
+                    if (parsed.selectedValues?.length) setSelectedValues(parsed.selectedValues);
+                    if (parsed.workStyle) setWorkStyle(parsed.workStyle);
+                    if (parsed.mbtiEnergy) setMbtiEnergy(parsed.mbtiEnergy);
+                    if (parsed.mbtiDecisions) setMbtiDecisions(parsed.mbtiDecisions);
+                    if (parsed.mbtiStructure) setMbtiStructure(parsed.mbtiStructure);
+                    if (parsed.barrier) setBarrier(parsed.barrier);
+                    if (parsed.experience) setExperience(parsed.experience);
+                    if (parsed.readiness) setReadiness(parsed.readiness);
+                    if (parsed.currentStep) setCurrentStep(parsed.currentStep);
+                    if (parsed.subStep) setSubStep(parsed.subStep);
                 }
             } catch (e) {
                 console.error("Failed to restore assessment state");
@@ -78,14 +91,16 @@ const QuickAssessment = () => {
         }
     }, []);
 
-    // SAVE PERSISTENCE
+    // SAVE PERSISTENCE - Save all form fields during steps 1-6
     useEffect(() => {
-        if (currentStep > 1 && currentStep < 7) {
+        if (currentStep >= 1 && currentStep < 7) {
             localStorage.setItem('career_assessment_state', JSON.stringify({
-                grade, step: currentStep, timestamp: Date.now()
+                name, email, grade, pathway, selectedSubjects, selectedInterests,
+                selectedValues, workStyle, mbtiEnergy, mbtiDecisions, mbtiStructure,
+                barrier, experience, readiness, currentStep, subStep, timestamp: Date.now()
             }));
         }
-    }, [currentStep, name, email, grade]);
+    }, [currentStep, subStep, name, email, grade, pathway, selectedSubjects, selectedInterests, selectedValues, workStyle, mbtiEnergy, mbtiDecisions, mbtiStructure, barrier, experience, readiness]);
 
     const SUBJECT_DATA = {
         cbc_junior: ["Mathematics", "English", "Kiswahili", "Integrated Science", "Health Education", "Pre-Technical & Pre-Career Studies", "Social Studies", "Business Studies", "Agriculture & Nutrition", "Life Skills Education", "Creative Arts and Sports", "Religious Education (CRE/IRE/HRE)"],
