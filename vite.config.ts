@@ -29,7 +29,11 @@ export default defineConfig(({ mode }) => {
           display: 'standalone',
           theme_color: '#1d4ed8',
           background_color: '#ffffff',
-          icons: [{ src: '/logos/CareerGuide_Logo.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' }],
+          icons: [
+            { src: '/logos/CareerGuide_Logo.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+            { src: '/logos/CareerGuide_Logo.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+            { src: '/logos/CareerGuide_Logo.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+          ],
         },
         workbox: {
           navigateFallback: '/index.html',
