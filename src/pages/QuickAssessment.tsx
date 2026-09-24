@@ -14,6 +14,8 @@ import { ReportGenerator, type GuestProfile } from "@/lib/report-generator";
 import { createFallbackQuickAssessmentBrief, type QuickAssessmentBrief } from "@/lib/quick-assessment-report";
 import { dashboardService } from "@/lib/dashboard-service";
 import QuickAssessmentDirectionBrief from "@/components/QuickAssessmentDirectionBrief";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/lib/supabase";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import BackgroundGradient from "@/components/BackgroundGradient";
@@ -26,10 +28,13 @@ const QuickAssessment = () => {
     const isCareerFitMode = !!targetCareer;
 
     const paywallRef = useRef<any>(null);
+    const reportSectionRef = useRef<HTMLDivElement>(null);
+    const { user } = useAuth();
     const [currentStep, setCurrentStep] = useState(1);
     const [subStep, setSubStep] = useState(1); // For Phase 1 sub-steps
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [paymentConfirmed, setPaymentConfirmed] = useState(false);
 
     // Phase 1: Academics
     const [name, setName] = useState("");
@@ -170,6 +175,21 @@ const QuickAssessment = () => {
     const [reportHtml, setReportHtml] = useState<string | null>(null);
     const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 
+    useEffect(() => {
+        if (!user?.id || isCareerFitMode) return;
+        const checkExistingPayment = async () => {
+            const { data } = await (supabase.from as any)('payments')
+                .select('id')
+                .eq('user_id', user.id)
+                .eq('payment_type', 'quick_assessment')
+                .eq('status', 'completed')
+                .limit(1)
+                .maybeSingle();
+            if (data) setIsPaid(true);
+        };
+        void checkExistingPayment();
+    }, [user?.id, isCareerFitMode]);
+
     const finishAssessment = async () => {
         setIsLoading(true);
         setError(null);
@@ -276,7 +296,16 @@ const QuickAssessment = () => {
 
     const handlePaymentSuccess = () => {
         setIsPaid(true);
-        void downloadReport(); // Automatically trigger download on success
+        setPaymentConfirmed(true);
+        setTimeout(() => {
+            reportSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 600);
+        setTimeout(() => {
+            void downloadReport();
+        }, 1800);
+        setTimeout(() => {
+            setPaymentConfirmed(false);
+        }, 3000);
     };
 
     return (
@@ -658,7 +687,22 @@ const QuickAssessment = () => {
 
                             {/* STEP 7: RESULTS */}
                             {currentStep === 7 && (
+                                <div ref={reportSectionRef}>
                                 <motion.div key="step7" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 py-4 max-w-3xl mx-auto">
+                                    <AnimatePresence>
+                                        {paymentConfirmed && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: -10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -10 }}
+                                                className="flex items-center justify-center gap-2 p-4 rounded-xl bg-green-500/10 border border-green-500/20"
+                                            >
+                                                <CheckCircle className="w-5 h-5 text-green-500" />
+                                                <span className="font-semibold text-green-700 dark:text-green-400">Payment confirmed — your report is now unlocked!</span>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+
                                     <div className="text-center space-y-2">
                                         <div className="w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center mx-auto">
                                             <CheckCircle className="w-6 h-6 text-green-500" />
@@ -693,6 +737,7 @@ const QuickAssessment = () => {
                                         )}
                                     </div>
                                 </motion.div>
+                                </div>
                             )}
                         </AnimatePresence>
                     </CardContent>

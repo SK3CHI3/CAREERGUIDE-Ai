@@ -143,6 +143,7 @@ const ReportPaywall = forwardRef<ReportPaywallHandle, ReportPaywallProps>(({ onP
         api_ref: recoveryRef,
         first_name: studentName?.split(' ')[0] || 'Student',
         last_name: studentName?.split(' ').slice(1).join(' ') || 'Report',
+        redirectURL: window.location.href,
       });
     } catch (err) {
       setError('Failed to open payment window.');
