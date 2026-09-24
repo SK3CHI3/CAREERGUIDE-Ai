@@ -1,4 +1,4 @@
-import { BookOpen, CheckCircle2, Compass, Lightbulb, MapPinned, MessageCircle, Target } from 'lucide-react';
+import { BookOpen, Compass, Lightbulb, MapPinned, MessageCircle, Target } from 'lucide-react';
 import type { GuestProfile } from '@/lib/report-generator';
 import type { QuickAssessmentBrief } from '@/lib/quick-assessment-report';
 
@@ -126,16 +126,6 @@ const QuickAssessmentDirectionBrief = ({ profile, brief }: QuickAssessmentDirect
         </div>
       </div>
     </div>
-
-    {locked && (
-      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-white/95 via-white/50 to-transparent p-5">
-        <div className="max-w-xs text-center">
-          <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-primary/10"><CheckCircle2 className="h-6 w-6 text-primary" /></div>
-          <p className="mt-3 text-sm font-bold text-slate-900">Your full direction brief is ready</p>
-          <p className="mt-1 text-xs leading-5 text-slate-600">Unlock it to see the three careers, activities, plan, and downloadable report.</p>
-        </div>
-      </div>
-    )}
   </section>
 );
 
