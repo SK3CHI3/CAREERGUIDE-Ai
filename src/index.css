@@ -5,10 +5,6 @@
 /* Modern AI Career Platform Design System - Kenya CBE Focus */
 
 @layer base {
-  :root {
-    --app-font: Georgia, 'Times New Roman', serif;
-  }
-
   html,
   body,
   #root {
@@ -123,11 +119,6 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-  }
-
-  /* Georgia is the selected CareerGuide display face. */
-  h1, h2, h3, h4, h5, h6 {
-    font-family: Georgia, 'Times New Roman', serif !important;
   }
 
   button,

@@ -411,7 +411,7 @@ export class ReportGenerator {
       * { box-sizing: border-box; margin: 0; padding: 0; }
 
       .report-container {
-        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
         color: ${colors.text};
         background: ${colors.white};
         line-height: 1.5;
