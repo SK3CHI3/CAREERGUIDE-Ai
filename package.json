@@ -16,6 +16,7 @@
     "postbuild": "npm run sitemap"
   },
   "dependencies": {
+    "@fontsource/inter": "^5.3.0",
     "@fontsource/libre-baskerville": "^5.3.0",
     "@hookform/resolvers": "^3.10.0",
     "@lottiefiles/dotlottie-react": "^0.18.3",

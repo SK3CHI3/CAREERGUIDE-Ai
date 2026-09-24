@@ -21,8 +21,8 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				sans: ['ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', '"Noto Sans"', 'sans-serif'],
-				serif: ['Georgia', 'Cambria', '"Times New Roman"', 'Times', 'serif'],
+				sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', '"Noto Sans"', 'sans-serif'],
+				serif: ['Libre Baskerville', 'Georgia', 'Cambria', '"Times New Roman"', 'Times', 'serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
