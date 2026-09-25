@@ -877,115 +877,53 @@ export class ReportGenerator {
 
     console.log("Starting PDF generation...", { filename: safeFilename, htmlLength: htmlContent.length });
 
-    // Create a properly positioned off-screen container
-    const renderRoot = document.createElement('div');
-    renderRoot.setAttribute('aria-hidden', 'true');
-    renderRoot.style.cssText = `
-      position: absolute;
-      left: -10000px;
-      top: 0;
-      width: 794px;
-      background: #ffffff;
-      z-index: -9999;
-      overflow: visible;
-    `;
-    renderRoot.innerHTML = htmlContent;
-    document.body.appendChild(renderRoot);
+    // Wait for fonts with timeout
+    if ('fonts' in document) {
+      try {
+        await Promise.race([
+          document.fonts.ready,
+          new Promise((_, reject) => setTimeout(() => reject(new Error('Font loading timeout')), 3000))
+        ]);
+      } catch (err) {
+        console.warn('Font loading timeout, continuing anyway:', err);
+      }
+    }
+
+    const options: any = {
+      margin: [10, 10, 10, 10],
+      filename: safeFilename,
+      image: { type: 'jpeg', quality: 0.95 },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        letterRendering: true,
+        windowWidth: 794,
+        backgroundColor: '#ffffff',
+      },
+      jsPDF: {
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'portrait',
+        compress: true
+      },
+      pagebreak: {
+        mode: ['css', 'legacy'],
+        avoid: ['.brief-career-card', '.brief-plan-card', '.brief-reflection-row']
+      }
+    };
 
     try {
-      // Wait for fonts with timeout
-      if ('fonts' in document) {
-        try {
-          await Promise.race([
-            document.fonts.ready,
-            new Promise((_, reject) => setTimeout(() => reject(new Error('Font loading timeout')), 3000))
-          ]);
-        } catch (err) {
-          console.warn('Font loading timeout, continuing anyway:', err);
-        }
-      }
-
-      // Wait for images with timeout
-      const images = Array.from(renderRoot.querySelectorAll('img'));
-      if (images.length > 0) {
-        await Promise.race([
-          Promise.all(images.map(image => 
-            image.complete 
-              ? Promise.resolve()
-              : new Promise<void>((resolve) => {
-                  const timeout = setTimeout(() => resolve(), 2000);
-                  image.addEventListener('load', () => { clearTimeout(timeout); resolve(); }, { once: true });
-                  image.addEventListener('error', () => { clearTimeout(timeout); resolve(); }, { once: true });
-                })
-          )),
-          new Promise((_, reject) => setTimeout(() => reject(new Error('Image loading timeout')), 5000))
-        ]).catch(err => console.warn('Image loading timeout, continuing anyway:', err));
-      }
-
-      // Ensure container has proper dimensions
-      const contentHeight = renderRoot.scrollHeight;
-      console.log("Render root prepared:", {
-        hasContent: renderRoot.innerHTML.length > 0,
-        childCount: renderRoot.children.length,
-        offsetWidth: renderRoot.offsetWidth,
-        offsetHeight: renderRoot.offsetHeight,
-        scrollHeight: contentHeight
-      });
-
-      const options: any = {
-        margin: [10, 10, 10, 10],
-        filename: safeFilename,
-        image: { type: 'jpeg', quality: 0.95 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          logging: false,
-          letterRendering: true,
-          width: 794,
-          windowWidth: 794,
-          windowHeight: contentHeight + 100,
-          backgroundColor: '#ffffff',
-          scrollX: 0,
-          scrollY: 0,
-          x: 0,
-          y: 0,
-          onclone: (clonedDoc: Document) => {
-            // Ensure cloned document has proper styles
-            const clonedRoot = clonedDoc.querySelector('[aria-hidden="true"]');
-            if (clonedRoot) {
-              (clonedRoot as HTMLElement).style.visibility = 'visible';
-              (clonedRoot as HTMLElement).style.opacity = '1';
-            }
-          }
-        },
-        jsPDF: { 
-          unit: 'mm', 
-          format: 'a4', 
-          orientation: 'portrait',
-          compress: true
-        },
-        pagebreak: { 
-          mode: ['css', 'legacy'], 
-          avoid: ['.brief-career-card', '.brief-plan-card', '.brief-reflection-row'] 
-        }
-      };
-
-      // Execute PDF generation with proper error handling
-      const worker = html2pdf()
-        .from(renderRoot)
-        .set(options);
-
-      await worker.save();
+      // Pass HTML as string — html2pdf creates its own visible rendering container
+      await html2pdf()
+        .from(htmlContent, 'string')
+        .set(options)
+        .save();
 
       console.log("PDF save completed successfully");
     } catch (error) {
       console.error('PDF generation failed:', error);
       throw new Error(`PDF generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    } finally {
-      // Always cleanup
-      if (renderRoot.parentNode) {
-        renderRoot.parentNode.removeChild(renderRoot);
-      }
     }
   }
 
