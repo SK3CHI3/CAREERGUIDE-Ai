@@ -255,7 +255,8 @@ const QuickAssessment = () => {
     const downloadReport = async () => {
         if (!directionBrief) return;
         try {
-            await ReportGenerator.generateQuickAssessmentPDFReport(guestProfile, directionBrief);
+            const html = ReportGenerator.generateQuickAssessmentPDFReport(guestProfile, directionBrief);
+            await ReportGenerator.downloadPDF(html, `${guestProfile.name || 'CareerGuide'}-Direction-Brief.pdf`);
         } catch (err) {
             console.error(err);
             setError('Failed to download report. Please try again.');
