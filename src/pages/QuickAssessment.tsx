@@ -188,13 +188,20 @@ const QuickAssessment = () => {
             setGuestProfile(profile);
 
             // Load career fields from database
+            console.log('Fetching career fields for grade:', grade);
             const careerFields = await dashboardService.getCareerFields(grade).catch((err) => {
                 console.error('Failed to load career fields:', err);
                 throw new Error('Failed to load career fields. Please try again.');
             });
 
+            console.log('Career fields received:', {
+                count: careerFields?.length,
+                fields: careerFields?.slice(0, 5).map(f => ({ name: f.name, pathway: f.cbc_pathway }))
+            });
+
             if (!careerFields || careerFields.length < 3) {
-                throw new Error('Not enough career fields available. Please try again later.');
+                console.error('Not enough career fields:', careerFields?.length);
+                throw new Error(`Not enough career fields available (${careerFields?.length || 0} found). Please contact support.`);
             }
 
             const quickAssessment = {

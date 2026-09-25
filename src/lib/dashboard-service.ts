@@ -369,6 +369,8 @@ class DashboardService {
   // Career Fields (for Quick Assessment only)
   async getCareerFields(grade?: string): Promise<CareerField[]> {
     try {
+      console.log('getCareerFields called with grade:', grade);
+      
       let query = supabase
         .from('career_fields')
         .select('*')
@@ -377,12 +379,25 @@ class DashboardService {
       const { data, error } = await query
 
       if (error) throw error
-      
+
+      console.log('Total career fields from DB:', data?.length);
+      if (data && data.length > 0) {
+        console.log('Sample grade_appropriateness:', data[0].grade_appropriateness);
+      }
+
       // Filter by grade appropriateness if grade is provided
       if (grade && data) {
-        return data.filter(field => field.grade_appropriateness.includes(grade))
+        const filtered = data.filter(field => {
+          const matches = field.grade_appropriateness?.includes(grade);
+          if (!matches) {
+            console.log(`Field "${field.name}" doesn't match grade "${grade}". Has:`, field.grade_appropriateness);
+          }
+          return matches;
+        });
+        console.log('Filtered career fields:', filtered.length);
+        return filtered;
       }
-      
+
       return data || []
     } catch (err) {
       console.error('Error in getCareerFields:', err);
