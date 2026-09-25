@@ -356,8 +356,8 @@ export class ReportGenerator {
   private static getQuickAssessmentStyles(): string {
     return `
       * { box-sizing: border-box; }
-      .quick-brief { width: 794px; color: #14213d; background: #fff; font-family: Georgia, 'Times New Roman', serif; }
-      .quick-brief-page { width: 794px; min-height: 1123px; padding: 42px 52px 54px; position: relative; background: #fff; page-break-after: always; break-after: page; }
+      .quick-brief { width: 100%; max-width: 794px; color: #14213d; background: #fff; font-family: Georgia, 'Times New Roman', serif; margin: 0 auto; }
+      .quick-brief-page { width: 100%; max-width: 794px; min-height: 1123px; padding: 42px 52px 54px; position: relative; background: #fff; page-break-after: always; break-after: page; margin: 0 auto; }
       .quick-brief-page:last-child { page-break-after: auto; break-after: auto; }
       .brief-header { height: 53px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #dce4ed; font-family: Arial, sans-serif; color: #64748b; font-size: 11px; }
       .brief-logo { display: block; width: 155px; height: auto; max-height: 35px; object-fit: contain; object-position: left center; }
@@ -420,7 +420,8 @@ export class ReportGenerator {
       }
 
       .report-page {
-        width: 800px;
+        width: 100%;
+        max-width: 794px;
         min-height: 1100px;
         margin: 0 auto;
         padding: 40px 50px;
@@ -890,7 +891,7 @@ export class ReportGenerator {
     }
 
     const options: any = {
-      margin: [10, 10, 10, 10],
+      margin: [8, 8, 8, 8],
       filename: safeFilename,
       image: { type: 'jpeg', quality: 0.95 },
       html2canvas: {
@@ -898,8 +899,12 @@ export class ReportGenerator {
         useCORS: true,
         logging: false,
         letterRendering: true,
-        windowWidth: 794,
+        windowWidth: 850,
         backgroundColor: '#ffffff',
+        scrollX: 0,
+        scrollY: 0,
+        x: 0,
+        y: 0,
       },
       jsPDF: {
         unit: 'mm',
