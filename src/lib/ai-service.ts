@@ -398,12 +398,14 @@ ${input.budgetRange ? `- Budget range: ${input.budgetRange}` : ''}
 ${input.specificChallenges ? `- Specific challenges: ${input.specificChallenges.join(', ')}` : ''}
 ${input.targetCareer ? `- Career the student asked about: ${input.targetCareer}` : ''}
 
-ALLOWED CAREER FIELDS - choose exactly three fields from this list and copy each field name exactly:
+ALLOWED CAREER FIELDS - choose exactly three fields from this list and copy each field name EXACTLY as written:
 ${fields}
 
+CRITICAL: The "field" property in your JSON must contain the EXACT field name from the list above. Do not paraphrase, shorten, rename, or combine field names. For example, if the list says "Technology and Computing", you must write "Technology and Computing" — not "Technology", not "Tech and Computing", not "Arts and Creative Industries". Copy the name character-for-character.
+
 Non-negotiable guidance rules:
-1. The three suggestions must be career fields from the allowed list. Never suggest specific job titles like "Real Estate Manager," "Software Developer," or "Registered Nurse." Use field-level framing: "Technology and Computing," "Health and Caring Professions," "Business and Finance."
-2. Each career field must include cbc_pathway and cbc_track fields. Validate against the 3 known pathways: STEM, Social Sciences, Arts & Sports Science.
+1. The three suggestions must be career fields from the allowed list above. Copy the field name EXACTLY as it appears. Never invent new field names, never paraphrase existing ones, and never suggest specific job titles like "Real Estate Manager," "Software Developer," or "Registered Nurse."
+2. Each career field must include cbc_pathway and cbc_track fields that match the pathway and track shown in the allowed list above. Valid pathways are: STEM, Social Sciences, Arts & Sports Science.
 3. Each career field must include subjects_to_prioritise - 1-3 specific subjects the student should focus on this term, based on their performance data and the field's track requirements.
 4. For Grades 7-9: only suggest fields marked as appropriate for the student's grade. "Law and Governance" must never appear for a Grade 7 student.
 5. For Grades 7-9: filter suggestions to school pathway availability. If the school only offers 2 of 3 pathways, don't suggest fields from the missing one.
@@ -426,9 +428,9 @@ Return exactly this shape:
   ${input.grade === 'Grade 11' ? '"vision_note": "1 sentence connecting the student\'s future vision to the career suggestions.",' : ''}
   "career_fields": [
     {
-      "field": "Exact field name from the allowed list",
+      "field": "Copy EXACT name from allowed list (e.g., Technology and Computing)",
       "cbc_pathway": "STEM or Social Sciences or Arts & Sports Science",
-      "cbc_track": "Track name from the allowed list",
+      "cbc_track": "Track name from the allowed list (e.g., Applied Sciences)",
       "subjects_to_prioritise": ["Subject 1", "Subject 2"],
       "why_it_appeared": "Specific evidence from at least two student signals; end with an uncertainty-aware statement.",
       "reality_to_test": "The aspect of daily work that still needs evidence.",

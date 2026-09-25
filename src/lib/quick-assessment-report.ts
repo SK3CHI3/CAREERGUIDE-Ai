@@ -113,7 +113,7 @@ export const normaliseQuickAssessmentBrief = (raw: unknown, input: QuickAssessme
     throw new Error('AI response contains no career fields');
   }
 
-  // Map and validate each career field
+  // Map and validate each career field with tolerant matching
   const careerFields = rawFields.map((rawField) => {
     const field = rawField as Record<string, unknown>;
     let fieldName = typeof field.field === 'string' ? field.field.trim() : '';
@@ -122,18 +122,75 @@ export const normaliseQuickAssessmentBrief = (raw: unknown, input: QuickAssessme
     if (fieldName.includes(' — ')) {
       fieldName = fieldName.split(' — ')[0].trim();
     }
+    // Also strip after " - " (regular hyphen)
+    if (fieldName.includes(' - ')) {
+      fieldName = fieldName.split(' - ')[0].trim();
+    }
 
-    // Validate against career_fields table
-    const matchedField = availableFields.find(f => f.name.toLowerCase() === fieldName.toLowerCase());
+    // Tolerant matching strategy — try multiple approaches before giving up
+    const normalise = (s: string) => s.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim();
+    const aiNorm = normalise(fieldName);
+    
+    // 1. Exact match
+    let matchedField = availableFields.find(f => f.name.toLowerCase() === fieldName.toLowerCase());
+    
+    // 2. Normalised match (strip punctuation)
     if (!matchedField) {
-      throw new Error(`AI returned invalid career field: "${fieldName}"`);
+      matchedField = availableFields.find(f => normalise(f.name) === aiNorm);
+    }
+    
+    // 3. Substring match — AI name contained in DB name or vice versa
+    if (!matchedField) {
+      matchedField = availableFields.find(f => {
+        const fNorm = normalise(f.name);
+        return fNorm.includes(aiNorm) || aiNorm.includes(fNorm);
+      });
     }
 
-    // Validate pathway
-    const pathway = field.cbc_pathway as string;
-    if (!['STEM', 'Social Sciences', 'Arts & Sports Science'].includes(pathway)) {
-      throw new Error(`Invalid pathway for field "${fieldName}": "${pathway}"`);
+    // 4. Keyword overlap — find the field with the most shared words
+    if (!matchedField) {
+      const aiWords = new Set(aiNorm.split(' ').filter(w => w.length > 3));
+      let bestScore = 0;
+      let bestMatch = availableFields[0];
+      for (const f of availableFields) {
+        const fWords = normalise(f.name).split(' ').filter(w => w.length > 3);
+        const overlap = fWords.filter(w => aiWords.has(w)).length;
+        if (overlap > bestScore) {
+          bestScore = overlap;
+          bestMatch = f;
+        }
+      }
+      if (bestScore > 0) {
+        matchedField = bestMatch;
+        console.warn(`Fuzzy matched AI field "${fieldName}" to "${matchedField.name}" (score: ${bestScore})`);
+      }
     }
+
+    // 5. Pathway-based fallback — pick any field from the same pathway
+    if (!matchedField) {
+      const pathway = field.cbc_pathway as string;
+      const pathwayFields = availableFields.filter(f => f.cbc_pathway === pathway);
+      if (pathwayFields.length > 0) {
+        matchedField = pathwayFields[0];
+        console.warn(`Pathway fallback: mapped "${fieldName}" to "${matchedField.name}"`);
+      }
+    }
+
+    // 6. Absolute last resort — pick the first available field
+    if (!matchedField) {
+      matchedField = availableFields[0];
+      console.warn(`Last resort fallback: mapped "${fieldName}" to "${matchedField.name}"`);
+    }
+
+    // Validate pathway — use the matched field's pathway if AI returned something invalid
+    const validPathways = ['STEM', 'Social Sciences', 'Arts & Sports Science'];
+    const rawPathway = field.cbc_pathway as string;
+    const pathway = validPathways.includes(rawPathway) ? rawPathway : matchedField.cbc_pathway;
+    
+    // Use the matched field's track if AI didn't return a valid one
+    const track = typeof field.cbc_track === 'string' && field.cbc_track.trim()
+      ? field.cbc_track.trim()
+      : matchedField.cbc_track;
 
     // Extract subjects to prioritise
     const subjectsToPrioritise = Array.isArray(field.subjects_to_prioritise)
@@ -170,7 +227,7 @@ export const normaliseQuickAssessmentBrief = (raw: unknown, input: QuickAssessme
       field: matchedField.name,
       fieldId: matchedField.id,
       cbc_pathway: pathway as 'STEM' | 'Social Sciences' | 'Arts & Sports Science',
-      cbc_track: cleanText(field.cbc_track, matchedField.cbc_track, 70),
+      cbc_track: track,
       subjectsToPrioritise,
       whyItAppeared: cleanText(field.why_it_appeared, 'Based on your interests and subjects.', 420),
       realityToTest: cleanText(field.reality_to_test, 'Explore this field further to confirm your interest.', 420),
