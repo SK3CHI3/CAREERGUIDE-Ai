@@ -189,11 +189,11 @@ const QuickAssessment = () => {
 
             // Load career fields from database
             const careerFields = await dashboardService.getCareerFields(grade).catch((err) => {
-                console.warn('Could not load career fields:', err);
-                return [];
+                console.error('Failed to load career fields:', err);
+                throw new Error('Failed to load career fields. Please try again.');
             });
 
-            if (careerFields.length < 3) {
+            if (!careerFields || careerFields.length < 3) {
                 throw new Error('Not enough career fields available. Please try again later.');
             }
 
@@ -217,12 +217,19 @@ const QuickAssessment = () => {
             };
 
             const brief = await aiCareerService.generateQuickAssessmentBrief(quickAssessment);
+            
+            if (!brief || !brief.careerFields || brief.careerFields.length === 0) {
+                console.error('Invalid brief returned:', brief);
+                throw new Error('The AI returned an invalid result. Please try again.');
+            }
+
             setDirectionBrief(brief);
             localStorage.removeItem('career_assessment_state');
             setCurrentStep(5);
         } catch (err: unknown) {
-            console.error(err);
+            console.error('Assessment generation failed:', err);
             setError((err as Error).message || 'Failed to generate assessment. Please try again.');
+            setCurrentStep(4); // Go back to last step so they can retry
         } finally {
             setIsLoading(false);
         }
@@ -554,7 +561,20 @@ const QuickAssessment = () => {
                                             onConsult={() => navigate('/student')}
                                         />
                                     ) : (
-                                        <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-5 text-center text-sm text-destructive">Your result is not ready yet. Please try generating the brief again.</div>
+                                        <div className="space-y-4">
+                                            <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-5 text-center">
+                                                <p className="text-sm text-destructive font-semibold">Your result is not ready yet.</p>
+                                                <p className="text-xs text-muted-foreground mt-2">Something went wrong while generating your brief.</p>
+                                            </div>
+                                            <div className="flex gap-3">
+                                                <Button variant="outline" onClick={() => setCurrentStep(4)} className="flex-1 h-12 border-2 font-bold">
+                                                    <ArrowLeft className="mr-2 w-4 h-4" /> Go Back
+                                                </Button>
+                                                <Button onClick={finishAssessment} className="flex-1 h-12 bg-primary font-bold">
+                                                    Try Again
+                                                </Button>
+                                            </div>
+                                        </div>
                                     )}
                                 </motion.div>
                             )}
