@@ -223,7 +223,7 @@ const QuickAssessment = () => {
                 availableCareerFields: careerFields,
             };
 
-            const brief = await aiCareerService.generateQuickAssessmentBrief(quickAssessment);
+            const brief = await aiCareerService.generateQuickAssessmentBrief({ quickAssessment });
 
             console.log('Brief received from AI:', {
                 hasBrief: !!brief,
