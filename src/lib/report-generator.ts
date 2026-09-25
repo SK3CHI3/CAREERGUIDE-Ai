@@ -215,25 +215,57 @@ export class ReportGenerator {
     const studentName = escape(profile.name || 'Student');
     const subjectList = escape(profile.subjects?.slice(0, 4).join(', ') || 'Not selected');
     const interestList = escape(profile.interests?.slice(0, 4).join(', ') || 'Not selected');
+    const isGrade11 = profile.grade === 'Grade 11';
 
-    const careerCards = brief.careers.map((career, index) => `
+    const careerCards = brief.careerFields.map((field, index) => `
       <article class="brief-career-card">
         <div class="brief-career-number">0${index + 1}</div>
-        <div class="brief-kicker">Career to explore</div>
-        <h2>${escape(career.career)}</h2>
+        <div class="brief-kicker">Career field to explore</div>
+        <h2>${escape(field.field)}</h2>
+        <div class="brief-pathway-badges">
+          <span class="brief-pathway-badge brief-pathway-${field.cbc_pathway.toLowerCase().replace(/\s+/g, '-')}">${escape(field.cbc_pathway)}</span>
+          <span class="brief-track-badge">${escape(field.cbc_track)}</span>
+        </div>
+        <div class="brief-copy-block">
+          <h3>Subjects to prioritise</h3>
+          <div class="brief-subject-chips">
+            ${field.subjectsToPrioritise.map(s => `<span class="brief-subject-chip">${escape(s)}</span>`).join('')}
+          </div>
+        </div>
         <div class="brief-copy-block">
           <h3>Why it appeared</h3>
-          <p>${escape(career.whyItAppeared)}</p>
+          <p>${escape(field.whyItAppeared)}</p>
         </div>
         <div class="brief-copy-block">
           <h3>What still needs testing</h3>
-          <p>${escape(career.realityToTest)}</p>
+          <p>${escape(field.realityToTest)}</p>
         </div>
+        ${!isGrade11 && field.starterActivity ? `
         <div class="brief-activity">
-          <strong>${escape(career.starterActivityTitle)}</strong>
-          <p>${escape(career.starterActivity)}</p>
-          <span><b>Notice:</b> ${escape(career.reflectionPrompt)}</span>
+          <strong>${escape(field.starterActivity.title)}</strong>
+          <p>${escape(field.starterActivity.instruction)}</p>
+          <span><b>Notice:</b> ${escape(field.starterActivity.reflectionPrompt)}</span>
         </div>
+        ` : ''}
+        ${isGrade11 && field.trainingRoutes ? `
+        <div class="brief-training-routes">
+          <strong>Training routes</strong>
+          ${field.trainingRoutes.map(route => `
+            <div class="brief-route">
+              <p><b>${escape(route.route)}:</b> ${escape(route.programme)}</p>
+              <p>${escape(route.requirements)}</p>
+              <p class="brief-route-budget">${escape(route.budgetNote)}</p>
+            </div>
+          `).join('')}
+        </div>
+        ` : ''}
+        ${isGrade11 && field.nextAction ? `
+        <div class="brief-next-action">
+          <strong>${escape(field.nextAction.title)}</strong>
+          <p>${escape(field.nextAction.instruction)}</p>
+          <span><b>Deadline:</b> ${escape(field.nextAction.deadline)}</span>
+        </div>
+        ` : ''}
       </article>
     `).join('');
 
@@ -247,13 +279,6 @@ export class ReportGenerator {
           <span>${escape(step.careerGuideAction)}</span>
         </div>
       </article>
-    `).join('');
-
-    const reflectionRows = brief.reflectionPrompts.map(prompt => `
-      <div class="brief-reflection-row">
-        <h3>${escape(prompt)}</h3>
-        <div></div><div></div><div></div>
-      </div>
     `).join('');
 
     return `
@@ -285,6 +310,18 @@ export class ReportGenerator {
             <div class="brief-kicker">Your focus now</div>
             <h2>${escape(brief.gradeFocus)}</h2>
           </div>
+          ${brief.parentNote ? `
+          <div class="brief-callout">
+            <div class="brief-kicker">Your family's expectations</div>
+            <p>${escape(brief.parentNote)}</p>
+          </div>
+          ` : ''}
+          ${brief.visionNote ? `
+          <div class="brief-callout">
+            <div class="brief-kicker">Your vision</div>
+            <p>${escape(brief.visionNote)}</p>
+          </div>
+          ` : ''}
           ${this.getQuickAssessmentFooter(1)}
         </section>
 
@@ -311,20 +348,6 @@ export class ReportGenerator {
             <p>Ask a teacher, parent, mentor, or CareerGuide counsellor to respond to the work you actually produce.</p>
           </div>
           ${this.getQuickAssessmentFooter(3)}
-        </section>
-
-        <section class="quick-brief-page">
-          ${this.getQuickAssessmentHeader('Reflection and next steps')}
-          <div class="brief-title-block small">
-            <h1>Keep the evidence, not just the feeling.</h1>
-            <p>Use this page after trying one activity. Your notes will make the next CareerGuide conversation more useful.</p>
-          </div>
-          <div class="brief-reflections">${reflectionRows}</div>
-          <div class="brief-next-card">
-            <h2>Continue in CareerGuide AI</h2>
-            <p>Explore career paths  |  Try a short course  |  Compare subjects  |  Ask the AI adviser</p>
-          </div>
-          ${this.getQuickAssessmentFooter(4)}
         </section>
       </div>
     `;
@@ -388,6 +411,24 @@ export class ReportGenerator {
       .brief-activity strong { color: #1f5bc5; font-size: 12px; }
       .brief-activity p { margin: 4px 0 5px; font-size: 11px; line-height: 1.38; }
       .brief-activity span { display: block; color: #64748b; font-size: 10px; line-height: 1.35; }
+      .brief-pathway-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+      .brief-pathway-badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font: 700 10px/1.3 Arial, sans-serif; }
+      .brief-pathway-stem { background: #dbeafe; color: #1e40af; }
+      .brief-pathway-social-sciences { background: #f3e8ff; color: #6b21a8; }
+      .brief-pathway-arts-&-sports-science { background: #dcfce7; color: #166534; }
+      .brief-track-badge { display: inline-block; padding: 4px 10px; border-radius: 12px; background: #f1f5f9; color: #475569; font: 600 10px/1.3 Arial, sans-serif; }
+      .brief-subject-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+      .brief-subject-chip { display: inline-block; padding: 4px 8px; border-radius: 8px; background: #eef4ff; color: #1f5bc5; font: 700 10px/1.3 Arial, sans-serif; }
+      .brief-training-routes { margin-top: 14px; padding: 11px 14px; border-radius: 10px; background: #f8fafc; border: 1px solid #e2e8f0; font-family: Arial, sans-serif; }
+      .brief-training-routes strong { color: #14213d; font-size: 12px; display: block; margin-bottom: 8px; }
+      .brief-route { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #e2e8f0; }
+      .brief-route:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+      .brief-route p { margin: 2px 0; font-size: 11px; line-height: 1.38; color: #44546a; }
+      .brief-route-budget { color: #1f5bc5 !important; font-weight: 600; }
+      .brief-next-action { margin-top: 14px; padding: 11px 14px; border-radius: 10px; background: #ecf8f0; font-family: Arial, sans-serif; }
+      .brief-next-action strong { color: #237a4b; font-size: 12px; }
+      .brief-next-action p { margin: 4px 0 5px; font-size: 11px; line-height: 1.38; color: #44546a; }
+      .brief-next-action span { display: block; color: #64748b; font-size: 10px; line-height: 1.35; }
       .brief-plan-stack { margin-top: 38px; }
       .brief-plan-card { display: grid; grid-template-columns: 58px 1fr; gap: 16px; margin-bottom: 20px; padding: 20px; border: 1px solid #dce4ed; border-radius: 15px; page-break-inside: avoid; break-inside: avoid; }
       .brief-plan-number { display: grid; width: 48px; height: 48px; place-items: center; background: #eef4ff; border-radius: 12px; color: #1f5bc5; font: 700 13px Arial, sans-serif; }

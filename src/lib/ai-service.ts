@@ -5,7 +5,6 @@ import {
   normaliseQuickAssessmentBrief,
   type QuickAssessmentBrief,
   type QuickAssessmentInput,
-  type AssessmentCareerCatalogueItem,
 } from './quick-assessment-report'
 
 const AI_ENDPOINT = '/.netlify/functions/ai-chat'
@@ -33,7 +32,6 @@ export interface UserContext {
   gradeSnapshot?: { subject: string; average: number }[]
   hasRecordedGrades?: boolean
   quickAssessment?: QuickAssessmentInput
-  availableCareers?: AssessmentCareerCatalogueItem[]
 }
 
 class AICareerService {
@@ -352,16 +350,31 @@ Return EXACTLY this JSON format (array of 3 objects):
     const input = userContext.quickAssessment
     if (!input) throw new Error('Quick assessment data is required to create a direction brief.')
 
-    const careers = (userContext.availableCareers || input.availableCareers || [])
-      .slice(0, 160)
-      .map(item => `- ${item.title}${item.category ? ` (${item.category})` : ''}`)
-      .join('\n') || '- Software Developer\n- UX/UI Designer\n- Registered Nurse\n- Accountant\n- Architect\n- Environmental Scientist'
+    const fields = (input.availableCareerFields || [])
+      .filter(f => f.grade_appropriateness.includes(input.grade))
+      .map(item => `- ${item.name} — ${item.cbc_pathway} / ${item.cbc_track} (example roles: ${item.example_roles.slice(0, 3).join(', ')})`)
+      .join('\n') || '- Technology and Computing — STEM / Applied Sciences (example roles: Software Developer, Data Scientist)\n- Business and Entrepreneurship — Social Sciences / Humanities & Business Studies (example roles: Entrepreneur, Business Owner)'
 
     const gradeInstruction = input.grade === 'Grade 7'
-      ? 'The student is in Grade 7. Focus on broad exposure, subject curiosity, and safe short activities. Do not discuss admissions, university choices, or locking in a pathway.'
-      : input.grade === 'Grade 9'
-        ? 'The student is in Grade 9. Focus on testing ideas before Senior School pathway and subject selection. Do not present a career as chosen or guaranteed.'
-        : `The student is in Grade 11${input.pathway ? ` in the ${input.pathway} pathway` : ''}. Focus on comparing training routes, subject requirements, and first experiences. Do not promise admission, a salary, or employment.`
+      ? `The student is in Grade 7 (Junior Secondary). This is CRITICAL: Kenya's CBC places students into Senior School pathways based on Grades 7-8 school-based assessments (20%) plus Grade 9 summative evaluation (60%). What the student does THIS YEAR literally determines which Senior School pathway they qualify for. Focus on:
+1. Broad exploration and subject curiosity - this is a transition phase for career discovery, not specialisation
+2. Connecting interests to CBC's three Senior School pathways: STEM, Social Sciences, or Arts & Sports Science
+3. Helping the student and parent understand that Grade 7-8 performance now shapes future options
+4. Using age-appropriate field-level suggestions (e.g., "business and entrepreneurship" not "property sales agent")
+5. Safe short activities that build evidence without requiring money or special equipment`
+      : input.grade === 'Grade 8'
+        ? `The student is in Grade 8 (Junior Secondary). CRITICAL CONTEXT: CBC pathway placement is based on Grades 7-8 school-based assessments (20%) plus Grade 9 summative (60%). The student is mid-cycle and current performance is shaping which Senior School pathway they'll access. Focus on:
+1. Testing career interests against actual subject enjoyment and aptitude
+2. Explicitly connecting career possibilities to CBC's three pathways: STEM, Social Sciences, Arts & Sports Science
+3. Making the Grade 8 stakes clear - this year counts toward Senior School placement
+4. Practical activities that help the student gather evidence for pathway choice`
+        : input.grade === 'Grade 9'
+          ? `The student is in Grade 9 (final year of Junior Secondary). CRITICAL: The summative evaluation this year determines 60% of their Senior School pathway placement. Grades 7-8 school-based assessments make up the other 20%. They need to:
+1. Test final career ideas before committing to a Senior School pathway (STEM, Social Sciences, or Arts & Sports Science)
+2. Make informed subject selections for Senior School based on evidence, not assumptions
+3. Understand that pathway choice now shapes their Grade 10-12 experience
+4. Focus on comparing training routes and first-hand experiences`
+          : `The student is in Grade 11${input.pathway ? ` in the ${input.pathway} pathway` : ''}. Focus on comparing training routes, subject requirements, and first experiences. Do not promise admission, a salary, or employment.`
 
     const prompt = `Return ONLY one valid JSON object. No markdown, no backticks, no text outside the object.
 
@@ -373,46 +386,65 @@ Student data - use every relevant field:
 - Grade: ${input.grade}
 - Pathway: ${input.pathway || 'Not selected'}
 - Strong subjects: ${input.subjects.join(', ') || 'Not selected'}
+- Subject performance: ${Object.entries(input.subjectPerformance).map(([subject, performance]) => `${subject} (${performance})`).join(', ') || 'Not rated'}
+${input.schoolPathways ? `- School pathways offered: ${input.schoolPathways.join(', ')}` : ''}
 - Interests: ${input.interests.join(', ') || 'Not selected'}
-- Values: ${input.values.join(', ') || 'Not selected'}
-- Preferred work style: ${input.workStyle || 'Not selected'}
-- Focus preference: ${input.preferences.focus || 'Not selected'}
-- Decision preference: ${input.preferences.decisions || 'Not selected'}
-- Structure preference: ${input.preferences.structure || 'Not selected'}
-- Current barrier: ${input.barrier || 'Not selected'}
-- Experience: ${input.experience || 'Not selected'}
-- Readiness: ${input.readiness || 'Not selected'}
+- Clubs/activities: ${input.clubs.join(', ') || 'Not selected'}
+${input.parentExpectation ? `- Parent expectation: ${input.parentExpectation}` : ''}
+${input.parentAlignment ? `- Student alignment with parent expectation: ${input.parentAlignment}` : ''}
+- Future vision: ${input.futureVision || 'Not provided'}
+${input.postSecondaryPlan ? `- Post-secondary plan: ${input.postSecondaryPlan}` : ''}
+${input.budgetRange ? `- Budget range: ${input.budgetRange}` : ''}
+${input.specificChallenges ? `- Specific challenges: ${input.specificChallenges.join(', ')}` : ''}
 ${input.targetCareer ? `- Career the student asked about: ${input.targetCareer}` : ''}
 
-ALLOWED CAREERS - choose exactly three titles from this catalogue and copy each title exactly:
-${careers}
+ALLOWED CAREER FIELDS - choose exactly three fields from this list and copy each field name exactly:
+${fields}
 
 Non-negotiable guidance rules:
-1. The three suggestions must be named, real careers from the allowed catalogue. Never use broad labels such as "technology", "creative work", "business", or "problem-solving" as a career.
-2. Do not call any suggestion a fit, perfect match, destiny, or final choice. These are possibilities to test.
-3. Every why_it_appeared must cite at least two independent student signals (for example a selected subject plus an interest, or an interest plus a work preference). Do not infer a career only because the student likes one subject or one idea.
-4. Every reality_to_test must name an uncertainty about the day-to-day work. Do not invent grades, personality tests, salary figures, KUCCPS points, university requirements, or labour-market facts.
-5. Do not mention MBTI or RIASEC. The three preference answers are not a validated personality assessment.
-6. Make the language direct, warm, specific, and readable. No filler paragraphs.
-7. Each starter activity must be safe, practical, and achievable with ordinary school/home resources. It must help the student collect evidence, not merely research careers.
-8. Grade context and grade focus must be specific to the student's grade and stage.
-9. The plan must contain exactly three practical actions and connect each to an existing CareerGuide activity: Explore careers, Ask the AI counsellor, or Compare careers and subject pathways.
+1. The three suggestions must be career fields from the allowed list. Never suggest specific job titles like "Real Estate Manager," "Software Developer," or "Registered Nurse." Use field-level framing: "Technology and Computing," "Health and Caring Professions," "Business and Finance."
+2. Each career field must include cbc_pathway and cbc_track fields. Validate against the 3 known pathways: STEM, Social Sciences, Arts & Sports Science.
+3. Each career field must include subjects_to_prioritise - 1-3 specific subjects the student should focus on this term, based on their performance data and the field's track requirements.
+4. For Grades 7-9: only suggest fields marked as appropriate for the student's grade. "Law and Governance" must never appear for a Grade 7 student.
+5. For Grades 7-9: filter suggestions to school pathway availability. If the school only offers 2 of 3 pathways, don't suggest fields from the missing one.
+6. For Grades 7-9: acknowledge parent expectations in why_it_appeared. If the student's signals conflict with parent wishes, name that tension honestly.
+7. For Grade 11: connect each career field to at least one training route (university programme, college diploma, TVET certificate, or apprenticeship). Reference budget where relevant.
+8. For Grade 11: connect each career field to the student's future vision statement.
+9. Every why_it_appeared must cite at least two independent student signals (subject performance + interest, or interest + club, etc.).
+10. Every reality_to_test must name an uncertainty about the day-to-day work within that field.
+11. Starter activities: Grades 7-9 = exploration (30-90 min, no cost, safe). Grade 11 = action (apply, prepare, build evidence for an application).
+12. The action plan must contain exactly 2 practical actions (not 3), each tied to a specific CareerGuide feature.
+13. The student_summary must explain the CBC placement structure for Grades 7-9, or the post-secondary landscape for Grade 11.
+14. Never use adult-framed job titles as suggestions. The student is exploring a field, not interviewing for a job.
 
 Return exactly this shape:
 {
   "student_summary": "2 concise sentences explaining what this brief used and why it is exploratory.",
   "grade_context": "1-2 sentences tied to the student's grade.",
   "grade_focus": "1 concise, grade-aware next focus.",
-  "careers": [
+  ${input.grade !== 'Grade 11' ? '"parent_note": "1 sentence acknowledging parent expectations and alignment.",' : ''}
+  ${input.grade === 'Grade 11' ? '"vision_note": "1 sentence connecting the student\'s future vision to the career suggestions.",' : ''}
+  "career_fields": [
     {
-      "career": "Exact title from the allowed catalogue",
+      "field": "Exact field name from the allowed list",
+      "cbc_pathway": "STEM or Social Sciences or Arts & Sports Science",
+      "cbc_track": "Track name from the allowed list",
+      "subjects_to_prioritise": ["Subject 1", "Subject 2"],
       "why_it_appeared": "Specific evidence from at least two student signals; end with an uncertainty-aware statement.",
       "reality_to_test": "The aspect of daily work that still needs evidence.",
-      "starter_activity": {
+      ${input.grade !== 'Grade 11' ? `"starter_activity": {
         "title": "Short activity title",
-        "instruction": "Concrete 30-90 minute or one-week task, depending on grade.",
+        "instruction": "Concrete 30-90 minute task, depending on grade.",
         "reflection_prompt": "One question that helps the student judge their experience."
-      }
+      }` : `"training_routes": [
+        {"route": "University", "programme": "Programme name", "requirements": "Entry requirements", "budget_note": "Cost information"},
+        {"route": "College/TVET", "programme": "Programme name", "requirements": "Entry requirements", "budget_note": "Cost information"}
+      ],
+      "next_action": {
+        "title": "Short action title",
+        "instruction": "Concrete action to take now.",
+        "deadline": "Timeframe for completion."
+      }`}
     }
   ],
   "plan": [

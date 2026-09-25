@@ -76,6 +76,19 @@ export interface CbeSubject {
   created_at: string
 }
 
+export interface CareerField {
+  id: string
+  name: string
+  description: string
+  cbc_pathway: 'STEM' | 'Social Sciences' | 'Arts & Sports Science'
+  cbc_track: string
+  example_roles: string[]
+  subjects: string[]
+  grade_appropriateness: string[]
+  keywords: string[]
+  created_at: string
+}
+
 export interface CareerInterest {
   id: string
   interest_name: string
@@ -324,7 +337,7 @@ class DashboardService {
     }
   }
 
-  // Career Paths
+  // Career Paths (for browsing feature)
   async getCareerPaths(category?: string, limit: number = 1000): Promise<CareerPath[]> {
     try {
       // Data is now managed strictly via the Admin Dashboard.
@@ -350,6 +363,30 @@ class DashboardService {
       // Fallback to whatever is in the DB if AI refresh fails
       const { data } = await supabase.from('career_paths').select('*').limit(limit);
       return data || [];
+    }
+  }
+
+  // Career Fields (for Quick Assessment only)
+  async getCareerFields(grade?: string): Promise<CareerField[]> {
+    try {
+      let query = supabase
+        .from('career_fields')
+        .select('*')
+        .order('name', { ascending: true })
+
+      const { data, error } = await query
+
+      if (error) throw error
+      
+      // Filter by grade appropriateness if grade is provided
+      if (grade && data) {
+        return data.filter(field => field.grade_appropriateness.includes(grade))
+      }
+      
+      return data || []
+    } catch (err) {
+      console.error('Error in getCareerFields:', err);
+      return [];
     }
   }
 

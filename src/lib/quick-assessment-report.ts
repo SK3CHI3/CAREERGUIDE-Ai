@@ -1,37 +1,74 @@
-export interface AssessmentCareerCatalogueItem {
-  id?: string;
-  title: string;
-  category?: string;
-  description?: string;
-}
+import type { CareerField } from './dashboard-service';
 
 export interface QuickAssessmentInput {
+  // Identity
   grade: string;
-  pathway?: string;
+  pathway?: string; // Grade 11 only
+  name: string;
+  email: string;
+
+  // Academics
   subjects: string[];
+  subjectPerformance: Record<string, 'struggling' | 'passing' | 'good' | 'excelling'>;
+
+  // School context (Grades 7-9)
+  schoolPathways: string[];
+
+  // Interests
   interests: string[];
-  values: string[];
-  workStyle: string;
-  preferences: {
-    focus: string;
-    decisions: string;
-    structure: string;
-  };
-  barrier: string;
-  experience: string;
-  readiness: string;
+  clubs: string[];
+
+  // Parent expectations (Grades 7-9)
+  parentExpectation: string;
+  parentAlignment: 'same' | 'unsure' | 'different';
+
+  // Grade 11 only
+  postSecondaryPlan?: string;
+  budgetRange?: string;
+
+  // Future vision (all grades)
+  futureVision: string;
+
+  // Specific challenges (Grade 11 only)
+  specificChallenges?: string[];
+
+  // Optional
   targetCareer?: string;
-  availableCareers?: AssessmentCareerCatalogueItem[];
+
+  // Career fields data (loaded from database)
+  availableCareerFields?: CareerField[];
 }
 
-export interface CareerPossibility {
-  career: string;
-  catalogueId?: string;
+export interface TrainingRoute {
+  route: string; // "University", "College/TVET", "Polytechnic", "Apprenticeship"
+  programme: string;
+  requirements: string;
+  budgetNote: string;
+}
+
+export interface CareerFieldPossibility {
+  field: string; // e.g., "Technology and Computing"
+  fieldId?: string; // links back to career_fields table
+  cbc_pathway: 'STEM' | 'Social Sciences' | 'Arts & Sports Science';
+  cbc_track: string;
+  subjectsToPrioritise: string[];
   whyItAppeared: string;
   realityToTest: string;
-  starterActivityTitle: string;
-  starterActivity: string;
-  reflectionPrompt: string;
+
+  // Grades 7-9
+  starterActivity?: {
+    title: string;
+    instruction: string;
+    reflectionPrompt: string;
+  };
+
+  // Grade 11
+  trainingRoutes?: TrainingRoute[];
+  nextAction?: {
+    title: string;
+    instruction: string;
+    deadline: string;
+  };
 }
 
 export interface ActionPlanStep {
@@ -45,25 +82,16 @@ export interface QuickAssessmentBrief {
   studentSummary: string;
   gradeContext: string;
   gradeFocus: string;
-  careers: CareerPossibility[];
-  plan: ActionPlanStep[];
-  reflectionPrompts: string[];
-}
 
-const DEFAULT_CAREERS: AssessmentCareerCatalogueItem[] = [
-  { title: 'Software Developer', category: 'Technology' },
-  { title: 'UX/UI Designer', category: 'Technology & Design' },
-  { title: 'Cybersecurity Analyst', category: 'Technology' },
-  { title: 'Architect', category: 'Built Environment' },
-  { title: 'Civil Engineer', category: 'Engineering' },
-  { title: 'Registered Nurse', category: 'Health' },
-  { title: 'Environmental Scientist', category: 'Science' },
-  { title: 'Data Analyst', category: 'Technology & Business' },
-  { title: 'Journalist', category: 'Media' },
-  { title: 'Graphic Designer', category: 'Creative Arts' },
-  { title: 'Accountant', category: 'Business' },
-  { title: 'Agronomist', category: 'Agriculture' },
-];
+  // Grades 7-9
+  parentNote?: string;
+
+  // Grade 11
+  visionNote?: string;
+
+  careerFields: CareerFieldPossibility[];
+  plan: ActionPlanStep[];
+}
 
 const cleanText = (value: unknown, fallback: string, maxLength = 420): string => {
   if (typeof value !== 'string') return fallback;
@@ -71,192 +99,111 @@ const cleanText = (value: unknown, fallback: string, maxLength = 420): string =>
   return cleaned.length >= 12 ? cleaned.slice(0, maxLength) : fallback;
 };
 
-const gradeDetails = (grade: string, pathway?: string) => {
-  if (grade === 'Grade 7') {
-    return {
-      context: 'Grade 7 is for broad exploration. You are gathering evidence about subjects and activities before any pathway decision is needed.',
-      focus: 'Try different kinds of work, notice which school subjects you want to return to, and keep a small record of what you learn.',
-      firstTimeframe: 'This week',
-      secondTimeframe: 'This term',
-      thirdTimeframe: 'Before Grade 8',
-    };
-  }
-
-  if (grade === 'Grade 9') {
-    return {
-      context: 'Grade 9 is a pathway-exploration year. These career ideas are evidence to test before you choose Senior School subjects - not a decision to lock in today.',
-      focus: 'Use short projects and teacher feedback to decide which subject combinations and Senior School pathway keep the strongest options open.',
-      firstTimeframe: 'This week',
-      secondTimeframe: 'This term',
-      thirdTimeframe: 'Before Senior School selection',
-    };
-  }
-
-  return {
-    context: `Grade 11 is a transition-planning stage${pathway ? ` within the ${pathway} pathway` : ''}. Use these career ideas to compare subject requirements, training routes, and first experiences - not as a guarantee of admission or employment.`,
-    focus: 'Turn your strongest current subjects into evidence: compare training requirements, speak with a practitioner or teacher, and complete one relevant project before narrowing your options.',
-    firstTimeframe: 'This week',
-    secondTimeframe: 'This month',
-    thirdTimeframe: 'Before your next application step',
-  };
-};
-
-const pickCareerCatalogue = (input: QuickAssessmentInput): AssessmentCareerCatalogueItem[] => {
-  const catalogue = input.availableCareers?.filter(item => item.title?.trim()) || [];
-  return catalogue.length >= 3 ? catalogue : DEFAULT_CAREERS;
-};
-
-const findCareerMatches = (input: QuickAssessmentInput, catalogue: AssessmentCareerCatalogueItem[]) => {
-  const evidence = [...input.subjects, ...input.interests, input.workStyle, ...input.values].join(' ').toLowerCase();
-  const categories = (item: AssessmentCareerCatalogueItem) => `${item.title} ${item.category || ''} ${item.description || ''}`.toLowerCase();
-  const score = (item: AssessmentCareerCatalogueItem) => {
-    const source = categories(item);
-    let points = 0;
-    const weights: [RegExp, number][] = [
-      [/(computer|coding|digital|technology|ict|pre-technical|software)/, 5],
-      [/(math|data|analysis|statistics|logic)/, 4],
-      [/(science|biology|chemistry|health)/, 4],
-      [/(art|design|creative|media|film|music)/, 4],
-      [/(business|economics|leadership|enterprise)/, 4],
-      [/(agriculture|environment|geography)/, 4],
-      [/(people|community|impact|service|social)/, 2],
-    ];
-    weights.forEach(([pattern, value]) => {
-      if (pattern.test(evidence) && pattern.test(source)) points += value;
-    });
-    if (input.targetCareer && item.title.toLowerCase() === input.targetCareer.toLowerCase()) points += 100;
-    return points;
-  };
-
-  return [...catalogue]
-    .map((item, index) => ({ item, score: score(item), index }))
-    .sort((a, b) => b.score - a.score || a.index - b.index)
-    .map(result => result.item);
-};
-
-const evidenceLine = (input: QuickAssessmentInput) => {
-  const subjects = input.subjects.slice(0, 3).join(', ') || 'the subjects you selected';
-  const interests = input.interests.slice(0, 3).join(', ') || 'the interests you selected';
-  return `It appeared because ${subjects} sit alongside ${interests} in your answers. Your values and preferred work style were also considered, but this is only a starting pattern - not proof that the career is right for you.`;
-};
-
-const activityFor = (career: string, grade: string) => {
-  const prefix = grade === 'Grade 7' ? 'a 30-minute starter' : grade === 'Grade 9' ? 'a one-week school project' : 'a focused evidence task';
-  const lower = career.toLowerCase();
-  if (/(software|data|cyber)/.test(lower)) {
-    return {
-      title: `Try ${prefix} in digital problem-solving`,
-      activity: 'Choose one repeated school or home problem. Sketch a simple digital solution, flowchart, or data table, then ask one person where it would fail or confuse them.',
-      reflection: 'Did you enjoy working through the unclear middle, then improving the solution after feedback?'
-    };
-  }
-  if (/(design|architect|media|journalist)/.test(lower)) {
-    return {
-      title: `Try ${prefix} in communication and design`,
-      activity: 'Turn a difficult school topic or local issue into a one-page visual, short article plan, or space sketch for a real audience. Ask that audience what they understood without your explanation.',
-      reflection: 'Did you enjoy learning what another person needed before changing your first idea?'
-    };
-  }
-  if (/(nurse|health|environment|agronom)/.test(lower)) {
-    return {
-      title: `Try ${prefix} in evidence and care`,
-      activity: 'Investigate one health, environment, or food issue around school or home. Collect two reliable observations, explain what is uncertain, and propose one safe next question to investigate.',
-      reflection: 'Did careful observation and responsible decision-making hold your attention?'
-    };
-  }
-  if (/(account|business|finance)/.test(lower)) {
-    return {
-      title: `Try ${prefix} in practical planning`,
-      activity: 'Plan a small school or community activity with a simple budget, audience, and success measure. Ask someone to challenge one assumption before you improve the plan.',
-      reflection: 'Did you enjoy balancing the numbers, the people involved, and the practical trade-offs?'
-    };
-  }
-  return {
-    title: `Try ${prefix} related to this career`,
-    activity: 'Choose one small real-world problem connected to this field. Learn enough to explain the problem, make one practical response, and ask someone working or learning nearby for feedback.',
-    reflection: 'Which part gave you energy, and which part would you be willing to practise again?'
-  };
-};
-
-export const createFallbackQuickAssessmentBrief = (input: QuickAssessmentInput): QuickAssessmentBrief => {
-  const grade = gradeDetails(input.grade, input.pathway);
-  const selected = findCareerMatches(input, pickCareerCatalogue(input));
-  const careers = selected.slice(0, 3).map((item, index) => {
-    const activity = activityFor(item.title, input.grade);
-    return {
-      career: item.title,
-      catalogueId: item.id,
-      whyItAppeared: evidenceLine(input),
-      realityToTest: index === 0
-        ? 'Test whether you enjoy the day-to-day work, including revision after feedback, rather than only the idea of the career.'
-        : index === 1
-          ? 'Look for evidence that you can stay engaged when the task becomes detailed, repetitive, or difficult.'
-          : 'Find out what the work actually involves and compare it with your own experience before giving it more weight.',
-      starterActivityTitle: activity.title,
-      starterActivity: activity.activity,
-      reflectionPrompt: activity.reflection,
-    };
-  });
-
-  return {
-    studentSummary: `Your answers show a set of possible directions rather than one final answer. This brief combines your selected subjects, interests, values, work style, practical experience, and current concern so you can test ideas with real evidence.`,
-    gradeContext: grade.context,
-    gradeFocus: grade.focus,
-    careers,
-    plan: [
-      { timeframe: grade.firstTimeframe, title: 'Choose one career to test', action: 'Pick the possibility you are most curious about and complete its starter activity before searching for more options.', careerGuideAction: 'Explore that career in CareerGuide.' },
-      { timeframe: grade.secondTimeframe, title: 'Get outside feedback', action: 'Show what you made or learnt to a teacher, parent, mentor, or trusted adult. Ask what they notice about your process, not whether they think you should choose the career.', careerGuideAction: 'Use the AI counsellor to prepare better questions.' },
-      { timeframe: grade.thirdTimeframe, title: 'Compare evidence', action: 'Write down what held your attention, what became difficult, and which subjects or skills you would be willing to improve.', careerGuideAction: 'Compare careers and subject pathways in CareerGuide.' },
-    ],
-    reflectionPrompts: [
-      'What part of the activity pulled me in most?',
-      'What part did I avoid or lose interest in?',
-      'What did another person notice about my work?',
-      'What would I like to test next?'
-    ]
-  };
-};
-
 export const normaliseQuickAssessmentBrief = (raw: unknown, input: QuickAssessmentInput): QuickAssessmentBrief => {
-  const fallback = createFallbackQuickAssessmentBrief(input);
-  if (!raw || typeof raw !== 'object') return fallback;
+  if (!raw || typeof raw !== 'object') {
+    throw new Error('AI response is missing or invalid');
+  }
+
   const data = raw as Record<string, unknown>;
-  const catalogue = pickCareerCatalogue(input);
-  const rawCareers = Array.isArray(data.careers) ? data.careers : [];
+  const availableFields = input.availableCareerFields || [];
 
-  const careers = fallback.careers.map((fallbackCareer, index) => {
-    const rawCareer = rawCareers[index] as Record<string, unknown> | undefined;
-    const requestedTitle = typeof rawCareer?.career === 'string' ? rawCareer.career.trim() : '';
-    const matched = catalogue.find(item => item.title.toLowerCase() === requestedTitle.toLowerCase());
-    const activity = rawCareer?.starter_activity as Record<string, unknown> | undefined;
+  // Validate career fields array
+  const rawFields = Array.isArray(data.career_fields) ? data.career_fields : [];
+  if (rawFields.length === 0) {
+    throw new Error('AI response contains no career fields');
+  }
+
+  // Map and validate each career field
+  const careerFields = rawFields.map((rawField) => {
+    const field = rawField as Record<string, unknown>;
+    const fieldName = typeof field.field === 'string' ? field.field.trim() : '';
+
+    // Validate against career_fields table
+    const matchedField = availableFields.find(f => f.name.toLowerCase() === fieldName.toLowerCase());
+    if (!matchedField) {
+      throw new Error(`AI returned invalid career field: "${fieldName}"`);
+    }
+
+    // Validate pathway
+    const pathway = field.cbc_pathway as string;
+    if (!['STEM', 'Social Sciences', 'Arts & Sports Science'].includes(pathway)) {
+      throw new Error(`Invalid pathway for field "${fieldName}": "${pathway}"`);
+    }
+
+    // Extract subjects to prioritise
+    const subjectsToPrioritise = Array.isArray(field.subjects_to_prioritise)
+      ? field.subjects_to_prioritise.slice(0, 3)
+      : matchedField.subjects.slice(0, 3);
+
+    // Extract starter activity (Grades 7-9)
+    const starterActivity = field.starter_activity as Record<string, unknown> | undefined;
+    const starterActivityData = starterActivity ? {
+      title: cleanText(starterActivity.title, 'Explore this field', 110),
+      instruction: cleanText(starterActivity.instruction, 'Research and reflect on this career field.', 300),
+      reflectionPrompt: cleanText(starterActivity.reflection_prompt, 'What interested you most?', 180),
+    } : undefined;
+
+    // Extract training routes (Grade 11)
+    const trainingRoutes = Array.isArray(field.training_routes)
+      ? field.training_routes.map((route: any) => ({
+          route: cleanText(route.route, 'Training route', 70),
+          programme: cleanText(route.programme, 'Programme', 110),
+          requirements: cleanText(route.requirements, 'Check specific requirements', 200),
+          budgetNote: cleanText(route.budget_note, 'Consider funding options', 150),
+        }))
+      : undefined;
+
+    // Extract next action (Grade 11)
+    const nextAction = field.next_action as Record<string, unknown> | undefined;
+    const nextActionData = nextAction ? {
+      title: cleanText(nextAction.title, 'Take action', 110),
+      instruction: cleanText(nextAction.instruction, 'Complete this step', 300),
+      deadline: cleanText(nextAction.deadline, 'This term', 70),
+    } : undefined;
+
     return {
-      career: matched?.title || fallbackCareer.career,
-      catalogueId: matched?.id || fallbackCareer.catalogueId,
-      whyItAppeared: cleanText(rawCareer?.why_it_appeared, fallbackCareer.whyItAppeared),
-      realityToTest: cleanText(rawCareer?.reality_to_test, fallbackCareer.realityToTest),
-      starterActivityTitle: cleanText(activity?.title, fallbackCareer.starterActivityTitle, 110),
-      starterActivity: cleanText(activity?.instruction, fallbackCareer.starterActivity, 300),
-      reflectionPrompt: cleanText(activity?.reflection_prompt, fallbackCareer.reflectionPrompt, 180),
+      field: matchedField.name,
+      fieldId: matchedField.id,
+      cbc_pathway: pathway as 'STEM' | 'Social Sciences' | 'Arts & Sports Science',
+      cbc_track: cleanText(field.cbc_track, matchedField.cbc_track, 70),
+      subjectsToPrioritise,
+      whyItAppeared: cleanText(field.why_it_appeared, 'Based on your interests and subjects.', 420),
+      realityToTest: cleanText(field.reality_to_test, 'Explore this field further to confirm your interest.', 420),
+      starterActivity: starterActivityData,
+      trainingRoutes,
+      nextAction: nextActionData,
     };
   });
 
+  // Validate plan
   const rawPlan = Array.isArray(data.plan) ? data.plan : [];
-  const plan = fallback.plan.map((fallbackStep, index) => {
-    const rawStep = rawPlan[index] as Record<string, unknown> | undefined;
+  const plan = rawPlan.slice(0, 2).map((step) => {
+    const s = step as Record<string, unknown>;
     return {
-      timeframe: cleanText(rawStep?.timeframe, fallbackStep.timeframe, 70),
-      title: cleanText(rawStep?.title, fallbackStep.title, 110),
-      action: cleanText(rawStep?.action, fallbackStep.action, 300),
-      careerGuideAction: cleanText(rawStep?.careerguide_action, fallbackStep.careerGuideAction, 120),
+      timeframe: cleanText(s.timeframe, 'This term', 70),
+      title: cleanText(s.title, 'Take action', 110),
+      action: cleanText(s.action, 'Explore this field further', 300),
+      careerGuideAction: cleanText(s.careerguide_action, 'Explore careers', 120),
     };
   });
+
+  // Ensure at least one plan step
+  if (plan.length === 0) {
+    plan.push({
+      timeframe: 'This term',
+      title: 'Explore your top field',
+      action: 'Complete a starter activity to test your interest.',
+      careerGuideAction: 'Explore careers',
+    });
+  }
 
   return {
-    studentSummary: cleanText(data.student_summary, fallback.studentSummary, 480),
-    gradeContext: cleanText(data.grade_context, fallback.gradeContext, 380),
-    gradeFocus: cleanText(data.grade_focus, fallback.gradeFocus, 330),
-    careers,
+    studentSummary: cleanText(data.student_summary, 'Based on your interests and subjects, here are fields to explore.', 480),
+    gradeContext: cleanText(data.grade_context, 'Use these suggestions to guide your exploration.', 380),
+    gradeFocus: cleanText(data.grade_focus, 'Focus on subjects that align with these fields.', 330),
+    parentNote: data.parent_note ? cleanText(data.parent_note, '', 330) : undefined,
+    visionNote: data.vision_note ? cleanText(data.vision_note, '', 330) : undefined,
+    careerFields,
     plan,
-    reflectionPrompts: fallback.reflectionPrompts,
   };
 };
