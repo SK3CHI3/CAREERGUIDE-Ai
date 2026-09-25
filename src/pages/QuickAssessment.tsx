@@ -217,14 +217,24 @@ const QuickAssessment = () => {
             };
 
             const brief = await aiCareerService.generateQuickAssessmentBrief(quickAssessment);
-            
+
+            console.log('Brief received from AI:', {
+                hasBrief: !!brief,
+                hasCareerFields: !!brief?.careerFields,
+                careerFieldsLength: brief?.careerFields?.length,
+                briefKeys: brief ? Object.keys(brief) : []
+            });
+
             if (!brief || !brief.careerFields || brief.careerFields.length === 0) {
                 console.error('Invalid brief returned:', brief);
                 throw new Error('The AI returned an invalid result. Please try again.');
             }
 
+            console.log('Setting direction brief and moving to step 5');
             setDirectionBrief(brief);
             localStorage.removeItem('career_assessment_state');
+            // Small delay to ensure state updates are batched together
+            await new Promise(resolve => setTimeout(resolve, 0));
             setCurrentStep(5);
         } catch (err: unknown) {
             console.error('Assessment generation failed:', err);
