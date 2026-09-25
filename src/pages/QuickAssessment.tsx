@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Sparkles, Download, ArrowRight, ArrowLeft, CheckCircle, Brain, Target, User, MapPin, GraduationCap } from "lucide-react";
+import { Sparkles, ArrowRight, ArrowLeft, Brain, Target, User, MapPin, GraduationCap } from "lucide-react";
 import BrandedLoader from "@/components/BrandedLoader";
 import { aiCareerService } from "@/lib/ai-service";
 import { ReportGenerator, type GuestProfile } from "@/lib/report-generator";
@@ -24,7 +24,6 @@ const QuickAssessment = () => {
     const targetCareer = searchParams.get('career');
     const isCareerFitMode = !!targetCareer;
 
-    const reportSectionRef = useRef<HTMLDivElement>(null);
     const [currentStep, setCurrentStep] = useState(1);
     const [subStep, setSubStep] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
@@ -546,32 +545,18 @@ const QuickAssessment = () => {
 
                             {/* STEP 5: RESULTS */}
                             {currentStep === 5 && (
-                                <div ref={reportSectionRef}>
-                                    <motion.div key="step5" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 py-4 max-w-3xl mx-auto">
-                                        <div className="text-center space-y-2">
-                                            <div className="w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center mx-auto">
-                                                <CheckCircle className="w-6 h-6 text-green-500" />
-                                            </div>
-                                            <h2 className="text-xl md:text-2xl font-black tracking-tight">Your Direction Brief is ready</h2>
-                                            <p className="text-sm text-muted-foreground">Career fields to explore, with CBC pathway guidance for {grade || 'your current grade'}.</p>
-                                        </div>
-
-                                        {directionBrief ? (
-                                            <QuickAssessmentDirectionBrief profile={guestProfile} brief={directionBrief} />
-                                        ) : (
-                                            <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-5 text-center text-sm text-destructive">Your result is not ready yet. Please try generating the brief again.</div>
-                                        )}
-
-                                        <div className="space-y-3">
-                                            <Button onClick={downloadReport} className="w-full h-14 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg text-base">
-                                                <Download className="mr-2 w-5 h-5" /> Download Direction Brief PDF
-                                            </Button>
-                                            <Button variant="outline" onClick={() => navigate('/student')} className="w-full h-12 border-2 border-primary text-primary hover:bg-primary/5 font-bold">
-                                                Consult with Career Counselor
-                                            </Button>
-                                        </div>
-                                    </motion.div>
-                                </div>
+                                <motion.div key="step5" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="py-4 max-w-3xl mx-auto">
+                                    {directionBrief ? (
+                                        <QuickAssessmentDirectionBrief
+                                            profile={guestProfile}
+                                            brief={directionBrief}
+                                            onDownload={downloadReport}
+                                            onConsult={() => navigate('/student')}
+                                        />
+                                    ) : (
+                                        <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-5 text-center text-sm text-destructive">Your result is not ready yet. Please try generating the brief again.</div>
+                                    )}
+                                </motion.div>
                             )}
                         </AnimatePresence>
                     </CardContent>
