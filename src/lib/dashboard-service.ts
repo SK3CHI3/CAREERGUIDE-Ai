@@ -387,10 +387,14 @@ class DashboardService {
 
       // Filter by grade appropriateness if grade is provided
       if (grade && data) {
+        // Extract just the number from grade string (e.g., "Grade 9" -> "9")
+        const gradeNumber = grade.replace('Grade ', '').trim();
+        console.log('Filtering for grade number:', gradeNumber);
+        
         const filtered = data.filter(field => {
-          const matches = field.grade_appropriateness?.includes(grade);
+          const matches = field.grade_appropriateness?.includes(gradeNumber);
           if (!matches) {
-            console.log(`Field "${field.name}" doesn't match grade "${grade}". Has:`, field.grade_appropriateness);
+            console.log(`Field "${field.name}" doesn't match grade "${gradeNumber}". Has:`, field.grade_appropriateness);
           }
           return matches;
         });
