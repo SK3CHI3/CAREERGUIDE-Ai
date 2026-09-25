@@ -154,23 +154,21 @@ const QuickAssessment = () => {
                 // Grades 7-9: validate parent expectations
                 if (!parentExpectation.trim()) return setError("Please share your parent/guardian's expectations");
             } else {
-                // Grade 11: validate vision fields (shown at step 3 for Grade 11)
+                // Grade 11: validate future vision only (plans are on step 4)
                 if (!futureVision.trim()) return setError("Please describe your vision for the future");
-                if (!postSecondaryPlan) return setError("Please select your post-secondary plan");
-                if (specificChallenges.length === 0) return setError("Please select at least one challenge");
-                // Grade 11: step 3 is the last step, call finishAssessment directly
-                finishAssessment();
-                return;
             }
         }
         if (currentStep === 4) {
             if (grade !== 'Grade 11') {
                 // Grades 7-9: validate vision fields
                 if (!futureVision.trim()) return setError("Please describe your vision for the future");
+            } else {
+                // Grade 11: validate post-secondary plans and challenges
+                if (!postSecondaryPlan) return setError("Please select your post-secondary plan");
+                if (specificChallenges.length === 0) return setError("Please select at least one challenge");
             }
-            // Grade 11: no validation needed at step 4, just proceed to finish
         }
-        if (currentStep < (grade === 'Grade 11' ? 4 : 5)) {
+        if (currentStep < 5) {
             setCurrentStep(currentStep + 1);
             setSubStep(1);
         } else {
@@ -289,7 +287,7 @@ const QuickAssessment = () => {
 
                 <div className="mb-6">
                     <div className="flex justify-center gap-1 md:gap-2 mb-2">
-                        {Array.from({ length: grade === 'Grade 11' ? 4 : 5 }, (_, i) => i + 1).map(s => (
+                        {[1, 2, 3, 4, 5].map(s => (
                             <div key={s} className={`h-1 md:h-2 flex-1 max-w-[60px] rounded-full transition-all ${currentStep >= s ? 'bg-primary shadow-[0_0_10px_rgba(var(--primary),0.5)]' : 'bg-muted'}`} />
                         ))}
                     </div>
@@ -520,11 +518,11 @@ const QuickAssessment = () => {
                                 </motion.div>
                             )}
 
-                            {/* PHASE 4: Your Vision (or Phase 3 for Grade 11) */}
-                            {currentStep === (grade === 'Grade 11' ? 3 : 4) && (
-                                <motion.div key="step4" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
+                            {/* PHASE 3: Your Vision (Grade 11 only) */}
+                            {currentStep === 3 && grade === 'Grade 11' && (
+                                <motion.div key="step3-g11" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
                                     <div className="text-center">
-                                        <h2 className="text-2xl md:text-3xl font-bold flex items-center justify-center gap-2"><GraduationCap className="w-8 h-8 text-primary" /> Phase {grade === 'Grade 11' ? 3 : 4}: Your Vision</h2>
+                                        <h2 className="text-2xl md:text-3xl font-bold flex items-center justify-center gap-2"><GraduationCap className="w-8 h-8 text-primary" /> Phase 3: Your Vision</h2>
                                         <p className="text-muted-foreground mt-2">What kind of future do you imagine?</p>
                                     </div>
 
@@ -534,8 +532,27 @@ const QuickAssessment = () => {
                                             <p className="text-sm text-muted-foreground mb-2">Where you live, what you do, what matters to you</p>
                                             <textarea value={futureVision} onChange={e => setFutureVision(e.target.value)} placeholder="e.g. I want to live in Nairobi, work in tech, and help solve problems that affect my community..." className="w-full h-32 p-4 border-2 rounded-xl bg-background/50 resize-none" />
                                         </div>
+                                    </div>
 
-                                        {grade === 'Grade 11' && (
+                                    <div className="pt-4 flex justify-between">
+                                        <Button variant="outline" onClick={handleBack} className="h-12 md:h-14 px-6 md:px-8 border-2 font-bold"><ArrowLeft className="mr-2 w-5 h-5" /> Back</Button>
+                                        <Button onClick={handleNext} className="h-12 md:h-14 px-6 md:px-8 bg-primary shadow-lg hover:translate-x-1 transition-transform">Continue <ArrowRight className="ml-2 w-5 h-5" /></Button>
+                                    </div>
+                                </motion.div>
+                            )}
+
+                            {/* PHASE 4: Your Vision (Grades 7-9) or Your Plans (Grade 11) */}
+                            {currentStep === 4 && (
+                                <motion.div key="step4" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
+                                    <div className="text-center">
+                                        <h2 className="text-2xl md:text-3xl font-bold flex items-center justify-center gap-2"><GraduationCap className="w-8 h-8 text-primary" /> Phase 4: {grade === 'Grade 11' ? 'Your Plans' : 'Your Vision'}</h2>
+                                        <p className="text-muted-foreground mt-2">
+                                            {grade === 'Grade 11' ? "What's your plan after Senior School?" : 'What kind of future do you imagine?'}
+                                        </p>
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        {grade === 'Grade 11' ? (
                                             <>
                                                 <div>
                                                     <Label className="text-base font-semibold">What's your plan after Senior School?</Label>
@@ -569,6 +586,12 @@ const QuickAssessment = () => {
                                                     </div>
                                                 </div>
                                             </>
+                                        ) : (
+                                            <div>
+                                                <Label className="text-base font-semibold">Describe the life you want in 5-10 years</Label>
+                                                <p className="text-sm text-muted-foreground mb-2">Where you live, what you do, what matters to you</p>
+                                                <textarea value={futureVision} onChange={e => setFutureVision(e.target.value)} placeholder="e.g. I want to live in Nairobi, work in tech, and help solve problems that affect my community..." className="w-full h-32 p-4 border-2 rounded-xl bg-background/50 resize-none" />
+                                            </div>
                                         )}
                                     </div>
 
