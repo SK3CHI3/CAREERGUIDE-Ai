@@ -116,7 +116,12 @@ export const normaliseQuickAssessmentBrief = (raw: unknown, input: QuickAssessme
   // Map and validate each career field
   const careerFields = rawFields.map((rawField) => {
     const field = rawField as Record<string, unknown>;
-    const fieldName = typeof field.field === 'string' ? field.field.trim() : '';
+    let fieldName = typeof field.field === 'string' ? field.field.trim() : '';
+
+    // Strip any extra text after " — " if AI returned the full formatted string
+    if (fieldName.includes(' — ')) {
+      fieldName = fieldName.split(' — ')[0].trim();
+    }
 
     // Validate against career_fields table
     const matchedField = availableFields.find(f => f.name.toLowerCase() === fieldName.toLowerCase());
