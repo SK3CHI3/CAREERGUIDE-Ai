@@ -150,16 +150,27 @@ const QuickAssessment = () => {
             if (selectedInterests.length === 0) return setError("Please select at least one interest");
         }
         if (currentStep === 3) {
-            if (grade !== 'Grade 11' && !parentExpectation.trim()) return setError("Please share your parent/guardian's expectations");
-        }
-        if (currentStep === 4) {
-            if (!futureVision.trim()) return setError("Please describe your vision for the future");
-            if (grade === 'Grade 11') {
+            if (grade !== 'Grade 11') {
+                // Grades 7-9: validate parent expectations
+                if (!parentExpectation.trim()) return setError("Please share your parent/guardian's expectations");
+            } else {
+                // Grade 11: validate vision fields (shown at step 3 for Grade 11)
+                if (!futureVision.trim()) return setError("Please describe your vision for the future");
                 if (!postSecondaryPlan) return setError("Please select your post-secondary plan");
                 if (specificChallenges.length === 0) return setError("Please select at least one challenge");
+                // Grade 11: step 3 is the last step, call finishAssessment directly
+                finishAssessment();
+                return;
             }
         }
-        if (currentStep < 5) {
+        if (currentStep === 4) {
+            if (grade !== 'Grade 11') {
+                // Grades 7-9: validate vision fields
+                if (!futureVision.trim()) return setError("Please describe your vision for the future");
+            }
+            // Grade 11: no validation needed at step 4, just proceed to finish
+        }
+        if (currentStep < (grade === 'Grade 11' ? 4 : 5)) {
             setCurrentStep(currentStep + 1);
             setSubStep(1);
         } else {
@@ -278,7 +289,7 @@ const QuickAssessment = () => {
 
                 <div className="mb-6">
                     <div className="flex justify-center gap-1 md:gap-2 mb-2">
-                        {[1, 2, 3, 4, 5].map(s => (
+                        {Array.from({ length: grade === 'Grade 11' ? 4 : 5 }, (_, i) => i + 1).map(s => (
                             <div key={s} className={`h-1 md:h-2 flex-1 max-w-[60px] rounded-full transition-all ${currentStep >= s ? 'bg-primary shadow-[0_0_10px_rgba(var(--primary),0.5)]' : 'bg-muted'}`} />
                         ))}
                     </div>
