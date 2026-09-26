@@ -204,7 +204,7 @@ const CareerPaths = () => {
                       navigate(`/quick-assessment?career=${encodeURIComponent(career.title)}`);
                     }}
                   >
-                    Am I a fit?
+                    Access fit
                   </Button>
                 </div>
               </div>
