@@ -168,11 +168,7 @@ Slide 5: Still not sure? Our AI counsellor matches you based on your actual subj
 
 ### Instagram/Facebook Reels & TikTok Scripts
 
-**Reel 1: "I asked AI what career fits my CBC subjects"**
-
-Hook (0-3s): "I told an AI my CBC subjects and it gave me 3 careers I never considered."
-Body (3-15s): Screen recording of chat at careerguideai.co.ke/chat. Student types their subjects, AI responds with career fields and pathway recommendations.
-CTA (15-20s): "Free. No sign-up. Link in bio."
+**c"
 
 **Reel 2: "The CBC pathway mistake most parents make"**
 

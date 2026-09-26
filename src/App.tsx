@@ -11,6 +11,7 @@ import FeedbackWidget from "./components/FeedbackWidget";
 import CookieBanner from "./components/CookieBanner";
 import InstallPrompt from "./components/InstallPrompt";
 import SmartRoot from "./components/SmartRoot";
+import AdminGuard from "./components/AdminGuard";
 import { initializeTracking } from "@/lib/tracking-service";
 
 // Lazy load pages for performance
@@ -26,6 +27,7 @@ const BlogIndex = lazy(() => import("./pages/BlogIndex"));
 const BlogPostPage = lazy(() => import("./pages/BlogPost"));
 const Terms = lazy(() => import("./pages/Terms"));
 const Privacy = lazy(() => import("./pages/Privacy"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -60,6 +62,7 @@ const App = () => {
               <Route path="/blog/:slug" element={<BlogPostPage />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/privacy" element={<Privacy />} />
+              <Route path="/admin" element={<AdminGuard><AdminDashboard /></AdminGuard>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
