@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
@@ -11,11 +11,9 @@ import FeatureShowcase from "@/components/FeatureShowcase";
 import Testimonials from "@/components/Testimonials";
 import BackgroundGradient from "@/components/BackgroundGradient";
 import StatsPartnersSection from "@/components/StatsPartnersSection.tsx";
-import CounselorBookingSection from "@/components/CounselorBookingSection";
 
 const Index = () => {
   const location = useLocation();
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (location.state && (location.state as any).scrollTo) {
@@ -33,17 +31,17 @@ const Index = () => {
   return (
     <div className="min-h-screen text-foreground overflow-x-hidden relative">
       <Helmet>
-        <title>CareerGuide AI | Kenya's Most Advanced AI Academic Synchronizer</title>
-        <meta name="description" content="Synchronize your academic potential with professional success. CareerGuide AI provides precision educational mapping and specialized AI guidance for all Kenyan students." />
-        <meta name="keywords" content="Academic potential mapping, educational synchronization, AI career counseling Kenya, professional roadmaps, university transition guidance" />
+        <title>CareerGuide AI | Free Career Guidance for Kenyan Students</title>
+        <meta name="description" content="Discover your ideal career path with AI-powered guidance aligned to Kenya's CBC education system. Free assessment, trending careers, and personalized recommendations." />
+        <meta name="keywords" content="career guidance Kenya, CBC careers, AI career assessment, free career test, Kenyan students, career paths, university programmes" />
         <link rel="canonical" href="https://careerguideai.co.ke/" />
         {/* Open Graph / LLM indexing support */}
-        <meta property="og:title" content="CareerGuide AI - The Future of Career Guidance in Kenya" />
-        <meta property="og:description" content="AI-powered career guidance aligned with Kenya's Competency-Based Education framework." />
+        <meta property="og:title" content="CareerGuide AI - Free Career Guidance for Kenyan Students" />
+        <meta property="og:description" content="AI-powered career guidance aligned with Kenya's Competency-Based Education framework. Take our free assessment and discover your path." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://careerguideai.co.ke/" />
         <meta property="og:image" content="https://careerguideai.co.ke/logos/CareerGuide_Logo.webp" />
-        
+
         {/* Organization JSON-LD for AI & Google Brand Recognition */}
         <script type="application/ld+json">
           {JSON.stringify([
@@ -59,7 +57,7 @@ const Index = () => {
               "name": "CareerGuide AI",
               "url": "https://careerguideai.co.ke",
               "logo": "https://careerguideai.co.ke/logos/CareerGuide_Logo.webp",
-              "description": "The intelligence layer for Kenyan higher education, synchronizing academic potential with global career success.",
+              "description": "Free AI-powered career guidance for Kenyan students, aligned with the CBC education system.",
               "address": {
                 "@type": "PostalAddress",
                 "addressLocality": "Nairobi",
@@ -69,17 +67,17 @@ const Index = () => {
             {
               "@context": "https://schema.org",
               "@type": "Service",
-              "name": "Academic Potential Mapping",
+              "name": "Career Assessment",
               "provider": {
                 "@type": "Organization",
                 "name": "CareerGuide AI"
               },
-              "description": "Professional AI-driven mapping of academic results to university degrees and global career paths."
+              "description": "Free AI-driven career assessment and guidance for Kenyan students."
             }
           ])}
         </script>
       </Helmet>
-      
+
       <BackgroundGradient />
       <Navigation />
       <main>
@@ -98,7 +96,7 @@ const Index = () => {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8 }}
         >
-          <StatsPartnersSection />
+          <FeatureShowcase />
         </motion.div>
 
         <motion.div
@@ -107,8 +105,12 @@ const Index = () => {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8 }}
         >
-          <FeatureShowcase />
+          <CareerPaths />
         </motion.div>
+
+        <div id="quick-assessment" className="quick-assessment-section">
+          <QuickAssessmentSection />
+        </div>
 
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -125,21 +127,8 @@ const Index = () => {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8 }}
         >
-          <CounselorBookingSection />
+          <StatsPartnersSection />
         </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8 }}
-        >
-          <CareerPaths />
-        </motion.div>
-
-        <div id="guest-chat" className="guest-chat-section">
-          <QuickAssessmentSection />
-        </div>
 
       </main>
       <Footer />
