@@ -83,7 +83,8 @@ export interface CareerField {
   cbc_pathway: 'STEM' | 'Social Sciences' | 'Arts & Sports Science'
   cbc_track: string
   example_roles: string[]
-  subjects: string[]
+  jss_subjects: string[]  // Junior Secondary subjects (Grades 7-9) - 12 core subjects
+  ss_subjects: string[]  // Senior Secondary subjects (Grades 10-12) - pathway-specific
   grade_appropriateness: string[]
   keywords: string[]
   created_at: string

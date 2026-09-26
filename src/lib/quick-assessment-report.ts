@@ -193,9 +193,26 @@ export const normaliseQuickAssessmentBrief = (raw: unknown, input: QuickAssessme
       : matchedField.cbc_track;
 
     // Extract subjects to prioritise
-    const subjectsToPrioritise = Array.isArray(field.subjects_to_prioritise)
-      ? field.subjects_to_prioritise.slice(0, 3)
-      : matchedField.subjects.slice(0, 3);
+    // Validate against the right subjects list based on grade
+    const isJuniorSecondary = ['Grade 7', 'Grade 8', 'Grade 9'].includes(input.grade);
+    const validSubjectsList = isJuniorSecondary 
+      ? (matchedField.jss_subjects || [])
+      : (matchedField.ss_subjects || []);
+    
+    let subjectsToPrioritise: string[];
+    if (Array.isArray(field.subjects_to_prioritise) && field.subjects_to_prioritise.length > 0) {
+      // AI provided subjects - validate they're from the right list
+      const aiSubjects = field.subjects_to_prioritise.slice(0, 3);
+      const validSubjects = aiSubjects.filter((s: string) => 
+        validSubjectsList.some(valid => valid.toLowerCase() === s.toLowerCase())
+      );
+      subjectsToPrioritise = validSubjects.length > 0 
+        ? validSubjects 
+        : validSubjectsList.slice(0, 3);
+    } else {
+      // AI didn't provide subjects - use fallback from the right list
+      subjectsToPrioritise = validSubjectsList.slice(0, 3);
+    }
 
     // Extract starter activity (Grades 7-9)
     const starterActivity = field.starter_activity as Record<string, unknown> | undefined;

@@ -352,8 +352,8 @@ Return EXACTLY this JSON format (array of 3 objects):
 
     const fields = (input.availableCareerFields || [])
       .filter(f => f.grade_appropriateness.includes(input.grade))
-      .map(item => `- ${item.name} — ${item.cbc_pathway} / ${item.cbc_track} (example roles: ${item.example_roles.slice(0, 3).join(', ')})`)
-      .join('\n') || '- Technology and Computing — STEM / Applied Sciences (example roles: Software Developer, Data Scientist)\n- Business and Entrepreneurship — Social Sciences / Humanities & Business Studies (example roles: Entrepreneur, Business Owner)'
+      .map(item => `- ${item.name} — ${item.cbc_pathway} / ${item.cbc_track} (example roles: ${item.example_roles.slice(0, 3).join(', ')}) [JSS subjects: ${item.jss_subjects?.join(', ') || 'N/A'}] [SS subjects: ${item.ss_subjects?.join(', ') || 'N/A'}]`)
+      .join('\n') || '- Technology and Computing — STEM / Applied Sciences (example roles: Software Developer, Data Scientist) [JSS subjects: Mathematics, Integrated Science, Pre-Technical & Pre-Career Studies] [SS subjects: Computer Science, Mathematics, Physics]'
 
     const gradeInstruction = input.grade === 'Grade 7'
       ? `The student is in Grade 7 (Junior Secondary). This is CRITICAL: Kenya's CBC places students into Senior School pathways based on Grades 7-8 school-based assessments (20%) plus Grade 9 summative evaluation (60%). What the student does THIS YEAR literally determines which Senior School pathway they qualify for. Focus on:
@@ -418,7 +418,7 @@ CRITICAL: The "field" property in your JSON must contain the EXACT field name fr
 Non-negotiable guidance rules:
 1. The three suggestions must be career fields from the allowed list above. Copy the field name EXACTLY as it appears. Never invent new field names, never paraphrase existing ones, and never suggest specific job titles like "Real Estate Manager," "Software Developer," or "Registered Nurse."
 2. Each career field must include cbc_pathway and cbc_track fields that match the pathway and track shown in the allowed list above. Valid pathways are: STEM, Social Sciences, Arts & Sports Science.
-3. Each career field must include subjects_to_prioritise - 1-3 specific subjects the student should focus on this term, based on their performance data and the field's track requirements.
+3. Each career field must include subjects_to_prioritise - 1-3 specific subjects the student should focus on this term. CRITICAL: For Grades 7-9, use subjects from the [JSS subjects] list (the 12 core Junior Secondary subjects). For Grades 10-12, use subjects from the [SS subjects] list (pathway-specific Senior Secondary subjects). Base your choice on the student's performance data and the field's requirements.
 4. For Grades 7-9: only suggest fields marked as appropriate for the student's grade. "Law and Governance" must never appear for a Grade 7 student.
 5. For Grades 7-9: filter suggestions to school pathway availability. If the school only offers 2 of 3 pathways, don't suggest fields from the missing one.
 6. For Grades 7-9: acknowledge parent expectations in why_it_appeared. If the student's signals conflict with parent wishes, name that tension honestly.
