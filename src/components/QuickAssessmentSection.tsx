@@ -143,10 +143,10 @@ const QuickAssessmentSection = () => {
               <Button 
                 size="lg"
                 className="h-14 sm:h-16 px-10 sm:px-12 bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-glow text-lg rounded-2xl group"
-                onClick={() => navigate("/quick-assessment")}
+                onClick={() => navigate("/chat")}
               >
                 <span className="hidden lg:inline">Start Chatting Now</span>
-                <span className="lg:hidden">Take Full Assessment</span>
+                <span className="lg:hidden">Chat with AI</span>
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </div>
