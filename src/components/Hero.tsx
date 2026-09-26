@@ -1,34 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, GraduationCap, BookOpen } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useState, lazy, Suspense } from "react";
-import BrandedLoader from "@/components/BrandedLoader";
-
-// Lazy load the heavy Lottie player
-const DotLottieReact = lazy(() => import("@lottiefiles/dotlottie-react").then(module => ({ default: module.DotLottieReact })));
 
 const Hero = () => {
   const navigate = useNavigate();
-  const [selectedRole, setSelectedRole] = useState<"student" | "mentor" | null>(null);
-  const [showRoleOptions, setShowRoleOptions] = useState(true);
-
-  const handleRoleSelect = (role: "student" | "mentor") => {
-    setSelectedRole(role);
-    setShowRoleOptions(false);
-  };
-
-  const handleGetStarted = () => {
-    if (selectedRole === "student") {
-      navigate("/quick-assessment");
-    } else {
-      navigate("/quick-assessment");
-    }
-  };
-
-  const resetRoleSelection = () => {
-    setSelectedRole(null);
-    setShowRoleOptions(true);
-  };
 
   return (
     <section className="min-h-screen flex items-center pt-16 relative overflow-hidden bg-background">
@@ -44,70 +19,27 @@ const Hero = () => {
             </h1>
 
             <p className="text-lg text-foreground-muted leading-relaxed max-w-xl font-medium mx-auto lg:mx-0">
-              Synchronize your academic potential with global career success. We map your educational journey from school pathways to university with absolute precision.
+              Free AI-powered career guidance for Kenyan students. Discover careers aligned to the CBC system, explore pathways, and get personalized recommendations.
             </p>
 
-            {/* Role selection - Exact Labels and Layout */}
-            <div className="flex flex-col gap-4">
-              {showRoleOptions ? (
-                <div className="grid grid-cols-2 sm:flex sm:flex-row gap-3 sm:gap-4 items-center justify-center lg:justify-start">
-                  <Button
-                    size="lg"
-                    className="w-full sm:w-auto bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow h-14 sm:h-16 text-base sm:text-lg px-4 sm:px-8 font-bold"
-                    onClick={() => handleRoleSelect("student")}
-                  >
-                    <GraduationCap className="w-5 h-5 mr-1.5 sm:mr-2 flex-shrink-0" />
-                    <span className="hidden sm:inline">I'm a Student</span>
-                    <span className="sm:hidden">Student</span>
-                  </Button>
-                  <Button
-                    size="lg"
-                    className="w-full sm:w-auto bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow h-14 sm:h-16 text-base sm:text-lg px-4 sm:px-8 font-bold"
-                    onClick={() => handleRoleSelect("mentor")}
-                  >
-                    <BookOpen className="w-5 h-5 mr-1.5 sm:mr-2 flex-shrink-0" />
-                    <span className="hidden sm:inline">I'm a Mentor</span>
-                    <span className="sm:hidden">Mentor</span>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="col-span-2 sm:w-auto border-card-border hover:bg-surface h-14 sm:h-16 text-base sm:text-lg px-8 font-bold"
-                    onClick={() => navigate("/quick-assessment")}
-                  >
-                    Quick Assessment
-                  </Button>
-                </div>
-              ) : (
-                <div className="flex flex-col sm:flex-row gap-4 items-center justify-center lg:justify-start text-center lg:text-left">
-                  <Button
-                    size="lg"
-                    className="w-full sm:flex-1 bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow h-14 sm:h-16 text-base sm:text-lg px-8 font-bold"
-                    onClick={handleGetStarted}
-                  >
-                    {selectedRole === "student" ? "Start your journey" : "Start guiding students"}
-                    <ArrowRight className="w-5 h-5 ml-2" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="w-full sm:w-auto border-card-border hover:bg-surface h-14 sm:h-16 text-base sm:text-lg px-8 font-bold"
-                    onClick={() => navigate("/quick-assessment")}
-                  >
-                    Quick Assessment
-                  </Button>
-                </div>
-              )}
-
-              {/* Back button to change role */}
-              {selectedRole && !showRoleOptions && (
-                <button
-                  onClick={resetRoleSelection}
-                  className="text-xs text-muted-foreground hover:text-foreground underline text-left sm:text-center w-full"
-                >
-                  Switching from {selectedRole}? Click here to reset.
-                </button>
-              )}
+            <div className="flex flex-col sm:flex-row gap-4 items-center justify-center lg:justify-start">
+              <Button
+                size="lg"
+                className="w-full sm:w-auto bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow h-14 sm:h-16 text-base sm:text-lg px-8 font-bold"
+                onClick={() => navigate("/quick-assessment")}
+              >
+                <Sparkles className="w-5 h-5 mr-2" />
+                Take Free Assessment
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full sm:w-auto border-card-border hover:bg-surface h-14 sm:h-16 text-base sm:text-lg px-8 font-bold"
+                onClick={() => navigate("/careers")}
+              >
+                Explore Careers
+              </Button>
             </div>
           </div>
 

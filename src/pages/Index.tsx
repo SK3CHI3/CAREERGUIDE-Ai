@@ -11,6 +11,7 @@ import FeatureShowcase from "@/components/FeatureShowcase";
 import Testimonials from "@/components/Testimonials";
 import BackgroundGradient from "@/components/BackgroundGradient";
 import StatsPartnersSection from "@/components/StatsPartnersSection.tsx";
+import CounselorBookingSection from "@/components/CounselorBookingSection";
 
 const Index = () => {
   const location = useLocation();
@@ -111,6 +112,15 @@ const Index = () => {
         <div id="quick-assessment" className="quick-assessment-section">
           <QuickAssessmentSection />
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+        >
+          <CounselorBookingSection />
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 40 }}
