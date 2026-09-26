@@ -316,8 +316,14 @@ const QuickAssessment = () => {
 
             <main className="max-w-4xl mx-auto px-4 py-4 md:py-8 relative z-10 min-h-[100dvh] flex flex-col">
                 <div className="text-center mb-6 hidden md:block">
-                    <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent pb-1">CBC Pathway Assessment</h1>
-                    <p className="text-base text-muted-foreground mt-2">Discover career fields that match your performance, interests, and CBC pathway.</p>
+                    <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent pb-1">
+                        {isCareerFitMode ? `Am I a fit for ${targetCareer}?` : 'CBC Pathway Assessment'}
+                    </h1>
+                    <p className="text-base text-muted-foreground mt-2">
+                        {isCareerFitMode 
+                            ? `Find out if ${targetCareer} matches your performance, interests, and CBC pathway.`
+                            : 'Discover career fields that match your performance, interests, and CBC pathway.'}
+                    </p>
                 </div>
 
                 <div className="mb-6">
@@ -342,6 +348,13 @@ const QuickAssessment = () => {
                 )}
 
                 <Card className="bg-gradient-surface border-card-border shadow-elevated overflow-hidden">
+                    {isCareerFitMode && (
+                        <div className="bg-primary/10 border-b border-primary/20 px-5 py-3 md:hidden">
+                            <p className="text-sm font-bold text-primary text-center">
+                                Testing fit for: {targetCareer}
+                            </p>
+                        </div>
+                    )}
                     <CardContent className="p-5 md:p-10">
                         <AnimatePresence mode="wait">
                             {/* PHASE 1: Identity & Academics */}

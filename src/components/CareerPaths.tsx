@@ -185,9 +185,9 @@ const CareerPaths = () => {
                   </div>
                 </div>
                 
-                <div className="mt-auto pt-4">
-                  <Button 
-                    variant="ghost" 
+                <div className="mt-auto pt-4 space-y-2">
+                  <Button
+                    variant="ghost"
                     className="w-full justify-between hover:bg-surface group-hover:text-primary font-bold"
                     onClick={() => {
                       setSelectedCareer(career);
@@ -196,6 +196,15 @@ const CareerPaths = () => {
                   >
                     View Details
                     <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="w-full font-bold border-primary/30 hover:border-primary hover:bg-primary/5"
+                    onClick={() => {
+                      navigate(`/quick-assessment?career=${encodeURIComponent(career.title)}`);
+                    }}
+                  >
+                    Am I a fit?
                   </Button>
                 </div>
               </div>
