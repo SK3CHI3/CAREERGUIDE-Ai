@@ -1,18 +1,18 @@
-# Am I a Fit? Feature
+# Access Fit Feature
 
 ## Overview
 
-The "Am I a fit?" feature allows students to test their compatibility with any trending career from the homepage. When clicked, it launches a personalized Quick Assessment focused on that specific career.
+The "Access fit" feature allows students to test their compatibility with any career from the career directory. When clicked, it launches a personalized Quick Assessment focused on that specific career.
 
 ## How It Works
 
-### 1. Homepage Integration
+### 1. Career Directory Integration
 
 **Location:** `src/components/CareerPaths.tsx`
 
-Each trending career card now displays two buttons:
+Each career card displays two buttons:
 - **View Details** - Opens the career detail modal
-- **Am I a fit?** - Launches personalized assessment
+- **Access fit** - Launches personalized assessment
 
 ```typescript
 <Button
@@ -22,7 +22,7 @@ Each trending career card now displays two buttons:
     navigate(`/quick-assessment?career=${encodeURIComponent(career.title)}`);
   }}
 >
-  Am I a fit?
+  Access fit
 </Button>
 ```
 
@@ -40,7 +40,7 @@ The career title is passed as a URL parameter:
 #### Desktop Header
 When a target career is present, the header changes:
 - **Normal mode:** "CBC Pathway Assessment"
-- **Fit mode:** "Am I a fit for [Career Name]?"
+- **Fit mode:** "Testing fit for [Career Name]?"
 
 #### Mobile Banner
 A colored banner appears at the top of the card on mobile:
@@ -78,7 +78,7 @@ MAKE THIS THE VERY FIRST RECOMMENDATION and objectively evaluate if they are a f
 
 ### 5. Assessment Flow
 
-When a student clicks "Am I a fit?":
+When a student clicks "Access fit":
 
 1. **Navigate** to `/quick-assessment?career={career_title}`
 2. **Show** personalized header with career name
@@ -102,14 +102,14 @@ The QuickAssessmentDirectionBrief component:
 
 ### Desktop
 1. Student browses trending careers on homepage
-2. Clicks "Am I a fit?" button
-3. Sees personalized header: "Am I a fit for Software Engineer?"
+2. Clicks "Access fit" button
+3. Sees personalized header: "Testing fit for Software Engineer?"
 4. Completes assessment
 5. Gets results with Software Engineer as first recommendation (if fit)
 
 ### Mobile
 1. Student browses trending careers
-2. Clicks "Am I a fit?" button
+2. Clicks "Access fit" button
 3. Sees banner: "Testing fit for: Software Engineer"
 4. Completes assessment
 5. Gets results with Software Engineer as first recommendation (if fit)
@@ -117,7 +117,7 @@ The QuickAssessmentDirectionBrief component:
 ## Technical Implementation
 
 ### Files Modified
-- `src/components/CareerPaths.tsx` - Added "Am I a fit?" button
+- `src/components/CareerPaths.tsx` - Added "Access fit" button
 - `src/pages/QuickAssessment.tsx` - Added header and banner for fit mode
 
 ### Files Already Supporting
@@ -138,7 +138,7 @@ The QuickAssessmentDirectionBrief component:
 To test the feature:
 1. Go to homepage
 2. Find a trending career card
-3. Click "Am I a fit?" button
+3. Click "Access fit" button
 4. Verify header shows career name
 5. Complete assessment
 6. Check that target career appears first in results (if fit)
