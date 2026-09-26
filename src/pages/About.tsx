@@ -9,27 +9,6 @@ import { motion } from "framer-motion";
 import { Helmet } from "react-helmet-async";
 
 export default function About() {
-  const sections = [
-    {
-      id: "mission",
-      image: "/images/about_mission.png",
-      title: "Our Mission",
-      desc: "To synchronize every student's academic potential with their ideal career path, regardless of their background. We believe that clarity in the educational journey leads to success in the workforce.",
-    },
-    {
-      id: "cbc",
-      image: "/images/about_cbc.png",
-      title: "CBC-Aligned Career Fields",
-      desc: "Our platform is built around Kenya's Competency-Based Curriculum. We map your interests and strengths to real career fields that align with CBC pathways and subject combinations.",
-    },
-    {
-      id: "students",
-      image: "/images/about_schools.png",
-      title: "Free for All Students",
-      desc: "No sign-up required, no subscription fees. Every student in Kenya can access our AI assessment, explore career fields, and download personalized reports at zero cost.",
-    }
-  ];
-
   return (
     <div className="min-h-screen text-foreground overflow-x-hidden relative flex flex-col bg-background">
       <Helmet>
@@ -99,51 +78,6 @@ export default function About() {
               </p>
             </div>
           </motion.div>
-        </div>
-
-        {/* Bento Sections Grid */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-40">
-          {sections.map((section, index) => {
-            const isEven = index % 2 === 0;
-            return (
-              <div key={section.id} className={`flex flex-col lg:flex-row items-center gap-16 lg:gap-24 ${isEven ? '' : 'lg:flex-row-reverse'}`}>
-                
-                {/* Visual Side */}
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0.9, x: isEven ? -40 : 40 }}
-                  whileInView={{ opacity: 1, scale: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.8 }}
-                  className="flex-1 w-full"
-                >
-                  <div className={`relative aspect-[4/3] rounded-[3rem] border border-card-border overflow-hidden group shadow-2xl`}>
-                    <img 
-                      src={section.image} 
-                      alt={section.title} 
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                  </div>
-                </motion.div>
-
-                {/* Content Side */}
-                <motion.div 
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                  className="flex-1 space-y-6"
-                >
-                  <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">
-                    {section.title}
-                  </h2>
-                  <p className="text-lg text-foreground-muted leading-relaxed font-medium">
-                    {section.desc}
-                  </p>
-                </motion.div>
-              </div>
-            );
-          })}
         </div>
 
         {/* Team Section Redesign */}
