@@ -1,10 +1,8 @@
 import { useState, useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { User, Sparkles } from "lucide-react";
+import { User, Sparkles, ArrowUp } from "lucide-react";
 import { aiCareerService, type ChatMessage } from "@/lib/ai-service";
 import { MessageContent } from "@/components/chat/MessageContent";
-import { ChatInput, type ChatInputHandle } from "@/components/chat/ChatInput";
 import { trackChatMessageByRole, trackChatSession } from "@/lib/tracking-service";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -21,11 +19,24 @@ const AIChat = ({ isStandalone = false }: { isStandalone?: boolean }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const chatInputRef = useRef<ChatInputHandle>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 200)}px`;
+    }
+  }, [message]);
+
+  // Focus input on mount
+  useEffect(() => {
+    textareaRef.current?.focus();
+  }, []);
 
   const handleSend = async () => {
     if (!message.trim() || isLoading) return;
@@ -66,108 +77,140 @@ const AIChat = ({ isStandalone = false }: { isStandalone?: boolean }) => {
       setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
-      setTimeout(() => chatInputRef.current?.focus(), 0);
+      setTimeout(() => textareaRef.current?.focus(), 0);
     }
   };
 
-  const handleReset = () => {
-    setMessages([]);
-    trackChatSession();
-    setTimeout(() => chatInputRef.current?.focus(), 0);
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
   };
 
   const handleSuggestedQuestion = (question: string) => {
     setMessage(question);
     setTimeout(() => {
-      handleSend();
-    }, 100);
+      setMessage(question);
+      const userMessage: ChatMessage = {
+        id: crypto.randomUUID(),
+        role: "user",
+        content: question,
+        timestamp: new Date().toISOString(),
+      };
+      setMessages((prev) => [...prev, userMessage]);
+      setIsLoading(true);
+      trackChatMessageByRole("user");
+
+      aiCareerService.sendMessage(question, [], {}).then((response) => {
+        const assistantMessage: ChatMessage = {
+          id: crypto.randomUUID(),
+          role: "assistant",
+          content: response,
+          timestamp: new Date().toISOString(),
+        };
+        setMessages((prev) => [...prev, assistantMessage]);
+        trackChatMessageByRole("assistant");
+      }).catch((error) => {
+        console.error("Chat error:", error);
+        const errorMessage: ChatMessage = {
+          id: crypto.randomUUID(),
+          role: "assistant",
+          content: "I'm sorry, I encountered an error. Please try again.",
+          timestamp: new Date().toISOString(),
+        };
+        setMessages((prev) => [...prev, errorMessage]);
+      }).finally(() => {
+        setIsLoading(false);
+        setTimeout(() => textareaRef.current?.focus(), 0);
+      });
+    }, 50);
   };
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col bg-background">
       {/* Messages area */}
       <ScrollArea className="flex-1">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 space-y-6">
           {messages.length === 0 ? (
-            // Empty state
+            /* Empty state */
             <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-8">
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.5 }}
-                className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center"
+                className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center"
               >
-                <Sparkles className="w-10 h-10 text-primary" />
+                <Sparkles className="w-8 h-8 text-primary" />
               </motion.div>
 
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.2, duration: 0.5 }}
-                className="space-y-3"
+                transition={{ delay: 0.15, duration: 0.5 }}
+                className="space-y-2"
               >
-                <h1 className="text-3xl sm:text-4xl font-bold text-foreground">
-                  AI Career Counselor
+                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
+                  How can I help you today?
                 </h1>
-                <p className="text-lg text-muted-foreground max-w-md">
-                  Ask me anything about careers, CBC pathways, subjects, or university applications in Kenya.
-                </p>
               </motion.div>
 
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.4, duration: 0.5 }}
+                transition={{ delay: 0.3, duration: 0.5 }}
                 className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-xl"
               >
                 {SUGGESTED_QUESTIONS.map((question, index) => (
-                  <Button
+                  <button
                     key={index}
-                    variant="outline"
-                    className="h-auto py-4 px-4 text-left justify-start hover:bg-primary/5 hover:border-primary/50 transition-all"
+                    className="text-left px-4 py-3.5 rounded-xl border border-border hover:border-primary/40 hover:bg-primary/[0.03] transition-all text-sm text-foreground/80 hover:text-foreground"
                     onClick={() => handleSuggestedQuestion(question)}
                   >
-                    <span className="text-sm">{question}</span>
-                  </Button>
+                    {question}
+                  </button>
                 ))}
               </motion.div>
             </div>
           ) : (
-            // Messages
+            /* Messages */
             <AnimatePresence mode="popLayout">
               {messages.map((msg) => (
                 <motion.div
                   key={msg.id}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
+                  transition={{ duration: 0.25 }}
                   className={cn(
                     "flex gap-3",
                     msg.role === "user" ? "justify-end" : "justify-start"
                   )}
                 >
                   {msg.role === "assistant" && (
-                    <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mt-0.5">
                       <Sparkles className="w-4 h-4 text-primary" />
                     </div>
                   )}
 
                   <div
                     className={cn(
-                      "max-w-[80%] rounded-2xl px-4 py-3",
+                      "max-w-[75%] sm:max-w-[70%]",
                       msg.role === "user"
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-card border border-border"
+                        ? "bg-primary text-primary-foreground rounded-2xl rounded-tr-md px-4 py-2.5"
+                        : ""
                     )}
                   >
-                    <MessageContent
-                      content={msg.content}
-                      role={msg.role}
-                    />
+                    {msg.role === "assistant" ? (
+                      <div className="py-1">
+                        <MessageContent content={msg.content} role={msg.role} />
+                      </div>
+                    ) : (
+                      <p className="text-sm leading-relaxed">{msg.content}</p>
+                    )}
                   </div>
 
                   {msg.role === "user" && (
-                    <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-muted flex items-center justify-center">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-muted flex items-center justify-center mt-0.5">
                       <User className="w-4 h-4 text-muted-foreground" />
                     </div>
                   )}
@@ -176,19 +219,17 @@ const AIChat = ({ isStandalone = false }: { isStandalone?: boolean }) => {
 
               {isLoading && (
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="flex gap-3 justify-start"
                 >
-                  <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mt-0.5">
                     <Sparkles className="w-4 h-4 text-primary" />
                   </div>
-                  <div className="bg-card border border-border rounded-2xl px-4 py-3">
-                    <div className="flex gap-1">
-                      <div className="w-2 h-2 rounded-full bg-primary/60 animate-bounce" style={{ animationDelay: "0ms" }} />
-                      <div className="w-2 h-2 rounded-full bg-primary/60 animate-bounce" style={{ animationDelay: "150ms" }} />
-                      <div className="w-2 h-2 rounded-full bg-primary/60 animate-bounce" style={{ animationDelay: "300ms" }} />
-                    </div>
+                  <div className="py-3 flex gap-1.5">
+                    <div className="w-2 h-2 rounded-full bg-foreground/30 animate-bounce" style={{ animationDelay: "0ms" }} />
+                    <div className="w-2 h-2 rounded-full bg-foreground/30 animate-bounce" style={{ animationDelay: "150ms" }} />
+                    <div className="w-2 h-2 rounded-full bg-foreground/30 animate-bounce" style={{ animationDelay: "300ms" }} />
                   </div>
                 </motion.div>
               )}
@@ -198,35 +239,34 @@ const AIChat = ({ isStandalone = false }: { isStandalone?: boolean }) => {
         </div>
       </ScrollArea>
 
-      {/* Input area */}
-      <div className="border-t border-border bg-card/50 backdrop-blur-sm">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4 space-y-3">
-          {messages.length > 0 && (
-            <div className="flex justify-center">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleReset}
-                className="gap-2 text-muted-foreground hover:text-foreground"
-              >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                Start new conversation
-              </Button>
-            </div>
-          )}
-
-          <ChatInput
-            ref={chatInputRef}
-            message={message}
-            onChange={setMessage}
-            onSend={handleSend}
-            placeholder="Ask about careers, subjects, or university programs..."
-            disabled={isLoading}
-          />
-
-          <p className="text-xs text-center text-muted-foreground">
+      {/* Input area — ChatGPT style */}
+      <div className="border-t border-border bg-background px-4 sm:px-6 py-3 sm:py-4">
+        <div className="max-w-3xl mx-auto">
+          <div className="flex items-end gap-2 rounded-2xl border border-border bg-card px-4 py-2 shadow-sm focus-within:border-primary/40 focus-within:shadow-md transition-all">
+            <textarea
+              ref={textareaRef}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Message CareerGuide AI..."
+              disabled={isLoading}
+              rows={1}
+              className="flex-1 resize-none bg-transparent text-sm sm:text-base py-1.5 focus:outline-none placeholder:text-muted-foreground/60 max-h-[200px] disabled:opacity-50"
+            />
+            <button
+              onClick={handleSend}
+              disabled={!message.trim() || isLoading}
+              className={cn(
+                "flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all",
+                message.trim() && !isLoading
+                  ? "bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer"
+                  : "bg-muted text-muted-foreground cursor-not-allowed"
+              )}
+            >
+              <ArrowUp className="w-4 h-4" />
+            </button>
+          </div>
+          <p className="text-[11px] text-center text-muted-foreground/70 mt-2">
             CareerGuide AI can make mistakes. Consider verifying important information.
           </p>
         </div>
