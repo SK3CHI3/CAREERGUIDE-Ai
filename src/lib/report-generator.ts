@@ -349,6 +349,23 @@ export class ReportGenerator {
           </div>
           ${this.getQuickAssessmentFooter(3)}
         </section>
+
+        <section class="quick-brief-page">
+          ${this.getQuickAssessmentHeader('Your reflection journal')}
+          <div class="brief-title-block small">
+            <h1>Keep the evidence, not just the feeling.</h1>
+            <p>Use this space to record what you learn from each activity. Your notes will make your next CareerGuide conversation more useful.</p>
+          </div>
+          <div class="brief-reflections">
+            ${brief.careerFields.map(field => `
+              <div class="brief-reflection-row">
+                <h3>${escape(field.field)} — ${escape(field.starterActivity?.title || field.nextAction?.title || 'Activity')}</h3>
+                <div></div><div></div><div></div>
+              </div>
+            `).join('')}
+          </div>
+          ${this.getQuickAssessmentFooter(4)}
+        </section>
       </div>
     `;
   }
