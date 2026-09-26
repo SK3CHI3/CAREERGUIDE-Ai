@@ -4,13 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { MessageSquarePlus, Send, X, Bug, Lightbulb, HelpCircle, MessageCircle, Loader2, CheckCircle2 } from "lucide-react";
-import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const FeedbackWidget = () => {
-    const { user } = useAuth();
     const { toast } = useToast();
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -26,8 +24,8 @@ const FeedbackWidget = () => {
         setLoading(true);
         try {
             const { error } = await supabase.from('feedbacks').insert({
-                user_id: user?.id || null,
-                user_email: email || user?.email || null,
+                user_id: null,
+                user_email: email || null,
                 category,
                 content,
                 status: 'new'

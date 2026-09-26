@@ -2,11 +2,9 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowRight, Video, Shield, Clock, Users, CheckCircle2, BookOpen, GraduationCap } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
 
 const CounselorBookingSection = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
 
   const handleCTA = () => {
     navigate("/counselors");

@@ -17,6 +17,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import BackgroundGradient from "@/components/BackgroundGradient";
 import { INTEREST_CATEGORIES } from "@/data/interest-categories";
+import { trackQuickAssessment } from "@/lib/tracking-service";
 
 const QuickAssessment = () => {
     const navigate = useNavigate();
@@ -284,6 +285,16 @@ const QuickAssessment = () => {
             console.log('Setting direction brief and moving to step 5');
             setDirectionBrief(brief);
             localStorage.removeItem('career_assessment_state');
+            
+            // Track Quick Assessment completion
+            trackQuickAssessment({
+                grade: profile.grade || 'Not specified',
+                pathway: profile.pathway || 'Not specified',
+                targetCareer: targetCareer || null,
+                subjectsCount: profile.subjects?.length || 0,
+                interestsCount: profile.interests?.length || 0
+            });
+            
             // Small delay to ensure state updates are batched together
             await new Promise(resolve => setTimeout(resolve, 0));
             setCurrentStep(5);

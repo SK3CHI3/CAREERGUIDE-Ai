@@ -1,17 +1,15 @@
 import SubjectSelectionGuide from '@/components/SubjectSelectionGuide';
 import { PersonalizedPathway } from '@/components/PersonalizedPathway';
-import { useAuth } from '@/contexts/AuthContext';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { Award, BookOpen, MessageSquare, Search, User } from 'lucide-react';
-import { StudentAppHeader } from '@/components/StudentAppHeader';
 
 export default function SubjectGuide() {
-  const { profile, user } = useAuth();
   const navigate = useNavigate();
 
-  const initialSubjects = profile?.subjects || profile?.cbe_subjects || [];
-  const initialGrades = profile?.grades || {};
+  // Start with empty subjects - user will select them in the guide
+  const initialSubjects: string[] = [];
+  const initialGrades: Record<string, number> = {};
 
   return (
     <div className="subject-guide-page student-courses-page student-shell min-h-screen text-foreground">
@@ -19,7 +17,6 @@ export default function SubjectGuide() {
         <title>Subject Selection Guide | CareerGuide AI</title>
         <meta name="description" content="Discover which KUCCPS clusters and university programmes match your subject combinations. Interactive guide for Kenyan CBC students." />
       </Helmet>
-      <StudentAppHeader />
 
       <main className="subject-guide-main max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 pb-28 space-y-7">
         <div className="subject-guide-intro text-center">
@@ -31,15 +28,6 @@ export default function SubjectGuide() {
             Discover which KUCCPS clusters and university programmes match your CBC subject combinations
           </span>
         </div>
-
-        {/* Personalized Pathway - Only show for logged-in users with subjects */}
-        {profile && initialSubjects.length > 0 && (
-          <PersonalizedPathway
-            subjects={initialSubjects}
-            grades={initialGrades}
-            profile={profile}
-          />
-        )}
 
         {/* Interactive Selection Guide */}
         <SubjectSelectionGuide

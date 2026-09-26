@@ -4,44 +4,40 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { User, Sparkles, Loader2, AlertCircle, RefreshCw } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
 import { aiCareerService, type ChatMessage, type UserContext } from "@/lib/ai-service";
-import { loadStudentAIContext } from "@/lib/student-ai-context";
 import { MessageContent } from "@/components/chat/MessageContent";
 import { ChatInput, type ChatInputHandle } from "@/components/chat/ChatInput";
+import { trackChatMessageByRole, trackChatSession } from "@/lib/tracking-service";
 
 interface AIChatProps {
   isStandalone?: boolean;
 }
 
 const AIChat = ({ isStandalone = false }: AIChatProps) => {
-  const { user, profile } = useAuth();
   const [message, setMessage] = useState("");
   const [conversation, setConversation] = useState<ChatMessage[]>(() => {
-    if (user?.id) {
-      const saved = localStorage.getItem(`ai_chat_${user.id}`);
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          return parsed.map((msg: any) => ({
-            ...msg,
-            timestamp: new Date(msg.timestamp)
-          }));
-        } catch (error) {
-          console.error('Failed to parse saved conversation:', error);
-        }
+    const saved = localStorage.getItem('ai_chat_anonymous');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return parsed.map((msg: any) => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp)
+        }));
+      } catch (error) {
+        console.error('Failed to parse saved conversation:', error);
       }
     }
     return [];
   });
   const [isLoading, setIsLoading] = useState(false);
-
   const [error, setError] = useState<string | null>(null);
   const [userContext, setUserContext] = useState<UserContext>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatInputRef = useRef<ChatInputHandle>(null);
   const [isInitialized, setIsInitialized] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [sessionMessageCount, setSessionMessageCount] = useState(0);
 
   // Predefined quick questions for students
   const SUGGESTED_QUESTIONS = [
@@ -52,84 +48,50 @@ const AIChat = ({ isStandalone = false }: AIChatProps) => {
     "Show me TVET options for my interests"
   ];
 
-  // Initialize user context and conversation
+  // Initialize chat with welcome message
   useEffect(() => {
-    if (user && profile && !isInitialized) {
-      initializeChat();
-    }
-  }, [user, profile, isInitialized]);
+    if (!isInitialized && conversation.length === 0) {
+      const welcomeMessage: ChatMessage = {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        content: `Habari! I'm your AI career counselor, specialized in Kenya's CBE education system.
 
+I'm here to help you discover your perfect career path based on your interests, abilities, and goals.
+
+To give you the best guidance, let's start with one simple question:
+
+What subjects do you enjoy most in your current studies?`,
+        timestamp: new Date()
+      };
+      setConversation([welcomeMessage]);
+      setIsInitialized(true);
+      trackChatSession('start');
+    }
+  }, [isInitialized, conversation.length]);
 
   // Save conversation to localStorage whenever it changes
   useEffect(() => {
-    if (user?.id && conversation.length > 0) {
-      localStorage.setItem(`ai_chat_${user.id}`, JSON.stringify(conversation));
-      console.log('💾 Saved conversation to localStorage');
+    if (conversation.length > 0) {
+      localStorage.setItem('ai_chat_anonymous', JSON.stringify(conversation));
     }
-  }, [conversation, user?.id]);
+  }, [conversation]);
 
   // Auto-scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [conversation]);
 
-  const initializeChat = async () => {
-    try {
-      if (!user?.id) return;
-      const context = await loadStudentAIContext(user.id, profile?.full_name);
-
-      setUserContext(context);
-
-      // Load conversation history
-      if (user?.id) {
-        const history = await aiCareerService.loadConversationHistory(user.id);
-        if (history.length > 0) {
-          setConversation(history);
-        } else {
-          // Start with welcome message
-          const welcomeMessage: ChatMessage = {
-            id: crypto.randomUUID(),
-            role: 'assistant',
-            content: `Habari yako, ${context.name ? context.name.split(' ')[0] : 'there'}.
-
-I'm your AI career counselor, specialized in Kenya's CBE education system. I'm here to help you discover your perfect career path based on your interests, abilities, and goals.
-
-${context.schoolLevel ? `I see you're in ${context.schoolLevel} education` : 'I\'d love to learn more about your educational background'}${context.currentGrade ? ` (Grade ${context.currentGrade})` : ''}.
-
-To give you the best guidance, let's start with one simple question:
-
-What subjects do you enjoy most in your current studies?`,
-            timestamp: new Date()
-          };
-          setConversation([welcomeMessage]);
-        }
-      }
-
-      setIsInitialized(true);
-    } catch (error) {
-      console.error('Failed to initialize chat:', error);
-      setError('Failed to initialize chat. Please refresh the page.');
-    }
-  }
-
   // Function to refresh/clear the chat
   const handleRefresh = async () => {
     setIsRefreshing(true);
     try {
-      // Clear the conversation
       setConversation([]);
       setError(null);
-
-      // Clear localStorage
-      if (user?.id) {
-        localStorage.removeItem(`ai_chat_${user.id}`);
-        console.log('🗑️ Cleared conversation from localStorage');
-      }
-
-      // Re-initialize the chat
+      localStorage.removeItem('ai_chat_anonymous');
       setIsInitialized(false);
-      await initializeChat();
-
+      setSessionMessageCount(0);
+      trackChatSession('reset');
+      await new Promise(resolve => setTimeout(resolve, 100));
       console.log('Chat refreshed - conversation cleared and re-initialized');
     } catch (error) {
       console.error('Failed to refresh chat:', error);
@@ -140,7 +102,7 @@ What subjects do you enjoy most in your current studies?`,
   };
 
   const handleSend = async () => {
-    if (!message.trim() || isLoading || !user) return;
+    if (!message.trim() || isLoading) return;
 
     const userMessage: ChatMessage = {
       id: crypto.randomUUID(),
@@ -154,7 +116,9 @@ What subjects do you enjoy most in your current studies?`,
     setIsLoading(true);
     setError(null);
 
-    // Re-focus input after clearing
+    trackChatMessageByRole('user');
+    setSessionMessageCount(prev => prev + 1);
+
     setTimeout(() => chatInputRef.current?.focus(), 0);
 
     try {
@@ -171,16 +135,15 @@ What subjects do you enjoy most in your current studies?`,
         timestamp: new Date()
       };
 
-      const updatedConversation = [...conversation, userMessage, assistantMessage];
-      setConversation(updatedConversation);
+      setConversation(prev => [...prev, assistantMessage]);
+      trackChatMessageByRole('assistant');
+      setSessionMessageCount(prev => prev + 1);
 
-      // Quick assessment - don't save conversation to database
-      console.log('Quick assessment chat - conversation not saved to database');
+      console.log('Anonymous chat - conversation saved to localStorage');
 
     } catch (error) {
       console.error('Failed to send message:', error);
 
-      // Show user-friendly error messages
       let errorMessage = 'Failed to send message. Please try again.';
       if (error instanceof Error) {
         if (error.message.includes('Network connection failed')) {
@@ -200,33 +163,20 @@ What subjects do you enjoy most in your current studies?`,
     }
   };
 
-  if (!user) {
-    return (
-      <div className="w-full max-w-4xl px-2 sm:mx-auto sm:p-6 p-2">
-        <Alert>
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            Please sign in to chat with your AI career counselor.
-          </AlertDescription>
-        </Alert>
-      </div>
-    );
-  }
-
-  // Fatal init error: show clear message and retry so the UI is not stuck
+  // Fatal init error: show clear message and retry
   if (error && !isInitialized) {
     return (
       <div className="w-full max-w-4xl px-2 sm:mx-auto sm:p-6 p-2">
         <Card className="bg-gradient-surface border-card-border shadow-elevated">
           <CardContent className="p-6">
             <Alert variant="destructive" className="mb-4">
-              <AlertCircle className="h-4 w-4" />
+              <AlertCircle className="h-4 h-4" />
               <AlertDescription>{error}</AlertDescription>
             </Alert>
             <Button
               onClick={() => {
                 setError(null);
-                initializeChat();
+                setIsInitialized(false);
               }}
               variant="outline"
               className="w-full sm:w-auto"
@@ -251,8 +201,8 @@ What subjects do you enjoy most in your current studies?`,
             </span>
           </h2>
           <p className="text-foreground-muted max-w-2xl mx-auto text-sm sm:text-base">
-            Quick AI assessment – Get personalized career guidance based on Kenya's education system and job market.
-            <span className="text-blue-600 font-medium"> Conversations persist during your session but are not saved to database.</span>
+            Get personalized career guidance based on Kenya's education system and job market.
+            <span className="text-blue-600 font-medium"> Conversations persist during your session.</span>
           </p>
         </div>
       )}
@@ -263,10 +213,10 @@ What subjects do you enjoy most in your current studies?`,
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center space-x-3">
               <div className="adviser-chat-logo w-10 h-10 rounded-xl flex items-center justify-center">
-                <img 
-                  src="/logos/CareerGuide_Logo.webp" 
-                  alt="AI" 
-                  className="w-6 h-auto" 
+                <img
+                  src="/logos/CareerGuide_Logo.webp"
+                  alt="AI"
+                  className="w-6 h-auto"
                 />
               </div>
               <div>
@@ -293,126 +243,92 @@ What subjects do you enjoy most in your current studies?`,
                 )}
                 Reset Chat
               </Button>
-              {userContext.schoolLevel && (
-                <Badge variant="secondary" className="adviser-level-badge text-[10px] py-0.5 px-2">
-                  {userContext.schoolLevel}
-                </Badge>
-              )}
             </div>
           </div>
         </div>
 
         {/* Chat Messages */}
-        <div className="adviser-chat-body p-0 sm:p-6 p-3 flex-1 overflow-hidden">
-          <ScrollArea className={`${isStandalone ? 'h-[calc(100vh-280px)]' : 'h-[450px] sm:h-[600px]'} p-2 sm:p-6`}>
-            <div className="space-y-4 sm:space-y-6">
-              {conversation.map((msg) => (
-                <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} mb-2`}>
-                  <div className={`flex max-w-[95%] sm:max-w-[85%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'} gap-2 items-end`}>
-                    <div className={`adviser-message-avatar w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${msg.role === 'user'
-                      ? 'adviser-message-user-avatar'
-                      : 'adviser-message-ai-avatar'
-                      }`}>
-                      {msg.role === 'user' ? (
-                        <User className="w-4 h-4" />
-                      ) : (
-                        <img 
-                          src="/logos/CareerGuide_Logo.webp" 
-                          alt="AI" 
-                          className="w-4 h-auto" 
-                        />
-                      )}
-                    </div>
-                    <div className={`adviser-message-bubble p-3 sm:p-4 rounded-2xl ${msg.role === 'user'
-                      ? 'adviser-message-user rounded-br-none'
-                      : 'adviser-message-ai rounded-bl-none'
-                      }`}>
-                      <MessageContent content={msg.content} role={msg.role as 'user' | 'assistant'} />
-                      <p className={`text-[10px] mt-1.5 opacity-60 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
-                        {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </p>
+        <ScrollArea className="adviser-chat-body flex-1">
+          <div className="p-4 sm:p-6 space-y-4">
+            {conversation.map((msg) => (
+              <div
+                key={msg.id}
+                className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                <div className={`flex gap-3 max-w-[85%] ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                  <div className={`adviser-message-avatar flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center ${
+                    msg.role === 'user' ? 'adviser-message-user' : 'adviser-message-ai'
+                  }`}>
+                    {msg.role === 'user' ? (
+                      <User className="w-4 h-4" />
+                    ) : (
+                      <Sparkles className="w-4 h-4" />
+                    )}
+                  </div>
+                  <div className={`adviser-message-bubble rounded-2xl p-4 ${
+                    msg.role === 'user' ? 'adviser-message-user' : 'adviser-message-ai'
+                  }`}>
+                    <MessageContent content={msg.content} role={msg.role} />
+                  </div>
+                </div>
+              </div>
+            ))}
+            {isLoading && (
+              <div className="flex gap-3 justify-start">
+                <div className="flex gap-3">
+                  <div className="adviser-message-avatar adviser-message-ai flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center">
+                    <Sparkles className="w-4 h-4" />
+                  </div>
+                  <div className="adviser-message-bubble adviser-message-ai rounded-2xl p-4">
+                    <div className="flex items-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span className="text-sm">Thinking...</span>
                     </div>
                   </div>
                 </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+        </ScrollArea>
+
+        {/* Suggested Questions (only show if conversation is just welcome message) */}
+        {conversation.length === 1 && (
+          <div className="px-4 sm:px-6 pb-4">
+            <CardDescription className="text-xs mb-2 text-center">Try asking:</CardDescription>
+            <div className="flex flex-wrap gap-2 justify-center">
+              {SUGGESTED_QUESTIONS.map((q, i) => (
+                <button
+                  key={i}
+                  onClick={() => {
+                    setMessage(q);
+                    setTimeout(() => handleSend(), 100);
+                  }}
+                  className="text-xs px-3 py-1.5 rounded-full border border-card-border hover:border-primary hover:bg-primary/5 transition-colors"
+                >
+                  {q}
+                </button>
               ))}
-
-              {isLoading && (
-                <div className="flex justify-start">
-                  <div className="flex gap-2 sm:gap-3">
-                    <div className="adviser-message-avatar adviser-message-ai-avatar w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center">
-                      <img 
-                        src="/logos/CareerGuide_Logo.webp" 
-                        alt="AI" 
-                        className="w-4 h-auto" 
-                      />
-                    </div>
-                    <div className="adviser-message-bubble adviser-message-ai p-3 sm:p-4 rounded-2xl">
-                      <div className="flex items-center space-x-2">
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        <span className="text-sm text-foreground-muted">AI is thinking...</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div ref={messagesEndRef} />
             </div>
-          </ScrollArea>
-        </div>
+          </div>
+        )}
 
         {/* Chat Input */}
-        <div className="adviser-chat-composer p-4 sm:p-6">
+        <div className="adviser-chat-footer p-4 sm:p-6">
           {error && (
-            <Alert variant="destructive" className="mb-4 text-xs">
-              <AlertCircle className="h-3 w-3" />
+            <Alert variant="destructive" className="mb-4">
+              <AlertCircle className="h-4 h-4" />
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
-
-          {/* Prompts are an empty-conversation aid, not a distraction mid-chat. */}
-          {!conversation.some(item => item.role === 'user') && !isLoading && (
-            <div className="flex overflow-x-auto gap-2 mb-4 pb-2 no-scrollbar">
-              {SUGGESTED_QUESTIONS.map((q, i) => (
-                <Button
-                  key={i}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setMessage(q)}
-                  className="adviser-suggestion whitespace-nowrap rounded-full h-8 text-xs px-4 py-1 flex-shrink-0"
-                >
-                  {q}
-                </Button>
-              ))}
-            </div>
-          )}
-
           <ChatInput
             ref={chatInputRef}
-            message={message}
+            value={message}
             onChange={setMessage}
             onSend={handleSend}
+            placeholder="Ask about careers, subjects, or university programs..."
             disabled={isLoading}
-            placeholder="Ask about careers..."
-            className="adviser-composer"
-            inputClassName="adviser-composer-input"
-            buttonClassName="adviser-send"
-            aria-label="Ask about careers"
-            autoFocus
           />
-
-          <div className="flex items-center justify-between mt-3 px-1">
-            <p className="adviser-composer-note text-[10px] flex items-center">
-              <Sparkles className="w-3 h-3 mr-1" />
-              Private, AI-powered support
-            </p>
-            {userContext.name && (
-              <div className="flex items-center gap-1.5 opacity-60">
-                <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                <span className="text-[10px] font-medium">{userContext.name.split(' ')[0]}</span>
-              </div>
-            )}
-          </div>
         </div>
       </div>
     </div>

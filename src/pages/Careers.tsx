@@ -11,7 +11,6 @@ import Footer from "@/components/Footer";
 import BackgroundGradient from "@/components/BackgroundGradient";
 import { motion, AnimatePresence } from "framer-motion";
 import CareerDetailModal from "@/components/CareerDetailModal";
-import { useAuth } from "@/contexts/AuthContext";
 import { Helmet } from "react-helmet-async";
 import NotFound from './NotFound';
 
@@ -28,7 +27,6 @@ const Careers = () => {
   const [notFound, setNotFound] = useState(false);
   const { slug } = useParams();
   const navigate = useNavigate();
-  const { profile } = useAuth();
 
   useEffect(() => {
      const loadCareers = async () => {

@@ -12,21 +12,10 @@ import Testimonials from "@/components/Testimonials";
 import BackgroundGradient from "@/components/BackgroundGradient";
 import StatsPartnersSection from "@/components/StatsPartnersSection.tsx";
 import CounselorBookingSection from "@/components/CounselorBookingSection";
-import { useAuth } from "@/contexts/AuthContext";
-import { getDashboardPathForRole } from "@/types/roles";
 
 const Index = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, profile, loading } = useAuth();
-
-  // Redirect if already authenticated
-  useEffect(() => {
-    if (!loading && user && profile) {
-      const dashboardPath = getDashboardPathForRole(profile.role as "student" | "admin" | "mentor");
-      navigate(dashboardPath, { replace: true });
-    }
-  }, [user, profile, loading, navigate]);
 
   useEffect(() => {
     if (location.state && (location.state as any).scrollTo) {

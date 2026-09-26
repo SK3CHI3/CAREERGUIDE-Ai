@@ -6,7 +6,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { dashboardService, CareerPath } from "@/lib/dashboard-service";
 import CareerDetailModal from "./CareerDetailModal";
-import { useAuth } from "@/contexts/AuthContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const getDemandColor = (demand: string) => {
@@ -27,7 +26,6 @@ const CareerPaths = () => {
   const [error, setError] = useState<string | null>(null)
   const [selectedCareer, setSelectedCareer] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const { profile } = useAuth()
 
   useEffect(() => {
     const loadCareerPaths = async () => {

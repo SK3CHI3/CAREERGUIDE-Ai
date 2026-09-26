@@ -2,8 +2,6 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Bot, ChevronDown } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
-import { getDashboardPathForRole } from "@/types/roles";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -14,7 +12,6 @@ const scrollToSection = (id: string) => {
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, profile } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -27,15 +24,13 @@ const Navigation = () => {
     }
   };
 
-  const dashboardPath = user && profile ? getDashboardPathForRole(profile.role) : "/student";
-
   return (
     <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-card-border safe-area-top">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <button 
+            <button
               onClick={() => navigate("/")}
               className="flex-shrink-0 flex items-center space-x-2 hover:opacity-80 transition-opacity"
             >
@@ -53,7 +48,7 @@ const Navigation = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
-              
+
               <div className="relative group py-4">
                 <button className="text-foreground-muted group-hover:text-foreground transition-colors flex items-center gap-1 font-medium">
                   Product <ChevronDown className="w-4 h-4 opacity-70 group-hover:rotate-180 transition-transform duration-200" />
@@ -86,30 +81,12 @@ const Navigation = () => {
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
-            {user ? (
-              <Button
-                className="bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow"
-                onClick={() => navigate(dashboardPath)}
-              >
-                Dashboard
-              </Button>
-            ) : (
-              <>
-                <Button
-                  variant="ghost"
-                  className="text-foreground-muted hover:text-foreground"
-                  onClick={() => navigate('/auth')}
-                >
-                  Sign In
-                </Button>
-                <Button
-                  className="bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow"
-                  onClick={() => navigate('/auth')}
-                >
-                  Get started
-                </Button>
-              </>
-            )}
+            <Button
+              className="bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow"
+              onClick={() => navigate('/quick-assessment')}
+            >
+              Start Assessment
+            </Button>
           </div>
 
           {/* Mobile menu button */}
@@ -155,40 +132,16 @@ const Navigation = () => {
                 <button onClick={() => { navigate('/blog'); setIsOpen(false); }} className="block w-full text-left px-4 py-3 text-foreground-muted hover:text-foreground hover:bg-muted/50 rounded-xl transition-all">
                   Blog
                 </button>
-                <div className="pt-4 mt-2 border-t border-card-border/50 px-2 space-y-3">
-                  {user ? (
-                    <Button
-                      className="w-full bg-gradient-primary text-primary-foreground shadow-glow h-12 rounded-xl"
-                      onClick={() => {
-                        navigate(dashboardPath);
-                        setIsOpen(false);
-                      }}
-                    >
-                      Dashboard
-                    </Button>
-                  ) : (
-                    <>
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-center text-foreground-muted h-12 rounded-xl mb-1"
-                        onClick={() => {
-                          navigate('/auth');
-                          setIsOpen(false);
-                        }}
-                      >
-                        Sign In
-                      </Button>
-                      <Button
-                        className="w-full bg-gradient-primary text-primary-foreground shadow-glow h-12 rounded-xl"
-                        onClick={() => {
-                          navigate('/auth');
-                          setIsOpen(false);
-                        }}
-                      >
-                        Get started
-                      </Button>
-                    </>
-                  )}
+                <div className="pt-4 mt-2 border-t border-card-border/50 px-2">
+                  <Button
+                    className="w-full bg-gradient-primary text-primary-foreground shadow-glow h-12 rounded-xl"
+                    onClick={() => {
+                      navigate('/quick-assessment');
+                      setIsOpen(false);
+                    }}
+                  >
+                    Start Assessment
+                  </Button>
                 </div>
               </div>
             </motion.div>

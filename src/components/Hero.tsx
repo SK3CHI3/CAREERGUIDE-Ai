@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, GraduationCap, BookOpen } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
-import { getDashboardPathForRole } from "@/types/roles";
 import { useState, lazy, Suspense } from "react";
 import BrandedLoader from "@/components/BrandedLoader";
 
@@ -10,17 +8,9 @@ import BrandedLoader from "@/components/BrandedLoader";
 const DotLottieReact = lazy(() => import("@lottiefiles/dotlottie-react").then(module => ({ default: module.DotLottieReact })));
 
 const Hero = () => {
-  const { user, profile } = useAuth();
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState<"student" | "mentor" | null>(null);
   const [showRoleOptions, setShowRoleOptions] = useState(true);
-
-  const dashboardPath =
-    user && profile
-      ? getDashboardPathForRole(
-        profile.role as "student" | "admin" | "mentor"
-      )
-      : "/student";
 
   const handleRoleSelect = (role: "student" | "mentor") => {
     setSelectedRole(role);
@@ -28,8 +18,11 @@ const Hero = () => {
   };
 
   const handleGetStarted = () => {
-    if (user) navigate(dashboardPath);
-    else if (selectedRole) navigate(`/auth?mode=signup&role=${selectedRole}`);
+    if (selectedRole === "student") {
+      navigate("/quick-assessment");
+    } else {
+      navigate("/quick-assessment");
+    }
   };
 
   const resetRoleSelection = () => {
