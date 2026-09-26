@@ -35,7 +35,7 @@ const QuickAssessment = () => {
     const [grade, setGrade] = useState("");
     const [pathway, setPathway] = useState<'stem' | 'arts' | 'social' | 'techvoc' | null>(null);
     const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
-    const [subjectPerformance, setSubjectPerformance] = useState<Record<string, 'struggling' | 'passing' | 'good' | 'excelling'>>({});
+    const [subjectPerformance, setSubjectPerformance] = useState<Record<string, 'Below Expectation' | 'Approaching Expectation' | 'Meeting Expectation' | 'Exceeding Expectation'>>({});
     const [schoolPathways, setSchoolPathways] = useState<string[]>([]);
 
     // Phase 2: Interests & Activities
@@ -466,7 +466,7 @@ const QuickAssessment = () => {
                                                             <div key={sub} className="space-y-2">
                                                                 <p className="text-sm font-medium">{sub}</p>
                                                                 <div className="grid grid-cols-4 gap-2">
-                                                                    {(['struggling', 'passing', 'good', 'excelling'] as const).map(level => (
+                                                                    {(['Below Expectation', 'Approaching Expectation', 'Meeting Expectation', 'Exceeding Expectation'] as const).map(level => (
                                                                         <button key={level} type="button" onClick={() => setSubjectPerformance(prev => ({ ...prev, [sub]: level }))}
                                                                             className={`p-2 text-xs rounded-lg border-2 transition-all capitalize ${subjectPerformance[sub] === level ? 'border-primary bg-primary/10 text-primary font-bold' : 'border-card-border hover:border-primary/50'}`}>{level}</button>
                                                                     ))}

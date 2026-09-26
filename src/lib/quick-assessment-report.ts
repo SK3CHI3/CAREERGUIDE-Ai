@@ -9,7 +9,7 @@ export interface QuickAssessmentInput {
 
   // Academics
   subjects: string[];
-  subjectPerformance: Record<string, 'struggling' | 'passing' | 'good' | 'excelling'>;
+  subjectPerformance: Record<string, 'Below Expectation' | 'Approaching Expectation' | 'Meeting Expectation' | 'Exceeding Expectation'>;
 
   // School context (Grades 7-9)
   schoolPathways: string[];

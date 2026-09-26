@@ -53,13 +53,13 @@ For **Grade 11**, the framing can be slightly more specific because the student 
 - Grade (Grade 7 / 8 / 9)
 - Strong subjects (multi-select from grade-appropriate list)
 - **Subject performance** — for each selected subject, rate yourself:
-  - Struggling
+  - Below Expectation
   - Passing
   - Good
   - Excelling
 
 **Why performance matters:**
-The CBC places students based on grades, not interest alone. A student who "likes" Math but is struggling in it needs different guidance than one excelling. The AI needs this signal to make realistic pathway suggestions.
+The CBC places students based on grades, not interest alone. A student who "likes" Math but is performing Below Expectation in it needs different guidance than one who is Exceeding Expectation. The AI needs this signal to make realistic pathway suggestions.
 
 **School pathways** — "Which Senior School pathways does your school offer?"
 - STEM
@@ -115,7 +115,7 @@ Parent expectations are the single largest non-academic factor in Kenyan student
 - Full Name, Email
 - Current pathway (STEM / Arts & Sports / Social Sciences / Technical & Vocational)
 - Current subjects (multi-select)
-- **Subject performance** — same rating scale (Struggling / Passing / Good / Excelling)
+- **Subject performance** — same rating scale (Below Expectation / Approaching Expectation / Meeting Expectation / Exceeding Expectation)
 
 #### Phase 2: Interests
 
@@ -561,7 +561,7 @@ export interface QuickAssessmentInput {
 
   // Academics
   subjects: string[];
-  subjectPerformance: Record<string, 'struggling' | 'passing' | 'good' | 'excelling'>;
+  subjectPerformance: Record<string, 'Below Expectation' | 'Approaching Expectation' | 'Meeting Expectation' | 'Exceeding Expectation'>;
 
   // School context (Grades 7-9)
   schoolPathways: string[];                  // which pathways the school offers
@@ -713,7 +713,7 @@ export interface QuickAssessmentBrief {
 - "Barrier" free text (replaced by structured choices for Grade 11, dropped for Grades 7-9)
 
 ### What we start collecting
-- Subject performance ratings (Struggling / Passing / Good / Excelling)
+- Subject performance ratings (Below Expectation / Approaching Expectation / Meeting Expectation / Exceeding Expectation)
 - School pathway availability
 - Current clubs/activities
 - Parent expectations + alignment

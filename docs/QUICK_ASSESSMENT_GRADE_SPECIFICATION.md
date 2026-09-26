@@ -16,7 +16,7 @@ This document specifies exactly what data we collect from students at each grade
 - **Grade**: Grade 7, 8, or 9
 - **Subjects**: All 12 core CBC subjects (no specialisation yet)
   - Mathematics, English, Kiswahili, Integrated Science, Health Education, Pre-Technical & Pre-Career Studies, Social Studies, Business Studies, Agriculture & Nutrition, Life Skills Education, Creative Arts and Sports, Religious Education (CRE/IRE/HRE)
-- **Subject Performance**: For each selected subject, rate performance as struggling/passing/good/excelling
+- **Subject Performance**: For each selected subject, rate performance as Below Expectation/Approaching Expectation/Meeting Expectation/Exceeding Expectation
 - **School Pathways**: Which Senior Secondary pathways does the school offer? (STEM, Social Sciences, Arts & Sports Science, or "Not sure")
 
 **Step 2: Interests & Activities**
@@ -44,7 +44,7 @@ This document specifies exactly what data we collect from students at each grade
   - **Arts & Sports**: English, Kiswahili, Mathematics, Fine Art & Design, Music, Drama & Theatre, Physical Education & Sports Science, Media & Film Studies, Fashion & Design
   - **Social Sciences**: English, Kiswahili, Mathematics, History & Citizenship, Geography, Business Studies & Economics, Religious Education, Law, Sociology
   - **Technical & Vocational**: English, Kiswahili, Mathematics, Building & Construction, Electrical & Electronics, Mechanical Engineering, Agriculture, Home Science, Hairdressing & Beauty, Plumbing & Carpentry, ICT / Computer Studies
-- **Subject Performance**: For each selected subject, rate performance as struggling/passing/good/excelling
+- **Subject Performance**: For each selected subject, rate performance as Below Expectation/Approaching Expectation/Meeting Expectation/Exceeding Expectation
 
 **Step 2: Interests & Activities**
 - **Interests**: Multi-select from RIASEC-based categories
