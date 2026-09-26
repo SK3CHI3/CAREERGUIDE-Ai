@@ -306,10 +306,10 @@ const AIChat = ({ isStandalone = false }: { isStandalone?: boolean }) => {
         </div>
       </ScrollArea>
 
-      {/* Input area — ChatGPT style */}
-      <div className="border-t border-border bg-background px-4 sm:px-6 py-3 sm:py-4">
+      {/* Input area — ChatGPT style floating */}
+      <div className="px-4 sm:px-6 pb-3 sm:pb-4 pt-2">
         <div className="max-w-3xl mx-auto">
-          <div className="flex items-end gap-2 rounded-2xl border border-border bg-card px-4 py-2 shadow-sm focus-within:border-primary/40 focus-within:shadow-md transition-all">
+          <div className="flex items-end gap-2 rounded-2xl bg-card px-4 py-2 shadow-lg focus-within:shadow-xl transition-all">
             <textarea
               ref={textareaRef}
               value={message}
