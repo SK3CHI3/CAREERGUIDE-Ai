@@ -79,14 +79,19 @@ export const handler = async (event) => {
   const hasSystemMessage = messages.some(message => message.role === 'system');
   const purpose = typeof request.purpose === 'string' ? request.purpose : 'general';
 
-  // A client can never supply an instruction hierarchy for an anonymous request.
-  // Anonymous use remains available for the public assessment, but at a deliberately
-  // small quota so it cannot be used as an open proxy to consume the model budget.
-  if (!isAuthenticated && hasSystemMessage) {
-    return json(401, { error: 'Please sign in to use profile-aware AI guidance.' });
-  }
-  if (!isAuthenticated && !['quick-assessment', 'guest-preview'].includes(purpose)) {
+  // Anonymous users can use specific purposes only (quick-assessment, guest-preview, student-chat).
+  // System messages are stripped for anonymous requests to prevent prompt injection.
+  if (!isAuthenticated && !['quick-assessment', 'guest-preview', 'student-chat'].includes(purpose)) {
     return json(401, { error: 'Please sign in to continue with AI guidance.' });
+  }
+
+  // For anonymous users, remove any system messages to prevent prompt injection
+  const safeMessages = isAuthenticated
+    ? messages
+    : messages.filter(message => message.role !== 'system');
+
+  if (!safeMessages.length) {
+    return json(400, { error: 'Please send a valid message.' });
   }
 
   const address = getClientAddress(event);
@@ -110,7 +115,7 @@ export const handler = async (event) => {
       },
       body: JSON.stringify({
         model: process.env.MODELSCOPE_MODEL || DEFAULT_MODEL,
-        messages,
+        messages: safeMessages,
         temperature: Number.isFinite(request.temperature) ? Math.min(Math.max(request.temperature, 0), 1) : 0.6,
         top_p: 0.9,
         max_tokens: Math.min(Math.max(Number(request.maxTokens) || 900, 128), 3500),

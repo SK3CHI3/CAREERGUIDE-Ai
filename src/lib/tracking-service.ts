@@ -48,16 +48,15 @@ export async function trackSession(): Promise<void> {
   try {
     const sessionId = getOrCreateSessionId();
     const userAgent = navigator.userAgent;
-    
-    // Check if session already exists
+
+    // Upsert: insert if new, update if exists — avoids race condition 409 errors
     const { data: existing } = await supabase
       .from('anonymous_sessions')
-      .select('id, visit_count')
+      .select('visit_count')
       .eq('session_id', sessionId)
       .maybeSingle();
-    
+
     if (existing) {
-      // Update existing session
       await supabase
         .from('anonymous_sessions')
         .update({
@@ -67,8 +66,7 @@ export async function trackSession(): Promise<void> {
         })
         .eq('session_id', sessionId);
     } else {
-      // Create new session
-      await supabase
+      const { error } = await supabase
         .from('anonymous_sessions')
         .insert({
           session_id: sessionId,
@@ -77,6 +75,17 @@ export async function trackSession(): Promise<void> {
           last_visit: new Date().toISOString(),
           visit_count: 1
         });
+
+      // If 409 (another tab created it first), just update instead
+      if (error && error.code === '23505') {
+        await supabase
+          .from('anonymous_sessions')
+          .update({
+            last_visit: new Date().toISOString(),
+            visit_count: 1
+          })
+          .eq('session_id', sessionId);
+      }
     }
   } catch (error) {
     console.error('Error tracking session:', error);
