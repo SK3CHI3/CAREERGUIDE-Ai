@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { User, Sparkles, ArrowUp } from "lucide-react";
-import { aiCareerService, type ChatMessage } from "@/lib/ai-service";
+import { aiCareerService, type ChatMessage, type UserContext } from "@/lib/ai-service";
+import { dashboardService, type CareerField } from "@/lib/dashboard-service";
 import { MessageContent } from "@/components/chat/MessageContent";
 import { trackChatMessageByRole, trackChatSession } from "@/lib/tracking-service";
 import { cn } from "@/lib/utils";
@@ -18,8 +19,47 @@ const AIChat = ({ isStandalone = false }: { isStandalone?: boolean }) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [chatContext, setChatContext] = useState<UserContext>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Load career fields and CBC data from database on mount
+  useEffect(() => {
+    const loadContext = async () => {
+      try {
+        const careerFields = await dashboardService.getCareerFields();
+        const careerPaths = await dashboardService.getCareerPaths(undefined, 20);
+
+        // Build a concise summary of career fields by pathway
+        const pathwaySummary: Record<string, string[]> = {};
+        careerFields.forEach((field: CareerField) => {
+          if (!pathwaySummary[field.cbc_pathway]) {
+            pathwaySummary[field.cbc_pathway] = [];
+          }
+          pathwaySummary[field.cbc_pathway].push(
+            `${field.name} (${field.cbc_track}) — roles: ${field.example_roles?.slice(0, 3).join(', ') || 'N/A'}`
+          );
+        });
+
+        const trendingCareers = careerPaths
+          .filter(p => p.is_featured)
+          .slice(0, 5)
+          .map(p => `${p.title} (${p.demand_level} demand, ${p.salary_range || 'varies'})`);
+
+        setChatContext({
+          careerFieldsData: careerFields,
+          pathwaySummary,
+          trendingCareers,
+          totalCareerFields: careerFields.length,
+          totalCareerPaths: careerPaths.length,
+        });
+      } catch (error) {
+        console.error('Failed to load chat context:', error);
+      }
+    };
+
+    loadContext();
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -38,43 +78,72 @@ const AIChat = ({ isStandalone = false }: { isStandalone?: boolean }) => {
     textareaRef.current?.focus();
   }, []);
 
-  const handleSend = async () => {
-    if (!message.trim() || isLoading) return;
-
-    const userMessage: ChatMessage = {
+  const sendMessage = async (content: string, currentMessages: ChatMessage[]) => {
+    setMessages(prev => [...prev, {
       id: crypto.randomUUID(),
       role: "user",
-      content: message,
+      content,
       timestamp: new Date().toISOString(),
-    };
-
-    setMessages((prev) => [...prev, userMessage]);
-    setMessage("");
+    }]);
     setIsLoading(true);
-
     trackChatMessageByRole("user");
 
     try {
-      const response = await aiCareerService.sendMessage(message, messages, {});
-      
+      const response = await aiCareerService.sendMessage(content, currentMessages, chatContext);
       const assistantMessage: ChatMessage = {
         id: crypto.randomUUID(),
         role: "assistant",
         content: response,
         timestamp: new Date().toISOString(),
       };
-
-      setMessages((prev) => [...prev, assistantMessage]);
+      setMessages(prev => [...prev, assistantMessage]);
       trackChatMessageByRole("assistant");
     } catch (error) {
       console.error("Chat error:", error);
-      const errorMessage: ChatMessage = {
+      setMessages(prev => [...prev, {
         id: crypto.randomUUID(),
         role: "assistant",
         content: "I'm sorry, I encountered an error. Please try again.",
         timestamp: new Date().toISOString(),
+      }]);
+    } finally {
+      setIsLoading(false);
+      setTimeout(() => textareaRef.current?.focus(), 0);
+    }
+  };
+
+  const handleSend = async () => {
+    if (!message.trim() || isLoading) return;
+    const userMessage: ChatMessage = {
+      id: crypto.randomUUID(),
+      role: "user",
+      content: message.trim(),
+      timestamp: new Date().toISOString(),
+    };
+    const newMessages = [...messages, userMessage];
+    setMessages(newMessages);
+    setMessage("");
+    setIsLoading(true);
+    trackChatMessageByRole("user");
+
+    try {
+      const response = await aiCareerService.sendMessage(message.trim(), newMessages, chatContext);
+      const assistantMessage: ChatMessage = {
+        id: crypto.randomUUID(),
+        role: "assistant",
+        content: response,
+        timestamp: new Date().toISOString(),
       };
-      setMessages((prev) => [...prev, errorMessage]);
+      setMessages(prev => [...prev, assistantMessage]);
+      trackChatMessageByRole("assistant");
+    } catch (error) {
+      console.error("Chat error:", error);
+      setMessages(prev => [...prev, {
+        id: crypto.randomUUID(),
+        role: "assistant",
+        content: "I'm sorry, I encountered an error. Please try again.",
+        timestamp: new Date().toISOString(),
+      }]);
     } finally {
       setIsLoading(false);
       setTimeout(() => textareaRef.current?.focus(), 0);
@@ -89,42 +158,40 @@ const AIChat = ({ isStandalone = false }: { isStandalone?: boolean }) => {
   };
 
   const handleSuggestedQuestion = (question: string) => {
-    setMessage(question);
-    setTimeout(() => {
-      setMessage(question);
-      const userMessage: ChatMessage = {
-        id: crypto.randomUUID(),
-        role: "user",
-        content: question,
-        timestamp: new Date().toISOString(),
-      };
-      setMessages((prev) => [...prev, userMessage]);
-      setIsLoading(true);
-      trackChatMessageByRole("user");
+    const userMessage: ChatMessage = {
+      id: crypto.randomUUID(),
+      role: "user",
+      content: question,
+      timestamp: new Date().toISOString(),
+    };
+    setMessages([userMessage]);
+    setMessage("");
+    setIsLoading(true);
+    trackChatMessageByRole("user");
 
-      aiCareerService.sendMessage(question, [], {}).then((response) => {
-        const assistantMessage: ChatMessage = {
+    aiCareerService.sendMessage(question, [userMessage], chatContext)
+      .then((response) => {
+        setMessages(prev => [...prev, {
           id: crypto.randomUUID(),
           role: "assistant",
           content: response,
           timestamp: new Date().toISOString(),
-        };
-        setMessages((prev) => [...prev, assistantMessage]);
+        }]);
         trackChatMessageByRole("assistant");
-      }).catch((error) => {
+      })
+      .catch((error) => {
         console.error("Chat error:", error);
-        const errorMessage: ChatMessage = {
+        setMessages(prev => [...prev, {
           id: crypto.randomUUID(),
           role: "assistant",
           content: "I'm sorry, I encountered an error. Please try again.",
           timestamp: new Date().toISOString(),
-        };
-        setMessages((prev) => [...prev, errorMessage]);
-      }).finally(() => {
+        }]);
+      })
+      .finally(() => {
         setIsLoading(false);
         setTimeout(() => textareaRef.current?.focus(), 0);
       });
-    }, 50);
   };
 
   return (

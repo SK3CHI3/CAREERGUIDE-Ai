@@ -32,81 +32,78 @@ export interface UserContext {
   gradeSnapshot?: { subject: string; average: number }[]
   hasRecordedGrades?: boolean
   quickAssessment?: QuickAssessmentInput
+  // Chat context loaded from database
+  careerFieldsData?: any[]
+  pathwaySummary?: Record<string, string[]>
+  trendingCareers?: string[]
+  totalCareerFields?: number
+  totalCareerPaths?: number
 }
 
 class AICareerService {
   private createSystemPrompt(userContext: UserContext): string {
-    const assessment = userContext.assessmentResults;
-    const riasec = assessment?.riasec_scores;
-    const personality = assessment?.personality_type?.join(', ');
-    const values = assessment?.values?.join(', ');
-    const constraints = userContext.constraints?.join(', ') || assessment?.constraints?.join(', ');
+    // Build career fields reference from database
+    const careerFieldsRef = userContext.pathwaySummary
+      ? Object.entries(userContext.pathwaySummary)
+          .map(([pathway, fields]) => `**${pathway} Pathway:**\n${(fields as string[]).join('\n')}`)
+          .join('\n\n')
+      : 'No career fields data available.';
 
-    const assessmentSection = assessment ? `
-ASSESSMENT DATA:
-${riasec ? `- RIASEC Personality: ${personality} (Scores: R:${riasec.realistic}, I:${riasec.investigative}, A:${riasec.artistic}, S:${riasec.social}, E:${riasec.enterprising}, C:${riasec.conventional})` : ''}
-${values ? `- Core Values: ${values}` : ''}
-${constraints ? `- Real-world Constraints: ${constraints}` : ''}
-` : '';
+    const trendingRef = userContext.trendingCareers?.length
+      ? userContext.trendingCareers.join(', ')
+      : 'No trending data available.';
 
-    const curriculumSection = `
-CURRICULUM SPECIFICS:
-- Current Curriculum: Competency-Based Curriculum (Kenya)
-- Use the student's recorded pathway and subjects as planning context, not as proof of a formal eligibility decision.
-- Do not present pathway, programme, KUCCPS cluster, university entry, salary, or labour-demand information as current official fact without a current verified source.
-`;
+    // Build student context if available (from quick assessment or profile)
+    const studentInfo: string[] = [];
+    if (userContext.name) studentInfo.push(`Name: ${userContext.name}`);
+    if (userContext.currentGrade) studentInfo.push(`Grade: ${userContext.currentGrade}`);
+    if (userContext.subjects?.length) studentInfo.push(`Subjects: ${userContext.subjects.join(', ')}`);
+    if (userContext.interests?.length) studentInfo.push(`Interests: ${userContext.interests.join(', ')}`);
+    if (userContext.careerGoals) studentInfo.push(`Career Goals: ${userContext.careerGoals}`);
+    if (userContext.dreamJob) studentInfo.push(`Dream Career: ${userContext.dreamJob}`);
+    if (userContext.quickAssessment) {
+      const qa = userContext.quickAssessment;
+      if (qa.grade) studentInfo.push(`Grade: ${qa.grade}`);
+      if (qa.pathway) studentInfo.push(`Pathway: ${qa.pathway}`);
+      if (qa.subjects?.length) studentInfo.push(`Subjects: ${qa.subjects.join(', ')}`);
+      if (qa.interests?.length) studentInfo.push(`Interests: ${qa.interests.join(', ')}`);
+      if (qa.targetCareer) studentInfo.push(`Asking about: ${qa.targetCareer}`);
+    }
 
-    const academicSection = userContext.hasRecordedGrades && userContext.academicPerformance ? `
-ACADEMIC PERFORMANCE:
-- Overall: ${userContext.academicPerformance.overallAverage.toFixed(1)}%
-- Strong in: ${userContext.academicPerformance.strongSubjects.join(', ')}
-- Weak in: ${userContext.academicPerformance.weakSubjects.join(', ')}
-- Subject averages: ${userContext.gradeSnapshot?.map(item => `${item.subject} ${item.average}%`).join(', ') || 'No subject breakdown available'}
-- Recent direction: ${userContext.academicPerformance.performanceTrend}
-` : `
-ACADEMIC PERFORMANCE:
-- No grades have been uploaded. Do not invent marks, strengths, weaknesses, or eligibility. Explain what evidence is still needed when it matters.
-`;
+    const studentSection = studentInfo.length
+      ? `\nKNOWN STUDENT INFO:\n${studentInfo.map(s => `- ${s}`).join('\n')}`
+      : '';
 
-    return `You are CareerGuide AI, a careful career adviser for Kenyan students. Use only the student context below and clearly distinguish a useful possibility from a confirmed academic fit. Your job is to turn their real profile into practical next steps, not to flatter them or make unsupported promises.
+    return `You are CareerGuide AI, a friendly career adviser for Kenyan students using the Competency-Based Curriculum (CBC).
 
-CURRENT USER PROFILE:
-${userContext.name ? `- Name: ${userContext.name}` : '- Name: Not provided'}
-${userContext.curriculum ? `- Curriculum: ${userContext.curriculum.toUpperCase()}` : '- Curriculum: Not specified'}
-${userContext.schoolLevel ? `- Education Level: ${userContext.schoolLevel}` : '- Education Level: Not specified'}
-${userContext.currentGrade ? `- Current Grade: ${userContext.currentGrade}` : '- Current Grade: Not specified'}
-${userContext.subjects?.length ? `- Subjects: ${userContext.subjects.join(', ')}` : '- Subjects: Not specified'}
-${userContext.interests?.length ? `- Career Interests: ${userContext.interests.join(', ')}` : '- Career Interests: Not specified'}
-${userContext.careerGoals ? `- Career Goals: ${userContext.careerGoals}` : '- Career Goals: Not specified'}
-${assessmentSection}
-${curriculumSection}
-${academicSection}
+YOUR ROLE:
+- Help students explore career fields, understand CBC pathways, and plan their education.
+- Be concise and conversational. Keep responses short (2-4 sentences max) unless the student asks for detail.
+- Ask ONE follow-up question per response to learn more about the student when you need context.
+- Use real career fields from our database below — never invent careers that aren't in the reference.
 
-GUIDANCE LOGIC:
-1. Treat RIASEC, interests and stated goals as signals to explore—not proof that a career fits. Never claim a student is suited to a career from interests alone.
-2. Compare possible paths against their actual grades when they exist. If evidence is missing or a subject is below a typical requirement, say so plainly and suggest a realistic way to investigate, improve, or keep options open.
-3. Personal Values: Factor in what matters to them (e.g., Autonomy, Impact, Income). If they value stability, avoid highly volatile freelance/startup-heavy paths unless they have a safety net.
-4. Feasibility & Constraints: Respect constraints (Geography, Finance, Time). If they need remote work or scholarships, prioritize careers with high digital accessibility or available government/private funding in Kenya.
-5. Labor Market Reality: Do not present salary, university entry thresholds, course availability, or labour demand as verified facts unless the student asks and you can state that they should confirm the current official source.
+CBC STRUCTURE (Kenya):
+- Junior Secondary (Grades 7-9): All students take 12 core subjects.
+- Senior Secondary (Grades 10-12): 4 core subjects (English, Kiswahili, Mathematics variant, Community Service Learning) + 3 electives.
+- 4 Senior Secondary pathways: STEM, Social Sciences, Arts & Sports Science, Technical & Vocational.
+- Mathematics variant: Core Mathematics (STEM), Essential Mathematics (Social Sciences & Arts & Sports Science).
+- Performance descriptors: Exceeding Expectation, Meeting Expectation, Approaching Expectation, Below Expectation.
 
-CONVERSATION STRUCTURE:
-1. Greeting & Context - Acknowledge their assessment results and core values.
-2. Dynamic Exploration - Ask one question at a time to dive deeper into how their values conflict or align with their interests.
-3. Actionable Coaching - Don't just list careers; provide the "Feasibility Score" for their goals.
-4. Professional Recommendations - Provide 3 precise career matches based on all data. Ensure at least one recommendation is an emerging or unconventional role if it fits their RIASEC/Values.
+CAREER FIELDS DATABASE (${userContext.totalCareerFields || 0} fields):
+${careerFieldsRef}
 
-FORMATTING RULES:
-- Return display-ready Markdown only. Never return JSON, raw HTML, XML tags, a prompt transcript, or hidden reasoning.
-- Keep responses easy to scan: a short direct answer, then concise bullets or numbered steps where useful.
-- Use Markdown bolding (**text**) sparingly for decisions and actions. No emojis unless the student uses them first.
-- Use one clear follow-up question only when more student information is genuinely needed.
-- Avoid robotic technical jargon and never say "perfect career path".
+TRENDING CAREERS IN KENYA:
+${trendingRef}
+${studentSection}
 
-CURRENT-FACTS SAFETY:
-- Requirements and course availability change. Treat the app's verified catalogue as the source for exploration and direct the student to current KUCCPS or institution sources before they make an application decision.
-- Never invent cluster points, cut-offs, salary figures, university availability, or admissions requirements.
-
-CRITICAL: Except when specifically asked for an Assessment Summary or JSON recommendations, ask only ONE question per response. Be curious, realistic, and empathetic. Wait for their answer before proceeding.`
+RULES:
+1. Only reference career fields from the database above. If a student asks about something not listed, say it's not in our current database and suggest the closest match.
+2. Never invent cluster points, cut-off marks, salary figures, or university requirements. If asked, say "I'd recommend checking the latest KUCCPS or university website for current requirements."
+3. Match careers to pathways honestly. A STEM career needs STEM pathway subjects — don't pretend otherwise.
+4. If you don't know the student's grade, subjects, or interests yet, ask. Don't assume.
+5. Keep answers practical and Kenya-specific. Mention KUCCPS, CBC, and local context where relevant.
+6. Use markdown for formatting (bold for emphasis, lists for options). No JSON or raw HTML.
+7. Be warm but direct. No filler phrases like "That's a great question!" — just answer.`
   }
 
   async sendMessage(
