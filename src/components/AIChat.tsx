@@ -324,7 +324,7 @@ What subjects do you enjoy most in your current studies?`,
           )}
           <ChatInput
             ref={chatInputRef}
-            value={message}
+            message={message}
             onChange={setMessage}
             onSend={handleSend}
             placeholder="Ask about careers, subjects, or university programs..."
