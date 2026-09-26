@@ -85,14 +85,14 @@ export default function HowItWorks() {
                 Ready to discover your career path?
               </h2>
               <p className="text-xl text-primary-foreground/80 font-medium">
-                Join thousands of students already using AI to unlock their potential and build their future.
+                Take a free assessment, chat with our AI counselor, or check if a career fits you.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                <a href="/auth" className="bg-white text-primary px-10 py-5 rounded-full font-black text-lg shadow-xl hover:scale-105 transition-transform">
-                  Get Started Today
+                <a href="/quick-assessment" className="bg-white text-primary px-10 py-5 rounded-full font-black text-lg shadow-xl hover:scale-105 transition-transform">
+                  Take Free Assessment
                 </a>
-                <a href="/faq" className="bg-transparent border-2 border-white/20 text-white px-10 py-5 rounded-full font-bold text-lg hover:bg-white/10 transition-colors">
-                  Check FAQs
+                <a href="/chat" className="bg-transparent border-2 border-white/20 text-white px-10 py-5 rounded-full font-bold text-lg hover:bg-white/10 transition-colors">
+                  Chat with AI
                 </a>
               </div>
             </div>

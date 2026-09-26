@@ -19,14 +19,14 @@ export default function About() {
     {
       id: "cbc",
       image: "/images/about_cbc.png",
-      title: "The CBC Advantage",
-      desc: "Our platform synchronizes student strengths directly to learning outcomes, ensuring realistic and actionable pathways. No more guessing—just precision educational mapping.",
+      title: "CBC-Aligned Career Fields",
+      desc: "Our platform is built around Kenya's Competency-Based Curriculum. We map your interests and strengths to real career fields that align with CBC pathways and subject combinations.",
     },
     {
-      id: "schools",
+      id: "students",
       image: "/images/about_schools.png",
-      title: "For Schools",
-      desc: "We empower schools with powerful insights, making career mapping manageable and scalable. Our dashboards turn academic metrics into institutional intelligence.",
+      title: "Free for All Students",
+      desc: "No sign-up required, no subscription fees. Every student in Kenya can access our AI assessment, explore career fields, and download personalized reports at zero cost.",
     }
   ];
 
@@ -92,10 +92,10 @@ export default function About() {
             <h2 className="text-3xl md:text-5xl font-black mb-8">Why we exist</h2>
             <div className="max-w-3xl mx-auto space-y-6 text-lg md:text-xl text-foreground-muted font-medium leading-relaxed">
               <p>
-                In many Kenyan schools, the ratio of students to career counselors is staggeringly high. We built CareerGuide AI as a scalable, 24/7 solution that scales with your institution.
+                In many Kenyan schools, the ratio of students to career counselors is staggeringly high. We built CareerGuide AI as a free, 24/7 solution that every student can access directly.
               </p>
               <p>
-                By leveraging AI trained specifically on the Kenyan economic landscape, we provide the personalized experience of a high-end mentor to every student with a smartphone.
+                By leveraging AI trained specifically on the Kenyan economic landscape and CBC system, we provide the personalized experience of a high-end mentor to every student with a smartphone.
               </p>
             </div>
           </motion.div>
@@ -234,16 +234,16 @@ export default function About() {
 
         {/* Final CTA */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-60">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             className="bg-primary rounded-[3.5rem] p-12 md:p-24 text-center text-white relative overflow-hidden"
           >
             <div className="relative z-10 max-w-2xl mx-auto space-y-8">
-              <h2 className="text-4xl md:text-5xl font-black leading-tight">Ready to see your student's metrics soar?</h2>
+              <h2 className="text-4xl md:text-5xl font-black leading-tight">Ready to discover your career path?</h2>
               <div className="flex justify-center">
-                <a href="/auth" className="bg-white text-primary px-12 py-5 rounded-full font-black text-lg flex items-center gap-2 hover:scale-105 transition-transform">
-                  Onboard Your School <ArrowRight className="w-6 h-6" />
+                <a href="/quick-assessment" className="bg-white text-primary px-12 py-5 rounded-full font-black text-lg flex items-center gap-2 hover:scale-105 transition-transform">
+                  Take Free Assessment <ArrowRight className="w-6 h-6" />
                 </a>
               </div>
             </div>

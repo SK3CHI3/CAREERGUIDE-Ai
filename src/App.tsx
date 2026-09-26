@@ -17,6 +17,7 @@ import { initializeTracking } from "@/lib/tracking-service";
 const Index = lazy(() => import("./pages/Index"));
 const About = lazy(() => import("./pages/About"));
 const FAQ = lazy(() => import("./pages/FAQ"));
+const Chat = lazy(() => import("./pages/Chat"));
 const QuickAssessment = lazy(() => import("./pages/QuickAssessment"));
 const SubjectGuide = lazy(() => import("./pages/SubjectGuide"));
 const Careers = lazy(() => import("./pages/Careers"));
@@ -49,6 +50,7 @@ const App = () => {
               <Route path="/" element={<SmartRoot />} />
               <Route path="/about" element={<About />} />
               <Route path="/how-it-works" element={<HowItWorks />} />
+              <Route path="/chat" element={<Chat />} />
               <Route path="/careers/:slug" element={<Careers />} />
               <Route path="/careers" element={<Careers />} />
               <Route path="/faq" element={<FAQ />} />

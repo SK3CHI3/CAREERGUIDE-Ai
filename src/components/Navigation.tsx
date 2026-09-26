@@ -55,9 +55,10 @@ const Navigation = () => {
                 </button>
                 <div className="absolute top-full left-0 mt-[-0.5rem] w-48 bg-background/95 backdrop-blur-xl border border-card-border rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 overflow-hidden">
                   <div className="py-2 flex flex-col">
-                    <button onClick={() => handleNavClick('features')} className="px-4 py-2.5 text-left text-sm hover:bg-muted text-foreground-muted hover:text-foreground transition-colors">Features</button>
-                    <button onClick={() => navigate('/how-it-works')} className="px-4 py-2.5 text-left text-sm hover:bg-muted text-foreground-muted hover:text-foreground transition-colors">How it works</button>
+                    <button onClick={() => navigate('/quick-assessment')} className="px-4 py-2.5 text-left text-sm hover:bg-muted text-foreground-muted hover:text-foreground transition-colors">Quick Assessment</button>
+                    <button onClick={() => navigate('/chat')} className="px-4 py-2.5 text-left text-sm hover:bg-muted text-foreground-muted hover:text-foreground transition-colors">AI Chat</button>
                     <button onClick={() => handleNavClick('careers')} className="px-4 py-2.5 text-left text-sm hover:bg-muted text-foreground-muted hover:text-foreground transition-colors">Career Paths</button>
+                    <button onClick={() => navigate('/subject-guide')} className="px-4 py-2.5 text-left text-sm hover:bg-muted text-foreground-muted hover:text-foreground transition-colors">Subject Guide</button>
                   </div>
                 </div>
               </div>
@@ -114,14 +115,17 @@ const Navigation = () => {
               className="md:hidden overflow-hidden"
             >
               <div className="px-2 pt-2 pb-6 space-y-1 bg-surface/95 backdrop-blur-xl rounded-2xl mt-2 border border-card-border shadow-2xl mx-1 mb-4">
-                <button onClick={() => handleNavClick('features')} className="block w-full text-left px-4 py-3 text-foreground-muted hover:text-foreground hover:bg-muted/50 rounded-xl transition-all">
-                  Features
+                <button onClick={() => { navigate('/quick-assessment'); setIsOpen(false); }} className="block w-full text-left px-4 py-3 text-foreground-muted hover:text-foreground hover:bg-muted/50 rounded-xl transition-all">
+                  Quick Assessment
                 </button>
-                <button onClick={() => { navigate('/how-it-works'); setIsOpen(false); }} className="block w-full text-left px-4 py-3 text-foreground-muted hover:text-foreground hover:bg-muted/50 rounded-xl transition-all">
-                  How it works
+                <button onClick={() => { navigate('/chat'); setIsOpen(false); }} className="block w-full text-left px-4 py-3 text-foreground-muted hover:text-foreground hover:bg-muted/50 rounded-xl transition-all">
+                  AI Chat
                 </button>
                 <button onClick={() => handleNavClick('careers')} className="block w-full text-left px-4 py-3 text-foreground-muted hover:text-foreground hover:bg-muted/50 rounded-xl transition-all">
                   Career Paths
+                </button>
+                <button onClick={() => { navigate('/subject-guide'); setIsOpen(false); }} className="block w-full text-left px-4 py-3 text-foreground-muted hover:text-foreground hover:bg-muted/50 rounded-xl transition-all">
+                  Subject Guide
                 </button>
                 <button onClick={() => { navigate('/about'); setIsOpen(false); }} className="block w-full text-left px-4 py-3 text-foreground-muted hover:text-foreground hover:bg-muted/50 rounded-xl transition-all">
                   About

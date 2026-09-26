@@ -131,32 +131,30 @@ const FeatureShowcase = () => {
                 </div>
               </div>
 
-              {/* Career Days Highlighted Section */}
+              {/* Live Career Counseling */}
               <div className="flex items-start gap-5 bg-primary/5 p-6 rounded-2xl border border-primary/20 shadow-glow-sm relative overflow-hidden group hover:scale-[1.02] transition-all">
                 <div className="absolute top-0 right-0 p-3 opacity-10">
                   <Sparkles className="w-12 h-12 text-primary" />
                 </div>
                 <div className="bg-primary/20 p-3 rounded-xl text-primary shrink-0 border border-primary/30">
-                  <Target className="w-6 h-6" />
+                  <UserCircle2 className="w-6 h-6" />
                 </div>
                 <div className="pt-0.5">
-                  <h4 className="text-lg font-bold text-card-foreground mb-1.5 flex items-center gap-2">
-                    Career Days & Scholarships
-                  </h4>
+                  <h4 className="text-lg font-bold text-card-foreground mb-1.5">Live Career Counseling</h4>
                   <p className="text-sm text-foreground-muted leading-relaxed font-medium">
-                    Spend a day with professionals in your target field and unlock exclusive scholarship opportunities to fund your dreams.
+                    Book 1-on-1 sessions with certified career counselors to get personalized guidance and refine your path.
                   </p>
                 </div>
               </div>
 
-              {/* Career Counseling Section */}
+              {/* Downloadable Reports */}
               <div className="flex items-start gap-5 bg-card p-5 rounded-2xl shadow-sm border border-border group hover:border-primary/30 transition-colors">
                 <div className="bg-primary/10 p-2.5 rounded-full text-primary shrink-0 border border-primary/20">
-                  <UserCircle2 className="w-5 h-5" />
+                  <Target className="w-5 h-5" />
                 </div>
                 <div className="pt-0.5">
-                  <h4 className="text-[15px] font-bold text-card-foreground mb-1">Career Counseling</h4>
-                  <p className="text-sm text-foreground-muted leading-snug font-medium">Book 1-on-1 sessions with certified career experts to refine your path.</p>
+                  <h4 className="text-[15px] font-bold text-card-foreground mb-1">Downloadable Career Reports</h4>
+                  <p className="text-sm text-foreground-muted leading-snug font-medium">Get detailed PDF reports with your career matches, CBC pathway recommendations, and action steps.</p>
                 </div>
               </div>
             </div>

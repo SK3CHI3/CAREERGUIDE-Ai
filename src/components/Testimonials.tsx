@@ -15,7 +15,7 @@ const testimonials = [
   },
   {
     name: "John Kamau",
-    role: "Parent & Mentor",
+    role: "Parent",
     quote: "As a parent, this tool has made it easy to guide my child through their career choices. The AI insights are accurate and locally relevant to Kenyan trends.",
     initials: "JK"
   },
@@ -48,10 +48,10 @@ const Testimonials = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-5xl font-bold font-serif tracking-tight mb-4 text-center">
-            Trusted by students, teachers & schools
+            Trusted by students across Kenya
           </h2>
           <p className="text-base sm:text-lg text-foreground-muted font-medium max-w-2xl mx-auto">
-            Hear how Career Guide AI is making a difference across Kenya's CBE community.
+            Hear how CareerGuide AI is helping students discover their career path.
           </p>
         </div>
 
