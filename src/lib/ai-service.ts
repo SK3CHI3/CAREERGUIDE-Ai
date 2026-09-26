@@ -374,7 +374,19 @@ Return EXACTLY this JSON format (array of 3 objects):
 2. Make informed subject selections for Senior School based on evidence, not assumptions
 3. Understand that pathway choice now shapes their Grade 10-12 experience
 4. Focus on comparing training routes and first-hand experiences`
-          : `The student is in Grade 11${input.pathway ? ` in the ${input.pathway} pathway` : ''}. Focus on comparing training routes, subject requirements, and first experiences. Do not promise admission, a salary, or employment.`
+          : input.grade === 'Grade 10'
+            ? `The student is in Grade 10 (first year of Senior Secondary)${input.pathway ? ` in the ${input.pathway} pathway` : ''}. They have just committed to a pathway and are building their foundation. Focus on:
+1. Confirming the pathway choice is right for them based on early performance and interests
+2. Exploring career fields within their chosen pathway in depth
+3. Understanding how pathway subjects connect to specific career fields
+4. Building foundational knowledge and skills for post-secondary applications`
+            : input.grade === 'Grade 12'
+              ? `The student is in Grade 12 (final year of Senior Secondary)${input.pathway ? ` in the ${input.pathway} pathway` : ''}. This is the application year. Focus on:
+1. Final career field selection based on KCSE performance expectations and pathway alignment
+2. Understanding KUCCPS placement, cut-off marks, and application strategy
+3. Exploring backup options (self-sponsored, TVET, apprenticeship) if university placement is uncertain
+4. Connecting career fields to immediate post-secondary actions and deadlines`
+              : `The student is in Grade 11${input.pathway ? ` in the ${input.pathway} pathway` : ''}. Focus on comparing training routes, subject requirements, and first experiences. Do not promise admission, a salary, or employment.`
 
     const prompt = `Return ONLY one valid JSON object. No markdown, no backticks, no text outside the object.
 
@@ -410,13 +422,13 @@ Non-negotiable guidance rules:
 4. For Grades 7-9: only suggest fields marked as appropriate for the student's grade. "Law and Governance" must never appear for a Grade 7 student.
 5. For Grades 7-9: filter suggestions to school pathway availability. If the school only offers 2 of 3 pathways, don't suggest fields from the missing one.
 6. For Grades 7-9: acknowledge parent expectations in why_it_appeared. If the student's signals conflict with parent wishes, name that tension honestly.
-7. For Grade 11: connect each career field to at least one training route (university programme, college diploma, TVET certificate, or apprenticeship). Reference budget where relevant.
-8. For Grade 11: connect each career field to the student's future vision statement.
+7. For Grades 10-12: connect each career field to at least one training route (university programme, college diploma, TVET certificate, or apprenticeship). Reference budget where relevant.
+8. For Grades 10-12: connect each career field to the student's future vision statement.
 9. Every why_it_appeared must cite at least two independent student signals (subject performance + interest, or interest + club, etc.).
 10. Every reality_to_test must name an uncertainty about the day-to-day work within that field.
-11. Starter activities: Grades 7-9 = exploration (30-90 min, no cost, safe). Grade 11 = action (apply, prepare, build evidence for an application).
+11. Starter activities: Grades 7-9 = exploration (30-90 min, no cost, safe). Grades 10-12 = action (apply, prepare, build evidence for an application).
 12. The action plan must contain exactly 2 practical actions (not 3), each tied to a specific CareerGuide feature.
-13. The student_summary must explain the CBC placement structure for Grades 7-9, or the post-secondary landscape for Grade 11.
+13. The student_summary must explain the CBC placement structure for Grades 7-9, or the post-secondary landscape for Grades 10-12.
 14. Never use adult-framed job titles as suggestions. The student is exploring a field, not interviewing for a job.
 
 Return exactly this shape:
@@ -424,8 +436,8 @@ Return exactly this shape:
   "student_summary": "2 concise sentences explaining what this brief used and why it is exploratory.",
   "grade_context": "1-2 sentences tied to the student's grade.",
   "grade_focus": "1 concise, grade-aware next focus.",
-  ${input.grade !== 'Grade 11' ? '"parent_note": "1 sentence acknowledging parent expectations and alignment.",' : ''}
-  ${input.grade === 'Grade 11' ? '"vision_note": "1 sentence connecting the student\'s future vision to the career suggestions.",' : ''}
+  ${['Grade 7', 'Grade 8', 'Grade 9'].includes(input.grade) ? '"parent_note": "1 sentence acknowledging parent expectations and alignment.",' : ''}
+  ${['Grade 10', 'Grade 11', 'Grade 12'].includes(input.grade) ? '"vision_note": "1 sentence connecting the student\'s future vision to the career suggestions.",' : ''}
   "career_fields": [
     {
       "field": "Copy EXACT name from allowed list (e.g., Technology and Computing)",
@@ -434,7 +446,7 @@ Return exactly this shape:
       "subjects_to_prioritise": ["Subject 1", "Subject 2"],
       "why_it_appeared": "Specific evidence from at least two student signals; end with an uncertainty-aware statement.",
       "reality_to_test": "The aspect of daily work that still needs evidence.",
-      ${input.grade !== 'Grade 11' ? `"starter_activity": {
+      ${['Grade 7', 'Grade 8', 'Grade 9'].includes(input.grade) ? `"starter_activity": {
         "title": "Short activity title",
         "instruction": "Concrete 30-90 minute task, depending on grade.",
         "reflection_prompt": "One question that helps the student judge their experience."

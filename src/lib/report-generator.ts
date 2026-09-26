@@ -215,7 +215,7 @@ export class ReportGenerator {
     const studentName = escape(profile.name || 'Student');
     const subjectList = escape(profile.subjects?.slice(0, 4).join(', ') || 'Not selected');
     const interestList = escape(profile.interests?.slice(0, 4).join(', ') || 'Not selected');
-    const isGrade11 = profile.grade === 'Grade 11';
+    const isSeniorSecondary = ['Grade 10', 'Grade 11', 'Grade 12'].includes(profile.grade || '');
 
     const careerCards = brief.careerFields.map((field, index) => `
       <article class="brief-career-card">
@@ -240,14 +240,14 @@ export class ReportGenerator {
           <h3>What still needs testing</h3>
           <p>${escape(field.realityToTest)}</p>
         </div>
-        ${!isGrade11 && field.starterActivity ? `
+        ${!isSeniorSecondary && field.starterActivity ? `
         <div class="brief-activity">
           <strong>${escape(field.starterActivity.title)}</strong>
           <p>${escape(field.starterActivity.instruction)}</p>
           <span><b>Notice:</b> ${escape(field.starterActivity.reflectionPrompt)}</span>
         </div>
         ` : ''}
-        ${isGrade11 && field.trainingRoutes ? `
+        ${isSeniorSecondary && field.trainingRoutes ? `
         <div class="brief-training-routes">
           <strong>Training routes</strong>
           ${field.trainingRoutes.map(route => `
@@ -259,7 +259,7 @@ export class ReportGenerator {
           `).join('')}
         </div>
         ` : ''}
-        ${isGrade11 && field.nextAction ? `
+        ${isSeniorSecondary && field.nextAction ? `
         <div class="brief-next-action">
           <strong>${escape(field.nextAction.title)}</strong>
           <p>${escape(field.nextAction.instruction)}</p>

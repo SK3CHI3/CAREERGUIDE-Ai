@@ -106,7 +106,7 @@ const QuickAssessment = () => {
         cbc_senior_techvoc: ["English", "Kiswahili", "Mathematics", "Building & Construction", "Electrical & Electronics", "Mechanical Engineering", "Agriculture", "Home Science", "Hairdressing & Beauty", "Plumbing & Carpentry", "ICT / Computer Studies"]
     };
 
-    const GRADES = { cbc: ["Grade 7", "Grade 9", "Grade 11"] };
+    const GRADES = { cbc: ["Grade 7", "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"] };
 
     const clubOptions = ["Science club", "Debate", "Drama/Theatre", "Sports team", "Music/Choir", "Art/Design", "Coding/Robotics", "Business club", "Community service", "Religious group"];
     const parentExpectationOptions = ["Doctor", "Engineer", "Lawyer", "Teacher", "Business owner", "Farmer/Agriculture", "Tech/IT", "Government worker", "Religious leader", "They don't have a preference"];
@@ -116,10 +116,12 @@ const QuickAssessment = () => {
 
     const getAvailableSubjects = () => {
         if (!grade) return [];
-        if (grade === 'Grade 11') {
+        // Senior Secondary grades (10, 11, 12) need pathway
+        if (['Grade 10', 'Grade 11', 'Grade 12'].includes(grade)) {
             if (!pathway) return [];
             return SUBJECT_DATA[`cbc_senior_${pathway}` as keyof typeof SUBJECT_DATA];
         }
+        // Junior Secondary grades (7, 8, 9) use all subjects
         return SUBJECT_DATA.cbc_junior;
     };
 
@@ -133,7 +135,7 @@ const QuickAssessment = () => {
             }
             if (subStep === 2) {
                 if (!grade) return setError("Please select your current grade");
-                if (grade === 'Grade 11' && !pathway) return setError("Please select your Senior Secondary pathway");
+                if (['Grade 10', 'Grade 11', 'Grade 12'].includes(grade) && !pathway) return setError("Please select your Senior Secondary pathway");
                 setSubStep(3);
                 return;
             }
@@ -143,27 +145,27 @@ const QuickAssessment = () => {
                 const missingPerformance = selectedSubjects.filter(s => !subjectPerformance[s]);
                 if (missingPerformance.length > 0) return setError("Please rate your performance in all selected subjects");
                 // Check school pathways for Grades 7-9
-                if (grade !== 'Grade 11' && schoolPathways.length === 0) return setError("Please select which pathways your school offers");
+                if (['Grade 7', 'Grade 8', 'Grade 9'].includes(grade) && schoolPathways.length === 0) return setError("Please select which pathways your school offers");
             }
         }
         if (currentStep === 2) {
             if (selectedInterests.length === 0) return setError("Please select at least one interest");
         }
         if (currentStep === 3) {
-            if (grade !== 'Grade 11') {
-                // Grades 7-9: validate parent expectations
+            if (['Grade 7', 'Grade 8', 'Grade 9'].includes(grade)) {
+                // Junior Secondary: validate parent expectations
                 if (!parentExpectation.trim()) return setError("Please share your parent/guardian's expectations");
             } else {
-                // Grade 11: validate future vision only (plans are on step 4)
+                // Senior Secondary (10-12): validate future vision only (plans are on step 4)
                 if (!futureVision.trim()) return setError("Please describe your vision for the future");
             }
         }
         if (currentStep === 4) {
-            if (grade !== 'Grade 11') {
-                // Grades 7-9: validate vision fields
+            if (['Grade 7', 'Grade 8', 'Grade 9'].includes(grade)) {
+                // Junior Secondary: validate vision fields
                 if (!futureVision.trim()) return setError("Please describe your vision for the future");
             } else {
-                // Grade 11: validate post-secondary plans and challenges
+                // Senior Secondary (10-12): validate post-secondary plans and challenges
                 if (!postSecondaryPlan) return setError("Please select your post-secondary plan");
                 if (specificChallenges.length === 0) return setError("Please select at least one challenge");
             }
@@ -222,12 +224,12 @@ const QuickAssessment = () => {
                 schoolPathways,
                 interests: selectedInterests,
                 clubs,
-                parentExpectation: grade !== 'Grade 11' ? parentExpectation : '',
-                parentAlignment: grade !== 'Grade 11' ? parentAlignment : 'unsure',
+                parentExpectation: ['Grade 7', 'Grade 8', 'Grade 9'].includes(grade) ? parentExpectation : '',
+                parentAlignment: ['Grade 7', 'Grade 8', 'Grade 9'].includes(grade) ? parentAlignment : 'unsure',
                 futureVision,
-                postSecondaryPlan: grade === 'Grade 11' ? postSecondaryPlan : undefined,
-                budgetRange: grade === 'Grade 11' ? budgetRange : undefined,
-                specificChallenges: grade === 'Grade 11' ? specificChallenges : undefined,
+                postSecondaryPlan: ['Grade 10', 'Grade 11', 'Grade 12'].includes(grade) ? postSecondaryPlan : undefined,
+                budgetRange: ['Grade 10', 'Grade 11', 'Grade 12'].includes(grade) ? budgetRange : undefined,
+                specificChallenges: ['Grade 10', 'Grade 11', 'Grade 12'].includes(grade) ? specificChallenges : undefined,
                 targetCareer: targetCareer || undefined,
                 availableCareerFields: careerFields,
             };
@@ -336,13 +338,13 @@ const QuickAssessment = () => {
                                                     <Label className="text-base font-semibold">Current Grade / Level</Label>
                                                     <div className="grid grid-cols-3 gap-2">
                                                         {GRADES.cbc.map(g => (
-                                                            <button key={g} type="button" onClick={() => { setGrade(g); setSelectedSubjects([]); setSubjectPerformance({}); if (g !== 'Grade 11') { setPathway(null); setSchoolPathways([]); } }}
+                                                            <button key={g} type="button" onClick={() => { setGrade(g); setSelectedSubjects([]); setSubjectPerformance({}); if (['Grade 7', 'Grade 8', 'Grade 9'].includes(g)) { setPathway(null); setSchoolPathways([]); } }}
                                                                 className={`p-2 text-sm rounded-lg border-2 transition-all font-medium ${grade === g ? 'border-primary bg-primary/10 text-primary shadow-sm' : 'border-card-border hover:border-primary/50'}`}>{g}</button>
                                                         ))}
                                                     </div>
                                                 </div>
 
-                                                {grade === 'Grade 11' && (
+                                                {['Grade 10', 'Grade 11', 'Grade 12'].includes(grade) && (
                                                     <div className="space-y-3 animate-in fade-in slide-in-from-top-2">
                                                         <Label className="text-base font-bold text-primary">Senior Secondary Pathway</Label>
                                                         <div className="grid grid-cols-2 gap-2">
@@ -354,7 +356,7 @@ const QuickAssessment = () => {
                                                     </div>
                                                 )}
 
-                                                {grade && grade !== 'Grade 11' && (
+                                                {grade && ['Grade 7', 'Grade 8', 'Grade 9'].includes(grade) && (
                                                     <div className="space-y-3 animate-in fade-in slide-in-from-top-2">
                                                         <Label className="text-base font-bold text-primary">Which pathways does your school offer?</Label>
                                                         <p className="text-sm text-muted-foreground">Select all that apply</p>
@@ -481,7 +483,7 @@ const QuickAssessment = () => {
                             )}
 
                             {/* PHASE 3: Parent Expectations (Grades 7-9 only) */}
-                            {currentStep === 3 && grade !== 'Grade 11' && (
+                            {currentStep === 3 && ['Grade 7', 'Grade 8', 'Grade 9'].includes(grade) && (
                                 <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
                                     <div className="text-center">
                                         <h2 className="text-2xl md:text-3xl font-bold flex items-center justify-center gap-2"><MapPin className="w-8 h-8 text-primary" /> Phase 3: Parent Expectations</h2>
@@ -518,8 +520,8 @@ const QuickAssessment = () => {
                                 </motion.div>
                             )}
 
-                            {/* PHASE 3: Your Vision (Grade 11 only) */}
-                            {currentStep === 3 && grade === 'Grade 11' && (
+                            {/* PHASE 3: Your Vision (Senior Secondary 10-12 only) */}
+                            {currentStep === 3 && ['Grade 10', 'Grade 11', 'Grade 12'].includes(grade) && (
                                 <motion.div key="step3-g11" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
                                     <div className="text-center">
                                         <h2 className="text-2xl md:text-3xl font-bold flex items-center justify-center gap-2"><GraduationCap className="w-8 h-8 text-primary" /> Phase 3: Your Vision</h2>
@@ -541,18 +543,18 @@ const QuickAssessment = () => {
                                 </motion.div>
                             )}
 
-                            {/* PHASE 4: Your Vision (Grades 7-9) or Your Plans (Grade 11) */}
+                            {/* PHASE 4: Your Vision (Grades 7-9) or Your Plans (Grades 10-12) */}
                             {currentStep === 4 && (
                                 <motion.div key="step4" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
                                     <div className="text-center">
-                                        <h2 className="text-2xl md:text-3xl font-bold flex items-center justify-center gap-2"><GraduationCap className="w-8 h-8 text-primary" /> Phase 4: {grade === 'Grade 11' ? 'Your Plans' : 'Your Vision'}</h2>
+                                        <h2 className="text-2xl md:text-3xl font-bold flex items-center justify-center gap-2"><GraduationCap className="w-8 h-8 text-primary" /> Phase 4: {['Grade 10', 'Grade 11', 'Grade 12'].includes(grade) ? 'Your Plans' : 'Your Vision'}</h2>
                                         <p className="text-muted-foreground mt-2">
-                                            {grade === 'Grade 11' ? "What's your plan after Senior School?" : 'What kind of future do you imagine?'}
+                                            {['Grade 10', 'Grade 11', 'Grade 12'].includes(grade) ? "What's your plan after Senior School?" : 'What kind of future do you imagine?'}
                                         </p>
                                     </div>
 
                                     <div className="space-y-4">
-                                        {grade === 'Grade 11' ? (
+                                        {['Grade 10', 'Grade 11', 'Grade 12'].includes(grade) ? (
                                             <>
                                                 <div>
                                                     <Label className="text-base font-semibold">What's your plan after Senior School?</Label>

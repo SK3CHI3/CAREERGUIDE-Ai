@@ -23,7 +23,7 @@ const pathwayColors = {
   'Arts & Sports Science': 'bg-green-100 text-green-800 border-green-200',
 };
 
-const CareerFieldCard = ({ field, index, isGrade11 }: { field: CareerFieldPossibility; index: number; isGrade11: boolean }) => (
+const CareerFieldCard = ({ field, index, isSeniorSecondary }: { field: CareerFieldPossibility; index: number; isSeniorSecondary: boolean }) => (
   <article className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
     <div className="flex gap-3">
       <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg text-xs font-black ${index === 1 ? 'bg-emerald-50 text-emerald-700' : 'bg-primary/10 text-primary'}`}>0{index + 1}</span>
@@ -62,7 +62,7 @@ const CareerFieldCard = ({ field, index, isGrade11 }: { field: CareerFieldPossib
       </div>
     </div>
 
-    {isGrade11 && field.trainingRoutes && (
+    {isSeniorSecondary && field.trainingRoutes && (
       <div className="mt-4 rounded-xl bg-slate-50 p-3">
         <p className="text-[11px] font-bold uppercase tracking-wide text-slate-600 mb-2">Training routes</p>
         <div className="space-y-2">
@@ -77,7 +77,7 @@ const CareerFieldCard = ({ field, index, isGrade11 }: { field: CareerFieldPossib
       </div>
     )}
 
-    {isGrade11 && field.nextAction && (
+    {isSeniorSecondary && field.nextAction && (
       <div className={`mt-4 rounded-xl p-3 ${index === 1 ? 'bg-emerald-50' : 'bg-primary/[0.06]'}`}>
         <div className="flex gap-2">
           <TrendingUp className={`mt-0.5 h-4 w-4 shrink-0 ${index === 1 ? 'text-emerald-700' : 'text-primary'}`} />
@@ -90,7 +90,7 @@ const CareerFieldCard = ({ field, index, isGrade11 }: { field: CareerFieldPossib
       </div>
     )}
 
-    {!isGrade11 && field.starterActivity && (
+    {!isSeniorSecondary && field.starterActivity && (
       <div className={`mt-4 rounded-xl p-3 ${index === 1 ? 'bg-emerald-50' : 'bg-primary/[0.06]'}`}>
         <div className="flex gap-2">
           <Lightbulb className={`mt-0.5 h-4 w-4 shrink-0 ${index === 1 ? 'text-emerald-700' : 'text-primary'}`} />
@@ -109,7 +109,7 @@ const TOTAL_PAGES = 3;
 
 const QuickAssessmentDirectionBrief = ({ profile, brief, onDownload, onConsult }: QuickAssessmentDirectionBriefProps) => {
   const [page, setPage] = useState(0);
-  const isGrade11 = profile.grade === 'Grade 11';
+  const isSeniorSecondary = ['Grade 10', 'Grade 11', 'Grade 12'].includes(profile.grade || '');
 
   const goNext = () => setPage(p => Math.min(p + 1, TOTAL_PAGES - 1));
   const goPrev = () => setPage(p => Math.max(p - 1, 0));
@@ -163,14 +163,14 @@ const QuickAssessmentDirectionBrief = ({ profile, brief, onDownload, onConsult }
                 </div>
               </div>
 
-              {!isGrade11 && brief.parentNote && (
+              {!isSeniorSecondary && brief.parentNote && (
                 <div className="rounded-2xl border border-amber-100 bg-amber-50 p-4">
                   <p className="text-xs font-bold uppercase tracking-wide text-amber-700">Your family's expectations</p>
                   <p className="mt-2 text-sm leading-6 text-slate-700">{brief.parentNote}</p>
                 </div>
               )}
 
-              {isGrade11 && brief.visionNote && (
+              {isSeniorSecondary && brief.visionNote && (
                 <div className="rounded-2xl border border-indigo-100 bg-indigo-50 p-4">
                   <p className="text-xs font-bold uppercase tracking-wide text-indigo-700">Your vision</p>
                   <p className="mt-2 text-sm leading-6 text-slate-700">{brief.visionNote}</p>
@@ -185,13 +185,13 @@ const QuickAssessmentDirectionBrief = ({ profile, brief, onDownload, onConsult }
               <div className="flex items-center gap-2">
                 <Target className="h-5 w-5 text-primary" />
                 <div>
-                  <h3 className="font-bold text-slate-900">Three career fields to {isGrade11 ? 'pursue' : 'explore'}</h3>
-                  <p className="text-sm text-slate-500">{isGrade11 ? 'Compare training routes and take action.' : 'Test the work before you decide.'}</p>
+                  <h3 className="font-bold text-slate-900">Three career fields to {isSeniorSecondary ? 'pursue' : 'explore'}</h3>
+                  <p className="text-sm text-slate-500">{isSeniorSecondary ? 'Compare training routes and take action.' : 'Test the work before you decide.'}</p>
                 </div>
               </div>
               <div className="space-y-4">
                 {brief.careerFields.map((field, index) => (
-                  <CareerFieldCard key={`${field.field}-${index}`} field={field} index={index} isGrade11={isGrade11} />
+                  <CareerFieldCard key={`${field.field}-${index}`} field={field} index={index} isSeniorSecondary={isSeniorSecondary} />
                 ))}
               </div>
             </div>
