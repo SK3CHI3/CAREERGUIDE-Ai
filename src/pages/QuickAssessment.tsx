@@ -99,11 +99,28 @@ const QuickAssessment = () => {
     }, [currentStep, subStep, name, email, grade, pathway, selectedSubjects, subjectPerformance, schoolPathways, selectedInterests, clubs, parentExpectation, parentAlignment, futureVision, postSecondaryPlan, budgetRange, specificChallenges]);
 
     const SUBJECT_DATA = {
-        cbc_junior: ["Mathematics", "English", "Kiswahili", "Integrated Science", "Health Education", "Pre-Technical & Pre-Career Studies", "Social Studies", "Business Studies", "Agriculture & Nutrition", "Life Skills Education", "Creative Arts and Sports", "Religious Education (CRE/IRE/HRE)"],
-        cbc_senior_stem: ["Mathematics", "English", "Kiswahili", "Physics", "Chemistry", "Biology", "Computer Science", "Further Mathematics", "Technical Drawing", "Agriculture & Nutrition"],
-        cbc_senior_arts: ["English", "Kiswahili", "Mathematics", "Fine Art & Design", "Music", "Drama & Theatre", "Physical Education & Sports Science", "Media & Film Studies", "Fashion & Design"],
-        cbc_senior_social: ["English", "Kiswahili", "Mathematics", "History & Citizenship", "Geography", "Business Studies & Economics", "Religious Education", "Law", "Sociology"],
-        cbc_senior_techvoc: ["English", "Kiswahili", "Mathematics", "Building & Construction", "Electrical & Electronics", "Mechanical Engineering", "Agriculture", "Home Science", "Hairdressing & Beauty", "Plumbing & Carpentry", "ICT / Computer Studies"]
+        // Junior Secondary (Grades 7-9): All 12 are core, locked
+        cbc_junior: {
+            core: ["Mathematics", "English", "Kiswahili", "Integrated Science", "Health Education", "Pre-Technical & Pre-Career Studies", "Social Studies", "Business Studies", "Agriculture & Nutrition", "Life Skills Education", "Creative Arts and Sports", "Religious Education (CRE/IRE/HRE)"],
+            electives: []
+        },
+        // Senior Secondary (Grades 10-12): 4 core (locked) + 3 electives (selectable)
+        cbc_senior_stem: {
+            core: ["English", "Kiswahili", "Core Mathematics", "Community Service Learning"],
+            electives: ["Advanced Mathematics", "Biology", "Chemistry", "Physics", "Computer Science", "Agriculture", "Media Technology", "Building & Construction", "Electricity", "Metal Work", "Power Mechanics", "Woodwork", "Marine & Fisheries Technology", "Aviation"]
+        },
+        cbc_senior_arts: {
+            core: ["English", "Kiswahili", "Essential Mathematics", "Community Service Learning"],
+            electives: ["Sports & Recreation", "Physical Education", "Music", "Dance", "Theatre", "Film", "Applied Arts", "Fine Arts"]
+        },
+        cbc_senior_social: {
+            core: ["English", "Kiswahili", "Essential Mathematics", "Community Service Learning"],
+            electives: ["Literature in English", "Indigenous Languages", "Fasihi ya Kiswahili", "Arabic", "French", "German", "Mandarin", "Religious Education (CRE/IRE/HRE)", "Business Studies", "History & Citizenship", "Geography", "Law", "Sociology"]
+        },
+        cbc_senior_techvoc: {
+            core: ["English", "Kiswahili", "Essential Mathematics", "Community Service Learning"],
+            electives: ["Building & Construction", "Electrical & Electronics", "Mechanical Engineering", "Agriculture", "Home Science", "Hairdressing & Beauty", "Plumbing & Carpentry", "ICT / Computer Studies"]
+        }
     };
 
     const GRADES = { cbc: ["Grade 7", "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"] };
@@ -114,15 +131,20 @@ const QuickAssessment = () => {
     const budgetOptions = ["Government-sponsored (KUCCPS)", "Self-sponsored (parents paying)", "Scholarship/bursary", "Not sure yet", "Not relevant (going straight to work)"];
     const challengeOptions = ["Not sure which university/college to apply to", "Worried about KUCCPS points / cut-off marks", "My parents want something different from me", "I'm struggling academically", "I don't know what career options exist in my pathway", "Financial concerns"];
 
-    const getAvailableSubjects = () => {
-        if (!grade) return [];
+    const getSubjectData = () => {
+        if (!grade) return { core: [], electives: [] };
         // Senior Secondary grades (10, 11, 12) need pathway
         if (['Grade 10', 'Grade 11', 'Grade 12'].includes(grade)) {
-            if (!pathway) return [];
+            if (!pathway) return { core: [], electives: [] };
             return SUBJECT_DATA[`cbc_senior_${pathway}` as keyof typeof SUBJECT_DATA];
         }
-        // Junior Secondary grades (7, 8, 9) use all subjects
+        // Junior Secondary grades (7, 8, 9) use all subjects as core
         return SUBJECT_DATA.cbc_junior;
+    };
+
+    const getAvailableSubjects = () => {
+        const { core, electives } = getSubjectData();
+        return [...core, ...electives];
     };
 
     const handleNext = () => {
@@ -140,10 +162,16 @@ const QuickAssessment = () => {
                 return;
             }
             if (subStep === 3) {
-                if (selectedSubjects.length === 0) return setError("Please select at least one subject");
-                // Check if all selected subjects have performance ratings
-                const missingPerformance = selectedSubjects.filter(s => !subjectPerformance[s]);
-                if (missingPerformance.length > 0) return setError("Please rate your performance in all selected subjects");
+                // For Senior Secondary: require exactly 3 electives
+                if (['Grade 10', 'Grade 11', 'Grade 12'].includes(grade)) {
+                    if (selectedSubjects.length !== 3) return setError("Please select exactly 3 elective subjects");
+                }
+                // Check if all subjects have performance ratings (core + selected for Senior, just core for Junior)
+                const allSubjects = ['Grade 7', 'Grade 8', 'Grade 9'].includes(grade) 
+                    ? getSubjectData().core 
+                    : [...getSubjectData().core, ...selectedSubjects];
+                const missingPerformance = allSubjects.filter(s => !subjectPerformance[s]);
+                if (missingPerformance.length > 0) return setError("Please rate your performance in all subjects");
                 // Check school pathways for Grades 7-9
                 if (['Grade 7', 'Grade 8', 'Grade 9'].includes(grade) && schoolPathways.length === 0) return setError("Please select which pathways your school offers");
             }
@@ -193,7 +221,10 @@ const QuickAssessment = () => {
         try {
             const profile: GuestProfile = {
                 name, email, curriculum: 'cbc', grade, pathway: pathway || undefined,
-                subjects: selectedSubjects, interests: selectedInterests,
+                subjects: ['Grade 7', 'Grade 8', 'Grade 9'].includes(grade) 
+                    ? getSubjectData().core 
+                    : [...getSubjectData().core, ...selectedSubjects],
+                interests: selectedInterests,
                 dreamJob: targetCareer || undefined
             };
             setGuestProfile(profile);
@@ -219,7 +250,9 @@ const QuickAssessment = () => {
                 grade: profile.grade || '',
                 pathway: profile.pathway,
                 name, email,
-                subjects: selectedSubjects,
+                subjects: ['Grade 7', 'Grade 8', 'Grade 9'].includes(grade) 
+                    ? getSubjectData().core 
+                    : [...getSubjectData().core, ...selectedSubjects],
                 subjectPerformance,
                 schoolPathways,
                 interests: selectedInterests,
@@ -375,25 +408,61 @@ const QuickAssessment = () => {
 
                                         {subStep === 3 && (
                                             <div className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
-                                                <Label className="text-base font-semibold mb-2 block">Select your subjects and rate your performance</Label>
-                                                <div className="flex flex-wrap gap-2 mb-4">
-                                                    {getAvailableSubjects().map(sub => (
-                                                        <button key={sub} type="button" onClick={() => {
-                                                            setSelectedSubjects(prev => {
-                                                                const newSubjects = prev.includes(sub) ? prev.filter(x => x !== sub) : [...prev, sub];
-                                                                if (!newSubjects.includes(sub)) {
-                                                                    setSubjectPerformance(perf => { const { [sub]: _, ...rest } = perf; return rest; });
-                                                                }
-                                                                return newSubjects;
-                                                            });
-                                                        }} className={`px-3 py-2 text-sm rounded-lg border-2 transition-all ${selectedSubjects.includes(sub) ? 'border-primary bg-primary text-primary-foreground' : 'border-card-border bg-card hover:border-primary/50 text-foreground'}`}>{sub}</button>
-                                                    ))}
-                                                </div>
+                                                <Label className="text-base font-semibold mb-2 block">Your subjects</Label>
+                                                
+                                                {['Grade 10', 'Grade 11', 'Grade 12'].includes(grade) && (
+                                                    <>
+                                                        <div className="space-y-2">
+                                                            <p className="text-sm text-muted-foreground">Core subjects (required for all students in your pathway):</p>
+                                                            <div className="flex flex-wrap gap-2">
+                                                                {getSubjectData().core.map(sub => (
+                                                                    <button key={sub} type="button" disabled
+                                                                        className="px-3 py-2 text-sm rounded-lg border-2 border-muted bg-muted/30 text-muted-foreground cursor-not-allowed">
+                                                                        {sub} <span className="text-xs">(required)</span>
+                                                                    </button>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                        <div className="space-y-2">
+                                                            <p className="text-sm text-muted-foreground">Select your 3 electives:</p>
+                                                            <div className="flex flex-wrap gap-2">
+                                                                {getSubjectData().electives.map(sub => (
+                                                                    <button key={sub} type="button" onClick={() => {
+                                                                        setSelectedSubjects(prev => {
+                                                                            const newSubjects = prev.includes(sub) ? prev.filter(x => x !== sub) : prev.length >= 3 ? prev : [...prev, sub];
+                                                                            if (!newSubjects.includes(sub)) {
+                                                                                setSubjectPerformance(perf => { const { [sub]: _, ...rest } = perf; return rest; });
+                                                                            }
+                                                                            return newSubjects;
+                                                                        });
+                                                                    }} className={`px-3 py-2 text-sm rounded-lg border-2 transition-all ${selectedSubjects.includes(sub) ? 'border-primary bg-primary text-primary-foreground' : 'border-card-border bg-card hover:border-primary/50 text-foreground'}`}>{sub}</button>
+                                                                ))}
+                                                            </div>
+                                                            {selectedSubjects.length > 0 && selectedSubjects.length < 3 && (
+                                                                <p className="text-xs text-amber-600">Select {3 - selectedSubjects.length} more elective{3 - selectedSubjects.length > 1 ? 's' : ''}</p>
+                                                            )}
+                                                        </div>
+                                                    </>
+                                                )}
 
-                                                {selectedSubjects.length > 0 && (
+                                                {['Grade 7', 'Grade 8', 'Grade 9'].includes(grade) && (
+                                                    <div className="space-y-2">
+                                                        <p className="text-sm text-muted-foreground">All subjects are required in Junior Secondary:</p>
+                                                        <div className="flex flex-wrap gap-2">
+                                                            {getSubjectData().core.map(sub => (
+                                                                <button key={sub} type="button" disabled
+                                                                    className="px-3 py-2 text-sm rounded-lg border-2 border-muted bg-muted/30 text-muted-foreground cursor-not-allowed">
+                                                                    {sub}
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                {(selectedSubjects.length > 0 || ['Grade 7', 'Grade 8', 'Grade 9'].includes(grade)) && (
                                                     <div className="space-y-3 animate-in fade-in slide-in-from-top-2">
                                                         <Label className="text-sm font-semibold">Rate your performance in each subject:</Label>
-                                                        {selectedSubjects.map(sub => (
+                                                        {(['Grade 7', 'Grade 8', 'Grade 9'].includes(grade) ? getSubjectData().core : [...getSubjectData().core, ...selectedSubjects]).map(sub => (
                                                             <div key={sub} className="space-y-2">
                                                                 <p className="text-sm font-medium">{sub}</p>
                                                                 <div className="grid grid-cols-4 gap-2">
